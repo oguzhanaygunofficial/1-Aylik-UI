@@ -1,0 +1,3632 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nexlify Mystic - Kaderin Sesi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mystic: {
+                            bg: '#0A0A1F',
+                            bgLight: '#121230',
+                            purple: '#C026D3',
+                            magenta: '#FF00AA',
+                            cyan: '#00F0FF',
+                            gold: '#C9A227',
+                            goldLight: '#E8C547',
+                            goldDim: '#8A6D18',
+                            coffee: '#8B4513',
+                            coffeeLight: '#A0522D',
+                            glass: 'rgba(255, 255, 255, 0.05)',
+                            glassBorder: 'rgba(255, 255, 255, 0.1)',
+                            parchment: 'rgba(201, 162, 39, 0.08)',
+                            parchmentBorder: 'rgba(201, 162, 39, 0.25)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        decorative: ['Cinzel Decorative', 'serif'],
+                        body: ['Cormorant Garamond', 'serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                        'twinkle': 'twinkle 3s ease-in-out infinite',
+                        'scan': 'scan 2s ease-in-out infinite',
+                        'crystal-glow': 'crystalGlow 4s ease-in-out infinite',
+                        'smoke-rise': 'smokeRise 3s ease-out infinite',
+                        'ripple': 'ripple 0.6s ease-out forwards',
+                        'fade-in': 'fadeIn 0.5s ease forwards',
+                        'slide-up': 'slideUp 0.4s ease forwards',
+                        'card-flip': 'cardFlip 0.6s ease forwards',
+                        'water-ripple': 'waterRipple 2s ease-out infinite',
+                        'feather-fall': 'featherFall 3s ease-out forwards',
+                        'glow-pulse': 'glowPulse 2s ease-in-out infinite',
+                        'shake': 'shake 0.5s ease-in-out',
+                        'bubble': 'bubble 2s ease-in-out infinite',
+                        'float-card': 'floatCard 3s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(192, 38, 211, 0.4)' },
+                            '50%': { boxShadow: '0 0 40px rgba(192, 38, 211, 0.8), 0 0 60px rgba(0, 240, 255, 0.4)' }
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        },
+                        twinkle: {
+                            '0%, 100%': { opacity: '0.3', transform: 'scale(1)' },
+                            '50%': { opacity: '1', transform: 'scale(1.2)' }
+                        },
+                        scan: {
+                            '0%': { top: '0%', opacity: '0.6' },
+                            '10%': { opacity: '1' },
+                            '90%': { opacity: '1' },
+                            '100%': { top: '100%', opacity: '0.6' }
+                        },
+                        crystalGlow: {
+                            '0%, 100%': { filter: 'brightness(1) drop-shadow(0 0 10px rgba(201, 162, 39, 0.5))' },
+                            '50%': { filter: 'brightness(1.3) drop-shadow(0 0 30px rgba(201, 162, 39, 0.8))' }
+                        },
+                        smokeRise: {
+                            '0%': { transform: 'translateY(0) scale(1)', opacity: '0.6' },
+                            '100%': { transform: 'translateY(-100px) scale(2)', opacity: '0' }
+                        },
+                        ripple: {
+                            '0%': { transform: 'scale(0)', opacity: '0.5' },
+                            '100%': { transform: 'scale(4)', opacity: '0' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        },
+                        slideUp: {
+                            'from': { opacity: '0', transform: 'translateY(30px)' },
+                            'to': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        cardFlip: {
+                            '0%': { transform: 'rotateY(0deg)' },
+                            '100%': { transform: 'rotateY(180deg)' }
+                        },
+                        waterRipple: {
+                            '0%, 100%': { transform: 'scale(1)', opacity: '0.5' },
+                            '50%': { transform: 'scale(1.1)', opacity: '0.8' }
+                        },
+                        featherFall: {
+                            '0%': { transform: 'translateY(-50px) rotate(0deg)', opacity: '0' },
+                            '50%': { opacity: '1' },
+                            '100%': { transform: 'translateY(200px) rotate(360deg)', opacity: '0' }
+                        },
+                        glowPulse: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(201, 162, 39, 0.3)' },
+                            '50%': { boxShadow: '0 0 40px rgba(201, 162, 39, 0.6)' }
+                        },
+                        shake: {
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '25%': { transform: 'translateX(-5px) rotate(-5deg)' },
+                            '75%': { transform: 'translateX(5px) rotate(5deg)' }
+                        },
+                        bubble: {
+                            '0%, 100%': { transform: 'translateY(0) scale(1)', opacity: '0.6' },
+                            '50%': { transform: 'translateY(-20px) scale(1.1)', opacity: '0.3' }
+                        },
+                        floatCard: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-5px) rotate(1deg)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* iPhone 14 Pro Frame with Dynamic Island */
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: #0A0A1F;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 0 12px #1a1a1a,
+                0 0 0 14px #333,
+                0 20px 60px rgba(0,0,0,0.5),
+                0 0 100px rgba(192, 38, 211, 0.2);
+            border-radius: 55px;
+        }
+        
+        /* Dynamic Island - iPhone 16 style, slim and static */
+        .dynamic-island {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 35px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 1000;
+        }
+        
+        /* Island Animations - removed */
+        .island-pulse {
+            /* static, no animation */
+        }
+        
+        /* Home Indicator */
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 3px;
+            z-index: 1000;
+        }
+        
+        /* Star Field Background */
+        .star-field {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        
+        /* Glassmorphism Panels */
+        .glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(201, 162, 39, 0.2);
+    position: relative;
+    box-shadow: 
+        inset 0 1px 0 rgba(255, 255, 255, 0.05),
+        0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.glass-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: linear-gradient(135deg, 
+        rgba(201, 162, 39, 0.4) 0%, 
+        rgba(192, 38, 211, 0.3) 50%,
+        rgba(255, 255, 255, 0.15) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+        
+        .glass-panel-strong {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        /* YENİ KOD: */
+.parchment-panel {
+    background: linear-gradient(180deg, 
+        rgba(201, 162, 39, 0.12) 0%, 
+        rgba(201, 162, 39, 0.06) 30%,
+        rgba(192, 38, 211, 0.04) 70%,
+        rgba(192, 38, 211, 0.08) 100%
+    );
+    border: 1px solid rgba(201, 162, 39, 0.25);
+    border-top: 2px solid #C9A227;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.parchment-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+        transparent 0%,
+        rgba(192, 38, 211, 0.03) 50%,
+        rgba(192, 38, 211, 0.06) 100%
+    );
+    pointer-events: none;
+}
+        
+        /* Neon Effects */
+        .neon-text {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+        }
+        
+        .neon-border {
+            position: relative;
+        }
+        
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            padding: 2px;
+            background: linear-gradient(135deg, #C026D3, #00F0FF, #C9A227, #C026D3);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .neon-border:hover::before {
+            opacity: 1;
+        }
+        
+        /* Gold Gradient Text */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #C9A227, #E8C547, #C9A227);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: shimmer 3s infinite;
+        }
+        
+        /* Mystic Card */
+        .mystic-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    box-shadow: 4px 6px 20px rgba(201, 162, 39, 0.08), 0 2px 8px rgba(0,0,0,0.3);
+    border: 1px solid rgba(192, 38, 211, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.mystic-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 6px 10px 30px rgba(201, 162, 39, 0.18), 0 20px 40px rgba(192, 38, 211, 0.2);
+    border-color: rgba(192, 38, 211, 0.35);
+}
+
+        .mystic-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    /* Sağ alttan hafifçe genele yansıyan altın ışık */
+    background: radial-gradient(
+        ellipse at 90% 95%,
+        rgba(201, 162, 39, 0.38) 0%,
+        rgba(201, 162, 39, 0.18) 35%,
+        rgba(201, 162, 39, 0.06) 60%,
+        transparent 80%
+    );
+    pointer-events: none;
+    opacity: 1;
+    transition: all 0.4s ease;
+    z-index: 1;
+}
+
+/* Kartların sürekli parlaması için animasyon sınıfı */
+.card-gold-glow {
+    animation: glowPulse 3s ease-in-out infinite;
+    border: 1px solid rgba(201, 162, 39, 0.4) !important;
+}
+
+.mystic-card:hover::before {
+    opacity: 1;
+}
+        
+        .mystic-card:active {
+            transform: translateY(-4px) scale(0.98);
+        }
+        
+        /* Tarot Card 3D */
+        .tarot-card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .tarot-card-3d.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-face {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .card-back {
+            transform: rotateY(180deg);
+        }
+        
+        @keyframes moonGlow {
+    0%, 100% { 
+        text-shadow: 
+            0 0 15px rgba(255, 240, 180, 0.7),
+            0 0 35px rgba(255, 220, 120, 0.4),
+            0 0 60px rgba(255, 200, 80, 0.2);
+        opacity: 0.82;
+        transform: rotate(20deg);
+    }
+    50% { 
+        text-shadow: 
+            0 0 25px rgba(255, 250, 200, 1),
+            0 0 55px rgba(255, 230, 140, 0.85),
+            0 0 100px rgba(255, 210, 80, 0.5),
+            0 0 150px rgba(255, 200, 60, 0.2);
+        opacity: 1;
+        transform: rotate(25deg);
+    }
+}
+        
+        /* Scan Line Effect - cyan laser */
+        .scan-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00F0FF, transparent);
+            box-shadow: 0 0 8px #00F0FF, 0 0 16px rgba(0, 240, 255, 0.5);
+            animation: scan 2s ease-in-out infinite;
+        }
+        
+        /* Smoke Particle */
+        .smoke-particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(192, 38, 211, 0.3) 0%, transparent 70%);
+            filter: blur(8px);
+            animation: smokeRise 3s ease-out infinite;
+        }
+        
+        /* Crystal Ball */
+        .crystal-ball {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(201, 162, 39, 0.3), rgba(0, 240, 255, 0.2));
+            box-shadow: 0 0 40px rgba(201, 162, 39, 0.4), inset 0 0 30px rgba(255,255,255,0.2);
+            animation: crystalGlow 4s ease-in-out infinite;
+            position: relative;
+        }
+        
+        .crystal-ball::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 25%;
+            width: 25%;
+            height: 15%;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            filter: blur(4px);
+        }
+        
+        /* Water Ripple */
+        .water-ripple {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 240, 255, 0.5);
+            animation: waterRipple 2s ease-out infinite;
+        }
+        
+        /* Feather Animation */
+        .feather {
+            position: absolute;
+            font-size: 24px;
+            animation: featherFall 3s ease-out forwards;
+            opacity: 0;
+        }
+        
+        /* Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s ease-out forwards;
+            pointer-events: none;
+        }
+        
+        /* Progress Ring */
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform-origin: 50% 50%;
+        }
+        
+        /* Route Animations */
+        .route-enter {
+            animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        /* Toast */
+        .toast {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(201, 162, 39, 0.15);
+            border: 1px solid rgba(201, 162, 39, 0.4);
+            border-radius: 20px;
+            padding: 12px 24px;
+            font-size: 13px;
+            color: #F5F5DC;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            z-index: 9999;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, rgba(10, 10, 31, 0.95), rgba(18, 18, 48, 0.95));
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: 24px;
+            padding: 24px;
+            width: 100%;
+            max-width: 320px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        /* Ad Container */
+        .ad-container {
+            background: linear-gradient(135deg, rgba(10, 10, 31, 0.98), rgba(20, 20, 50, 0.98));
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .ad-placeholder {
+            background: linear-gradient(135deg, #1a1a3e, #0f0f28);
+            border: 2px dashed rgba(201, 162, 39, 0.3);
+            border-radius: 12px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        /* Scroll Hide */
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Loading Orb */
+        .loading-orb {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #C026D3, #00F0FF, #C9A227, #C026D3);
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+        
+        .loading-orb::after {
+            content: '';
+            position: absolute;
+            inset: 5px;
+            border-radius: 50%;
+            background: #0A0A1F;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Category Badge */
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-free { background: rgba(0, 220, 255, 0.13); color: #55deff; border: 1px solid rgba(0, 220, 255, 0.32); }
+        .badge-token { background: rgba(201, 162, 39, 0.13); color: #d4a93a; border: 1px solid rgba(201, 162, 39, 0.32); }
+        .badge-premium { background: rgba(200, 50, 230, 0.13); color: #d060e8; border: 1px solid rgba(200, 50, 230, 0.32); }
+        
+        /* Aspect Bar */
+        .aspect-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .aspect-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #C9A227, #E8C547);
+            border-radius: 2px;
+            transition: width 1s ease;
+        }
+        
+        /* Lucky Numbers */
+        .lucky-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #C9A227, #E8C547);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #0A0A1F;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(201, 162, 39, 0.4);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+        
+        /* Coffee Cup Special */
+        .coffee-cup-anim {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+        
+        .coffee-cup-anim::before {
+            content: '☕';
+            font-size: 60px;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            filter: drop-shadow(0 0 20px rgba(139, 69, 19, 0.5));
+        }
+        
+        /* Hand Scanner */
+        .hand-scanner {
+            position: relative;
+            width: 140px;
+            height: 180px;
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        
+        /* Water Bowl */
+        .water-bowl {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 40%, rgba(0, 240, 255, 0.4), rgba(0, 100, 150, 0.3), rgba(10, 10, 31, 0.8));
+            border: 2px solid rgba(0, 240, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .water-bowl::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            width: 40%;
+            height: 20%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            filter: blur(8px);
+        }
+        
+        /* Angel Card */
+        .angel-card {
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(201, 162, 39, 0.1));
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .angel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(201, 162, 39, 0.3);
+        }
+        
+        .angel-card.selected {
+            border-color: #C9A227;
+            box-shadow: 0 0 30px rgba(201, 162, 39, 0.5);
+        }
+        
+        /* Zodiac Item - Enhanced */
+        .zodiac-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 12px 8px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.03);
+            aspect-ratio: 1;
+        }
+        
+        .zodiac-item:hover, .zodiac-item.selected {
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.15), rgba(201, 162, 39, 0.05));
+            border-color: rgba(201, 162, 39, 0.4);
+            transform: scale(1.05);
+        }
+        
+        .zodiac-item.selected {
+            box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
+        }
+        
+        .zodiac-item .z-symbol { 
+            font-size: 28px; 
+            filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.4));
+        }
+        .zodiac-item .z-name { 
+            font-size: 9px; 
+            color: #A09070; 
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Bottom Nav - soft gradient from dark navy to transparent */
+        .bottom-nav {
+    position: absolute;
+    bottom: 0;
+    left: 12px;
+    right: 12px;
+    height: 70px;
+    background: linear-gradient(180deg, 
+        rgba(10, 10, 35, 0.4) 0%,
+        rgba(15, 15, 40, 0.85) 20%,
+        rgba(20, 20, 50, 0.95) 100%
+    );
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(201, 162, 39, 0.15);
+    border-bottom: none;
+    border-radius: 24px 24px 40px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 30px 8px;
+    z-index: 100;
+    box-shadow: 
+        0 -10px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+        
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 24px;
+            border-radius: 16px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-btn .nav-icon { font-size: 24px; line-height: 1; }
+        .nav-btn .nav-label { 
+            font-size: 11px; 
+            color: #4A4A4A; 
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+            font-weight: 500;
+        }
+        
+        .nav-btn.active .nav-label { color: #C9A227; }
+        .nav-btn.active .nav-icon { 
+            filter: drop-shadow(0 0 8px rgba(201, 162, 39, 0.6));
+            transform: scale(1.1);
+        }
+        
+        .nav-btn:active { transform: scale(0.92); }
+        
+        /* History Item */
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(201, 162, 39, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+        
+        .history-item:active { 
+            background: rgba(201, 162, 39, 0.1);
+            transform: scale(0.98);
+        }
+        
+        .history-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(201, 162, 39, 0.1);
+            border: 1px solid rgba(201, 162, 39, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .history-info {
+            flex: 1;
+        }
+        
+        .history-info h4 {
+            color: #F5F5DC;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+        
+        .history-info p {
+            color: #4A4A4A;
+            font-size: 12px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+        }
+        
+        .history-fav {
+            color: #4A4A4A;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .history-fav.active {
+            color: #C9A227;
+        }
+        
+        .h-date {
+            color: #6A6A6A;
+            font-size: 10px;
+            font-family: 'Space Grotesk', monospace;
+            margin-top: 4px;
+        }
+        
+        /* Token Badge */
+        .token-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.15), rgba(139, 69, 19, 0.1));
+            border: 1px solid rgba(201, 162, 39, 0.4);
+            border-radius: 20px;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .token-badge:active { transform: scale(0.96); }
+        .token-badge .coin { font-size: 16px; }
+        .token-badge .amount {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 14px;
+            color: #C9A227;
+            font-weight: 700;
+        }
+        
+        /* Ad Progress */
+        .ad-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        
+        .ad-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #C026D3, #00F0FF);
+            border-radius: 2px;
+            transition: width 0.1s linear;
+        }
+        
+        /* Ornament Divider */
+        .ornament {
+            text-align: center;
+            color: #8A6D18;
+            font-size: 14px;
+            letter-spacing: 8px;
+            margin: 8px 0;
+            opacity: 0.6;
+        }
+        
+        /* Daily Quote */
+        .daily-quote {
+            background: rgba(201, 162, 39, 0.05);
+            border: 1px solid rgba(201, 162, 39, 0.15);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        /* STANDARDIZED BACK BUTTON - hidden since global btn handles this */
+        .back-btn {
+            display: none !important;
+        }
+        
+        /* STANDARDIZED SCREEN HEADER */
+        .screen-header {
+            padding-top: 56px;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        
+        .screen-header .icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+        
+        .screen-header h1 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 20px;
+            color: #C9A227;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+        
+        .screen-header p {
+            color: #4A4A4A;
+            font-size: 13px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            padding: 0 40px;
+        }
+        
+        /* Status Bar - iOS Style */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 54px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 28px 8px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        .status-time {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 15px;
+            color: #F5F5DC;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-icons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .status-icons svg {
+            width: 16px;
+            height: 16px;
+            fill: #F5F5DC;
+        }
+        
+        /* Screen Container */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            display: none;
+            flex-direction: column;
+            background: #0A0A1F;
+            z-index: 10;
+            padding: 0 20px 90px;
+        }
+        
+        .screen::-webkit-scrollbar { display: none; }
+        .screen.active { display: flex; animation: fadeIn 0.35s ease; }
+        
+        /* No-scroll screens */
+        .screen.no-scroll {
+            overflow: hidden;
+        }
+        
+        /* Input Styles */
+        .mystic-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #F5F5DC;
+            font-size: 14px;
+            width: 100%;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .mystic-input:focus {
+            outline: none;
+            border-color: #C026D3;
+            box-shadow: 0 0 20px rgba(192, 38, 211, 0.2);
+        }
+        
+        .mystic-input::placeholder {
+            color: #4A4A4A;
+        }
+        
+        /* Textarea */
+        .mystic-textarea {
+            min-height: 100px;
+            resize: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed rgba(201, 162, 39, 0.3);
+            border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(201, 162, 39, 0.02);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: #C9A227;
+            background: rgba(201, 162, 39, 0.06);
+        }
+        
+        /* Reading Result Parchment */
+        .parchment-result {
+            background: linear-gradient(160deg, rgba(26, 18, 10, 0.9), rgba(17, 13, 6, 0.95), rgba(26, 18, 10, 0.9));
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .parchment-result::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 23px,
+                rgba(201, 162, 39, 0.03) 24px
+            );
+            pointer-events: none;
+            border-radius: 16px;
+        }
+        
+        /* STANDARDIZED BUTTON STYLES */
+        .btn-primary {
+    background: linear-gradient(135deg, #C026D3, #FF00AA);
+    border: none;
+    border-radius: 14px;
+    height: auto;
+    min-height: 56px;
+    padding: 16px 24px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: white;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(192, 38, 211, 0.3);
+    width: calc(100% - 40px);
+    margin: 0 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn-primary.btn-gold {
+    background: linear-gradient(135deg, #8A6D18, #C9A227);
+    box-shadow: 0 6px 25px rgba(201, 162, 39, 0.4);
+}
+        
+        .btn-primary:active { transform: scale(0.97); }
+        
+        .btn-gold {
+            background: linear-gradient(135deg, #8A6D18, #C9A227);
+            box-shadow: 0 4px 20px rgba(201, 162, 39, 0.3);
+        }
+        
+        .btn-cyan {
+            background: linear-gradient(135deg, #0080A0, #00F0FF);
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(201, 162, 39, 0.4);
+            border-radius: 12px;
+            height: 44px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 13px;
+            color: #C9A227;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: calc(100% - 40px);
+            margin: 0 20px;
+            font-weight: 500;
+        }
+        
+        .btn-secondary:active {
+            transform: scale(0.97);
+            background: rgba(201, 162, 39, 0.1);
+        }
+        
+        /* Package Cards */
+        .token-package {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+        }
+        
+        .token-package:hover { border-color: rgba(201, 162, 39, 0.3); }
+        .token-package:active { transform: scale(0.98); }
+        
+        .token-package.featured {
+            border-color: #C9A227;
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.1), rgba(255, 255, 255, 0.05));
+        }
+        
+        .package-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #C9A227;
+            color: #0A0A1F;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 0 16px 0 10px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        /* TAROT DECK STYLES */
+       .tarot-deck-container {
+    position: relative;
+    height: 155px;
+    /* Negatif margin kaldırıldı - screen overflow-x:hidden ile çakışıyor */
+    margin: 16px 0 8px;
+    padding: 0;
+    overflow: hidden; /* clip cards vertically only */
+}
+
+.tarot-deck-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: scroll; /* scroll zorunlu - auto bazen çalışmıyor */
+    overflow-y: hidden;
+    height: 100%;
+    padding: 15px 20px 20px; /* alt padding: görünmez scroll hit alanı */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    touch-action: pan-x;
+    align-items: flex-end;
+    cursor: grab;
+    scroll-behavior: smooth;
+    /* Momentum scroll - iOS */
+    -webkit-overflow-scrolling: touch;
+    /* Scroll snap - her kart yumuşak duraksıyor */
+    scroll-snap-type: x proximity;
+}
+
+/* Scrollbar gizle */
+.tarot-deck-scroll::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+.tarot-deck-scroll:active {
+    cursor: grabbing;
+}
+
+.tarot-deck-card {
+    width: 65px;
+    height: 95px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #1a1a3e, #0f0f28);
+    border: 2px solid rgba(201, 162, 39, 0.3);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    position: relative;
+    transform: rotate(calc((var(--index, 0) - 5) * 1.5deg));
+    touch-action: pan-x; /* sadece yatay touch - scroll çalışsın */
+    user-select: none;
+    -webkit-user-drag: element;
+    scroll-snap-align: start;
+}
+
+.tarot-deck-card::before {
+    content: '✦';
+    font-size: 22px;
+    color: rgba(201, 162, 39, 0.5);
+}
+
+.tarot-deck-card:hover, .tarot-deck-card.hovered {
+    transform: rotate(0deg) translateY(-14px) scale(1.08);
+    box-shadow: 0 14px 30px rgba(201, 162, 39, 0.45);
+    z-index: 10;
+    border-color: rgba(201, 162, 39, 0.7);
+}
+
+.tarot-deck-card.dragging {
+    opacity: 0.9;
+    transform: scale(1.15) rotate(0deg);
+    z-index: 1000;
+    box-shadow: 0 20px 40px rgba(201, 162, 39, 0.6);
+}
+
+.tarot-deck-card.selected {
+    opacity: 0.3;
+    pointer-events: none;
+    transform: scale(0.9);
+}
+        
+        .tarot-slots-container {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .tarot-slot {
+            width: 90px;
+            height: 130px;
+            border: 2px dashed rgba(201, 162, 39, 0.3);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.02);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .tarot-slot.drag-over {
+            border-color: #C9A227;
+            background: rgba(201, 162, 39, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .tarot-slot.filled {
+            border-style: solid;
+            border-color: #C9A227;
+            background: rgba(201, 162, 39, 0.05);
+        }
+        
+        .tarot-slot-label {
+            position: absolute;
+            bottom: -24px;
+            font-size: 10px;
+            color: #4A4A4A;
+            font-family: 'Space Grotesk', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .tarot-slot-card {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(192, 38, 211, 0.1));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            animation: cardFlip 0.6s ease forwards;
+        }
+        
+        .tarot-slot-card .emoji {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+        
+        .tarot-slot-card .name {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 11px;
+            color: #C9A227;
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        /* Water Animation */
+        .water-drop {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.8), rgba(0, 240, 255, 0.2));
+            border-radius: 50%;
+            pointer-events: none;
+            animation: dropFall 1s ease-out forwards;
+        }
+        
+        @keyframes dropFall {
+            0% { transform: translateY(-100px) scale(0.5); opacity: 1; }
+            50% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(20px) scale(2); opacity: 0; }
+        }
+        
+        .water-splash {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .splash-ring {
+            position: absolute;
+            border: 2px solid rgba(0, 240, 255, 0.6);
+            border-radius: 50%;
+            animation: splashExpand 1.5s ease-out forwards;
+        }
+        
+        @keyframes splashExpand {
+            0% { width: 20px; height: 20px; opacity: 1; }
+            100% { width: 150px; height: 150px; opacity: 0; }
+        }
+        
+        /* Crystal Animation */
+        .crystal-flash {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            animation: flash 0.5s ease-out;
+        }
+        
+        @keyframes flash {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+        
+        .crystal-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .crystal-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #C9A227;
+            border-radius: 50%;
+            animation: particleFloat 2s ease-out forwards;
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+        
+        /* Settings Item */
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .settings-item:active {
+            background: rgba(201, 162, 39, 0.1);
+        }
+        
+        .s-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .s-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(201, 162, 39, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .s-name {
+            color: #F5F5DC;
+            font-size: 14px;
+        }
+        
+        .s-arrow {
+            color: #4A4A4A;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-black p-4">
+    
+    <div class="iphone-frame">
+        <!-- Dynamic Island -->
+        <div class="dynamic-island island-pulse"></div>
+        
+        <!-- Star Field Background -->
+        <div class="star-field" id="starField"></div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="status-time" id="clock">09:41</span>
+            <div class="status-icons">
+                <svg viewBox="0 0 24 24"><path d="M12 3C7.46 3 3.34 4.78.29 7.67c-.18.18-.29.43-.29.71 0 .28.11.53.29.71l11 11c.39.39 1.02.39 1.41 0l11-11c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71C20.66 4.78 16.54 3 12 3z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: HOME ==================== -->
+        <div id="screen-home" class="screen active">
+            <!-- Hero Section -->
+            <div class="pt-14 px-5 text-center relative">
+                <div class="text-5xl mb-3" id="moonHero" style="display:inline-block; color: #FFF8E7; animation: moonGlow 3s ease-in-out infinite;">☽</div>
+                <h1 class="font-decorative text-2xl text-mystic-gold tracking-[4px] mb-2" style="text-shadow: 0 0 30px rgba(201, 162, 39, 0.4);">NEXLIFY FAL</h1>
+<p class="text-mystic-goldDim text-sm tracking-[2px] uppercase font-body font-bold italic" style="color: #B8A070; text-shadow: 0 0 15px rgba(184, 160, 112, 0.15);">Geleceğin Kapısı • Kaderin Sesi</p>
+                <!-- Token Badge -->
+                <div class="token-badge mt-3" onclick="router.navigate('shop')">
+                    <span class="coin">🪙</span>
+                    <span class="amount" id="tokenDisplay">150</span>
+                </div>
+            </div>
+            
+            <!-- Daily Horoscope Preview -->
+            <div class="parchment-panel mx-5 mt-6 rounded-2xl p-5 cursor-pointer" onclick="router.navigate('horoscope')" style="min-height: 160px;">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-mystic-gold text-xs tracking-widest uppercase font-display">☽ Günün Mesajı</span>
+                </div>
+                <h3 class="font-decorative text-mystic-goldLight text-sm mb-2">Bugün yıldızlar konuşuyor...</h3>
+                <p class="text-gray-400 text-xs font-body italic leading-relaxed">Venüs ile Satürn'ün kavuşumu derin bir içsel dönüşümü işaret ediyor. Sezgilerinize güvenin.</p>
+                <div class="flex items-center gap-3 mt-3">
+                    <span class="text-xl" id="homeZodiacIcon">♏</span>
+                    <span class="text-mystic-gold text-xs font-display tracking-wider" id="homeZodiacName">AKREP</span>
+                    <span class="text-gray-600 text-xs font-mono ml-auto" id="todayDate">8 Mart</span>
+                </div>
+            </div>
+            
+            <!-- Ornament -->
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Services Title -->
+            <div class="px-5 mb-3">
+                <h2 class="font-decorative text-gray-500 text-xs tracking-[3px] uppercase">✦ FAL HİZMETLERİ ✦</h2>
+            </div>
+            
+            <!-- Services Grid -->
+            <div class="px-5 grid grid-cols-2 gap-3 mb-3">
+                <!-- Coffee -->
+                <div class="mystic-card glass-panel rounded-2xl p-4 flex flex-col gap-2 min-h-[140px]" onclick="startReading('coffee')">
+                    <div class="text-3xl">☕</div>
+                    <div class="font-decorative text-white text-sm tracking-wider">KAHVE</div>
+                    <p class="text-gray-500 text-xs font-body italic flex-1">Fincan telvenizden kaderinizi okuyoruz</p>
+                    <div class="flex items-center gap-1 text-mystic-gold text-xs font-mono">
+                        <span>🪙</span>
+                        <span id="cost-coffee">30</span>
+                    </div>
+                </div>
+                
+                <!-- Tarot -->
+                <div class="mystic-card glass-panel rounded-2xl p-4 flex flex-col gap-2 min-h-[140px]" onclick="startReading('tarot')">
+                    <div class="text-3xl">🃏</div>
+                    <div class="font-decorative text-white text-sm tracking-wider">TAROT</div>
+                    <p class="text-gray-500 text-xs font-body italic flex-1">Üç kart yayılımı: geçmiş, şimdi, gelecek</p>
+                    <div class="flex items-center gap-1 text-mystic-gold text-xs font-mono">
+                        <span>🪙</span>
+                        <span id="cost-tarot">25</span>
+                    </div>
+                </div>
+                
+                <!-- Palm -->
+                <div class="mystic-card glass-panel rounded-2xl p-4 flex flex-col gap-2 min-h-[140px]" onclick="startReading('palm')">
+                    <div class="text-3xl">✋</div>
+                    <div class="font-decorative text-white text-sm tracking-wider">EL FALI</div>
+                    <p class="text-gray-500 text-xs font-body italic flex-1">Avuç içi çizgilerinizin sırları</p>
+                    <div class="flex items-center gap-1 text-mystic-gold text-xs font-mono">
+                        <span>🪙</span>
+                        <span id="cost-palm">40</span>
+                    </div>
+                </div>
+                
+                <!-- Water -->
+                <div class="mystic-card glass-panel rounded-2xl p-4 flex flex-col gap-2 min-h-[140px]" onclick="startReading('water')">
+                    <div class="text-3xl">💧</div>
+                    <div class="font-decorative text-white text-sm tracking-wider">SU FALI</div>
+                    <p class="text-gray-500 text-xs font-body italic flex-1">Su yüzeyinde beliren semboller</p>
+                    <div class="flex items-center gap-1 text-mystic-gold text-xs font-mono">
+                        <span>🪙</span>
+                        <span id="cost-water">35</span>
+                    </div>
+                </div>
+                
+                <!-- Angel -->
+                <div class="mystic-card glass-panel rounded-2xl p-4 flex flex-col gap-2 min-h-[140px]" onclick="startReading('angel')">
+                    <div class="text-3xl">👼</div>
+                    <div class="font-decorative text-white text-sm tracking-wider">MELEK</div>
+                    <p class="text-gray-500 text-xs font-body italic flex-1">Melek kartlarından rehberlik</p>
+                    <div class="flex items-center gap-1 text-mystic-gold text-xs font-mono">
+                        <span>🪙</span>
+                        <span id="cost-angel">45</span>
+                    </div>
+                </div>
+                
+                <!-- Crystal -->
+                <div class="mystic-card glass-panel rounded-2xl p-4 flex flex-col gap-2 min-h-[140px]" onclick="startReading('crystal')">
+                    <div class="text-3xl">🔮</div>
+                    <div class="font-decorative text-white text-sm tracking-wider">KRİSTAL</div>
+                    <p class="text-gray-500 text-xs font-body italic flex-1">Kristal kürenin ışığında gelecek</p>
+                    <div class="flex items-center gap-1 text-mystic-gold text-xs font-mono">
+                        <span>🪙</span>
+                        <span id="cost-crystal">35</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Secondary Services -->
+            <div class="px-5 grid grid-cols-2 gap-3 mb-4">
+                <!-- Daily Horoscope -->
+                <div class="rounded-2xl p-4 flex items-center gap-3 cursor-pointer" style="background: linear-gradient(135deg, rgba(0,200,255,0.1), rgba(0,120,180,0.06)); border: 1px solid rgba(0,220,255,0.25);" onclick="router.navigate('horoscope')">
+                    <div class="text-2xl">✨</div>
+                    <div>
+                        <div class="text-white text-sm font-medium">Günlük Burç</div>
+                        <div style="display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:20px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; background:rgba(0,220,255,0.1); color:#7ae8ff; border:1px solid rgba(0,220,255,0.25); margin-top:4px;">Ücretsiz</div>
+                    </div>
+                </div>
+                
+                <!-- Dream -->
+                <div class="rounded-2xl p-4 flex items-center gap-3 cursor-pointer" style="background: linear-gradient(135deg, rgba(180,50,220,0.1), rgba(130,20,180,0.06)); border: 1px solid rgba(200,80,255,0.25);" onclick="startReading('dream')">
+                    <div class="text-2xl">🌙</div>
+                    <div>
+                        <div class="text-white text-sm font-medium">Rüya Yorumu</div>
+                        <div class="flex items-center gap-1 text-mystic-gold text-xs font-mono mt-1">
+                            <span>🪙</span>
+                            <span id="cost-dream">20</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Daily Quote -->
+            <div class="daily-quote mx-5 mb-24">
+                <div class="text-mystic-goldDim text-xs tracking-widest uppercase font-display mb-2">BUGÜNÜN SÖZÜ</div>
+                <p class="text-white font-body italic text-sm leading-relaxed">"Yıldızlar yolu gösterir, adımları sen atarsın."</p>
+                <div class="text-gray-600 text-xs font-mono mt-2">— Mevlana</div>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: COFFEE READING ==================== -->
+        <div id="screen-coffee" class="screen" style="overflow-y: auto;">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="screen-header">
+                <div class="icon animate-float" style="filter: drop-shadow(0 0 20px rgba(139, 69, 19, 0.5));">☕</div>
+                <h1>Kahve Falı</h1>
+                <p>Fincandaki telveden hayatınızın sırlarını okuyoruz. Fincanı tersine çevirin, bize gönderin.</p>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Upload Zones -->
+            <div class="space-y-3 px-5">
+                <!-- Cup Upload -->
+                <div class="upload-zone" id="coffeeUpload" onclick="document.getElementById('coffeeInput').click()">
+    <input type="file" id="coffeeInput" accept="image/*" capture="environment" class="hidden" onchange="handleCoffeeUpload(event, 'cup')">
+    
+    <!-- Fincan fotoğraf göstergeleri -->
+    <div class="absolute top-3 left-3 flex gap-2" id="cupIndicators">
+        <div class="w-3 h-3 rounded-full border-2 border-mystic-gold bg-transparent transition-all duration-300" id="cupIndicator1"></div>
+        <div class="w-3 h-3 rounded-full border-2 border-mystic-gold bg-transparent transition-all duration-300" id="cupIndicator2"></div>
+    </div>
+    
+    <div class="text-3xl mb-2">☕</div>
+    <h3 class="font-decorative text-white text-sm mb-1">Fincan Fotoğrafları</h3>
+    <p class="text-gray-500 text-xs font-body">2 fotoğraf • Farklı açılardan fincan içi</p>
+</div>
+                
+                <!-- Preview (Hidden initially) -->
+                <div id="coffeePreview" class="hidden rounded-xl overflow-hidden border border-mystic-gold/30 relative h-32">
+                    <img id="coffeePreviewImg" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-3">
+                        <span class="text-gray-300 text-xs font-body italic">Fincan hazır ✓</span>
+                    </div>
+                    <button class="absolute top-2 right-2 bg-black/60 border border-white/20 rounded-lg px-2 py-1 text-xs text-white" onclick="document.getElementById('coffeeInput').click()">Değiştir</button>
+                </div>
+                
+                <!-- Plate Upload (Required) -->
+                <div class="upload-zone" id="plateUpload" onclick="document.getElementById('plateInput').click()">
+    <input type="file" id="plateInput" accept="image/*" capture="environment" class="hidden" onchange="handleCoffeeUpload(event, 'plate')">
+    
+    <!-- Tabak fotoğraf göstergesi -->
+    <div class="absolute top-3 left-3" id="plateIndicators">
+        <div class="w-3 h-3 rounded-full border-2 border-mystic-gold bg-transparent transition-all duration-300" id="plateIndicator1"></div>
+    </div>
+    
+    <div class="text-3xl mb-2">🍽️</div>
+    <h3 class="font-decorative text-white text-sm mb-1">Tabak Fotoğrafı</h3>
+    <p class="text-gray-500 text-xs font-body">1 fotoğraf • Fincanın tabağındaki şekiller</p>
+</div>
+                
+                <!-- Plate Preview -->
+                <div id="platePreview" class="hidden rounded-xl overflow-hidden border border-mystic-gold/30 relative h-32">
+                    <img id="platePreviewImg" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-3">
+                        <span class="text-gray-300 text-xs font-body italic">Tabak hazır ✓</span>
+                    </div>
+                    <button class="absolute top-2 right-2 bg-black/60 border border-white/20 rounded-lg px-2 py-1 text-xs text-white" onclick="document.getElementById('plateInput').click()">Değiştir</button>
+                </div>
+            </div>
+            
+            <!-- Instructions -->
+            <div class="glass-panel mx-5 mt-4 rounded-xl p-4">
+                <h4 class="font-decorative text-mystic-gold text-xs tracking-wider mb-3">NASIL YAPILIR?</h4>
+                <div class="space-y-2">
+                    <div class="flex gap-3">
+                        <div class="w-5 h-5 rounded-full bg-gradient-to-br from-mystic-goldDim to-mystic-coffee flex items-center justify-center text-xs text-black font-bold flex-shrink-0">1</div>
+                        <p class="text-gray-400 text-xs font-body">Türk kahvenizi için ve tam olarak bitirin</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-5 h-5 rounded-full bg-gradient-to-br from-mystic-goldDim to-mystic-coffee flex items-center justify-center text-xs text-black font-bold flex-shrink-0">2</div>
+                        <p class="text-gray-400 text-xs font-body">Fincana tabağını kapatın ve niyet tutun</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-5 h-5 rounded-full bg-gradient-to-br from-mystic-goldDim to-mystic-coffee flex items-center justify-center text-xs text-black font-bold flex-shrink-0">3</div>
+                        <p class="text-gray-400 text-xs font-body">Ters çevirin, 20 dakika bekleyin</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-5 h-5 rounded-full bg-gradient-to-br from-mystic-goldDim to-mystic-coffee flex items-center justify-center text-xs text-black font-bold flex-shrink-0">4</div>
+                        <p class="text-gray-400 text-xs font-body">Fotoğrafları yükleyin, falınız hazırlansın</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Start Button -->
+            <button class="btn-primary btn-gold mt-6 mb-6" id="coffeeStartBtn" onclick="startCoffeeRitual()" disabled>
+    FALI BAŞLAT — 🪙 <span id="coffeeCostDisplay">30</span>
+</button>
+        </div>
+        
+        <!-- ==================== SCREEN: TAROT READING ==================== -->
+        <div id="screen-tarot" class="screen" style="overflow-x: visible;">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="screen-header">
+                <div class="icon animate-float" style="filter: drop-shadow(0 0 15px rgba(192, 38, 211, 0.4));">🃏</div>
+                <h1>Tarot Falı</h1>
+                <p>Aşağıdan 3 kart seçin. Her kart bir zaman dilimine yerleşir.</p>
+            </div>
+            
+            <!-- Selection counter -->
+            <div class="text-center mb-2">
+                <span class="text-mystic-gold text-xs font-mono" id="tarotCounter">0 / 3 kart seçildi</span>
+            </div>
+            
+            <!-- Card Deck (Horizontal Scroll) -->
+            <div class="tarot-deck-container">
+                <div class="tarot-deck-scroll" id="tarotDeck">
+                    <!-- Cards generated by JS -->
+                </div>
+            </div>
+            
+            <!-- Drop Slots -->
+            <div class="tarot-slots-container">
+                <div class="tarot-slot" id="slot-0" data-position="0" ondrop="dropCard(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)">
+                    <span class="text-2xl text-mystic-gold/30">?</span>
+                    <span class="tarot-slot-label">Geçmiş</span>
+                </div>
+                <div class="tarot-slot" id="slot-1" data-position="1" ondrop="dropCard(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)">
+                    <span class="text-2xl text-mystic-cyan/30">?</span>
+                    <span class="tarot-slot-label">Şimdi</span>
+                </div>
+                <div class="tarot-slot" id="slot-2" data-position="2" ondrop="dropCard(event)" ondragover="allowDrop(event)" ondragleave="leaveDrop(event)">
+                    <span class="text-2xl text-mystic-magenta/30">?</span>
+                    <span class="tarot-slot-label">Gelecek</span>
+                </div>
+            </div>
+            
+            <!-- Draw Button -->
+            <button class="btn-primary mt-4 mb-6" id="tarotDrawBtn" onclick="resetTarot()">
+                DESTENİ İNCELET — 🪙 <span id="tarotCostDisplay">25</span>
+            </button>
+        </div>
+        
+        <!-- ==================== SCREEN: PALM READING ==================== -->
+        <div id="screen-palm" class="screen no-scroll">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="screen-header">
+                <div class="icon animate-float">✋</div>
+                <h1>El Falı</h1>
+                <p>Elinizin fotoğrafını çekin, yapay zeka çizgilerinizi okusun</p>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Scanner Area -->
+            <div class="mx-auto w-36 h-48 rounded-2xl border-2 border-mystic-cyan/30 relative overflow-hidden bg-black/40 flex items-center justify-center cursor-pointer" onclick="document.getElementById('palmInput').click()">
+                <input type="file" id="palmInput" accept="image/*" capture="environment" class="hidden" onchange="handlePalmUpload(event)">
+                <div id="palmPlaceholder" class="text-center">
+                    <svg class="w-12 h-12 text-gray-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <p class="text-gray-500 text-xs">Fotoğraf Çek</p>
+                </div>
+                <img id="palmPreview" class="hidden absolute inset-0 w-full h-full object-cover">
+                <div id="palmScanLine" class="scan-line hidden"></div>
+            </div>
+            
+            <!-- Instructions -->
+            <div class="glass-panel mx-5 mt-4 rounded-xl p-4">
+                <h4 class="font-decorative text-mystic-cyan text-xs tracking-wider mb-3">NASIL ÇALIŞIR?</h4>
+                <ol class="text-gray-400 text-xs font-body space-y-2 list-decimal list-inside">
+                    <li>Elinizin aydınlık bir ortamda fotoğrafını çekin</li>
+                    <li>Yapay zeka çizgilerinizi analiz edecek</li>
+                    <li>Kalbinizin, kaderinizin ve beyninizin çizgileri yorumlanacak</li>
+                    <li>Kişiselleştirilmiş yorumunuzu alın</li>
+                </ol>
+            </div>
+            
+            <button class="btn-primary btn-cyan mt-4 mb-6" id="palmStartBtn" onclick="startPalmRitual()" disabled>
+                TARAMA BAŞLAT — 🪙 <span id="palmCostDisplay">40</span>
+            </button>
+        </div>
+        
+        <!-- ==================== SCREEN: WATER READING ==================== -->
+        <div id="screen-water" class="screen no-scroll">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="screen-header">
+                <div class="icon animate-float" style="filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.4));">💧</div>
+                <h1 style="color: #00F0FF;">Su Falı</h1>
+                <p>Su yüzeyinde beliren semboller geleceğinizi aydınlatır</p>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Water Bowl -->
+            <div class="mx-auto w-32 h-32 rounded-full relative overflow-hidden cursor-pointer" id="waterBowl" onclick="animateWater()">
+                <div class="absolute inset-0 rounded-full" style="background: radial-gradient(circle at 40% 40%, rgba(0, 240, 255, 0.3), rgba(0, 100, 150, 0.2), rgba(10, 10, 31, 0.9)); border: 2px solid rgba(0, 240, 255, 0.3);">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="text-4xl animate-bubble">💧</span>
+                    </div>
+                </div>
+                <div id="waterEffects" class="absolute inset-0 pointer-events-none"></div>
+            </div>
+            
+            <p class="text-center text-gray-500 text-xs font-body mt-4 px-8">Kaseye dokunun, suya bir damla bırakın ve sembolleri izleyin</p>
+            
+            <button class="btn-primary btn-cyan mt-6 mb-6" id="waterStartBtn" onclick="startWaterRitual()">
+                SU FALINA BAŞLA — 🪙 <span id="waterCostDisplay">35</span>
+            </button>
+        </div>
+        
+        <!-- ==================== SCREEN: ANGEL READING ==================== -->
+        <div id="screen-angel" class="screen no-scroll">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="screen-header">
+                <div class="icon animate-float" style="filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.3));">👼</div>
+                <h1 style="color: #F5F5DC;">Melek Falı</h1>
+                <p>Melek kartlarından rehberlik alın, evrenin mesajını dinleyin</p>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Feather Animation Area -->
+            <div class="h-28 mx-5 relative overflow-hidden rounded-xl border border-mystic-gold/20 bg-gradient-to-b from-transparent to-mystic-gold/5" id="featherArea">
+                <div class="absolute inset-0 flex items-center justify-center text-gray-500 text-xs font-body">
+                    Dokunun, melekler kart seçmenizi bekliyor
+                </div>
+            </div>
+            
+            <!-- Card Selection -->
+            <div class="px-5 mt-4 flex gap-3 justify-center">
+                <div class="angel-card" id="angelCard0" onclick="selectAngelCard(0)">
+                    <span class="text-2xl">✦</span>
+                    <span class="text-xs text-mystic-gold font-display">SEÇ</span>
+                </div>
+                <div class="angel-card" id="angelCard1" onclick="selectAngelCard(1)">
+                    <span class="text-2xl">✦</span>
+                    <span class="text-xs text-mystic-gold font-display">SEÇ</span>
+                </div>
+                <div class="angel-card" id="angelCard2" onclick="selectAngelCard(2)">
+                    <span class="text-2xl">✦</span>
+                    <span class="text-xs text-mystic-gold font-display">SEÇ</span>
+                </div>
+            </div>
+            
+            <button class="btn-primary mt-6 mb-6" id="angelStartBtn" onclick="startAngelRitual()" style="background: linear-gradient(135deg, #C0C0C0, #FFFFFF); color: #0A0A1F;">
+                MELEKLERDEN YARDIM İSTE — 🪙 <span id="angelCostDisplay">45</span>
+            </button>
+        </div>
+        
+        <!-- ==================== SCREEN: CRYSTAL READING ==================== -->
+        <div id="screen-crystal" class="screen no-scroll">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="screen-header">
+                <div class="icon animate-crystal-glow">🔮</div>
+                <h1 style="color: #C026D3;">Kristal Falı</h1>
+                <p>Kristal kürenin derinliklerinde geleceğinizi görün</p>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Crystal Ball -->
+            <div class="mx-auto w-32 h-32 relative cursor-pointer" id="crystalBall" onclick="animateCrystal()">
+                <div class="crystal-ball mx-auto"></div>
+                <div id="crystalEffects" class="absolute inset-0 pointer-events-none"></div>
+            </div>
+            
+            <p class="text-center text-gray-500 text-xs font-body mt-4 px-8">Küreye dokunun, derinleşin ve görüntülerin belirmesini bekleyin</p>
+            
+            <button class="btn-primary mt-6 mb-6" id="crystalStartBtn" onclick="startCrystalRitual()" style="background: linear-gradient(135deg, #8020A0, #C026D3);">
+                KRİSTALE BAK — 🪙 <span id="crystalCostDisplay">35</span>
+            </button>
+        </div>
+        
+        <!-- ==================== SCREEN: DREAM READING ==================== -->
+        <div id="screen-dream" class="screen no-scroll">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="screen-header">
+                <div class="icon animate-float" style="filter: drop-shadow(0 0 15px rgba(192, 38, 211, 0.3));">🌙</div>
+                <h1 style="color: #C026D3;">Rüya Yorumu</h1>
+                <p>Gördüğünüz rüyayı anlatın, yapay zeka yorumlasın</p>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Dream Input -->
+            <div class="px-5">
+                <textarea id="dreamInput" class="mystic-input mystic-textarea" placeholder="Örn: Uçan bir balina gördüm ve beni okyanusun derinliklerine götürdü..."></textarea>
+            </div>
+            
+            <!-- Category Tags -->
+            <div class="px-5 mt-3 flex gap-2 flex-wrap">
+                <button class="category-badge badge-premium" onclick="selectDreamCategory('love', this)">Aşk</button>
+                <button class="category-badge badge-token" onclick="selectDreamCategory('career', this)">Kariyer</button>
+                <button class="category-badge badge-token" onclick="selectDreamCategory('money', this)">Para</button>
+                <button class="category-badge badge-free" onclick="selectDreamCategory('general', this)">Genel</button>
+            </div>
+            
+            <button class="btn-primary mt-4 mb-6" onclick="interpretDream()">
+                RÜYAMI YORUMLA — 🪙 <span id="dreamCostDisplay">20</span>
+            </button>
+        </div>
+        
+        <!-- ==================== SCREEN: HOROSCOPE ==================== -->
+        <div id="screen-horoscope" class="screen">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="screen-header">
+                <div class="icon animate-float" style="filter: drop-shadow(0 0 15px rgba(201, 162, 39, 0.4));">✨</div>
+                <h1>Günlük Burç</h1>
+                <p>Bugün yıldızlar sizin için ne diyor?</p>
+            </div>
+            
+            <!-- Zodiac Grid - Compact 3x4 -->
+            <div class="px-5 mt-2">
+                <div class="grid grid-cols-4 gap-2">
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♈', 'Koç', '21 Mar–19 Nis', 'Aries')">
+                        <span class="z-symbol">♈</span>
+                        <span class="z-name">KOÇ</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♉', 'Boğa', '20 Nis–20 May', 'Taurus')">
+                        <span class="z-symbol">♉</span>
+                        <span class="z-name">BOĞA</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♊', 'İkizler', '21 May–21 Haz', 'Gemini')">
+                        <span class="z-symbol">♊</span>
+                        <span class="z-name">İKİZLER</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♋', 'Yengeç', '22 Haz–22 Tem', 'Cancer')">
+                        <span class="z-symbol">♋</span>
+                        <span class="z-name">YENGEÇ</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♌', 'Aslan', '23 Tem–22 Ağu', 'Leo')">
+                        <span class="z-symbol">♌</span>
+                        <span class="z-name">ASLAN</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♍', 'Başak', '23 Ağu–22 Eyl', 'Virgo')">
+                        <span class="z-symbol">♍</span>
+                        <span class="z-name">BAŞAK</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♎', 'Terazi', '23 Eyl–23 Eki', 'Libra')">
+                        <span class="z-symbol">♎</span>
+                        <span class="z-name">TERAZİ</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♏', 'Akrep', '24 Eki–21 Kas', 'Scorpio')">
+                        <span class="z-symbol">♏</span>
+                        <span class="z-name">AKREP</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♐', 'Yay', '22 Kas–21 Ara', 'Sagittarius')">
+                        <span class="z-symbol">♐</span>
+                        <span class="z-name">YAY</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♑', 'Oğlak', '22 Ara–19 Oca', 'Capricorn')">
+                        <span class="z-symbol">♑</span>
+                        <span class="z-name">OĞLAK</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♒', 'Kova', '20 Oca–18 Şub', 'Aquarius')">
+                        <span class="z-symbol">♒</span>
+                        <span class="z-name">KOVA</span>
+                    </div>
+                    <div class="zodiac-item" onclick="selectZodiac(this, '♓', 'Balık', '19 Şub–20 Mar', 'Pisces')">
+                        <span class="z-symbol">♓</span>
+                        <span class="z-name">BALIK</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Horoscope Detail -->
+            <div id="horoscopeDetail" class="hidden mx-5 mt-4 rounded-xl p-4 mb-6" style="background: linear-gradient(135deg, rgba(0,200,255,0.08), rgba(0,150,200,0.05)); border: 1px solid rgba(0, 220, 255, 0.3);">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-3xl" id="hSymbol"></span>
+                    <div>
+                        <h3 class="font-decorative text-mystic-gold text-base" id="hName"></h3>
+                        <p class="text-gray-500 text-xs font-mono" id="hDates"></p>
+                    </div>
+                </div>
+                <p class="text-gray-300 text-sm font-body italic leading-relaxed mb-3" id="hText"></p>
+                
+                <!-- Aspects -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-500">Aşk</span>
+                            <span class="text-mystic-gold" id="aLoveVal">85%</span>
+                        </div>
+                        <div class="aspect-bar"><div class="aspect-fill" id="aLoveBar" style="width: 85%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-500">Kariyer</span>
+                            <span class="text-mystic-cyan" id="aCareerVal">70%</span>
+                        </div>
+                        <div class="aspect-bar"><div class="aspect-fill" id="aCareerBar" style="width: 70%; background: linear-gradient(90deg, #00A0A0, #00F0FF);"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-500">Sağlık</span>
+                            <span class="text-mystic-purple" id="aHealthVal">90%</span>
+                        </div>
+                        <div class="aspect-bar"><div class="aspect-fill" id="aHealthBar" style="width: 90%; background: linear-gradient(90deg, #8020A0, #C026D3);"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-gray-500">Para</span>
+                            <span class="text-mystic-gold" id="aMoneyVal">60%</span>
+                        </div>
+                        <div class="aspect-bar"><div class="aspect-fill" id="aMoneyBar" style="width: 60%"></div></div>
+                    </div>
+                </div>
+                
+                <!-- Lucky Numbers -->
+                <div class="mt-3 pt-3 border-t border-mystic-gold/20">
+                    <p class="text-gray-500 text-xs mb-2 font-display tracking-wider">ŞANSLI SAYILAR</p>
+                    <div class="flex gap-2 justify-center">
+                        <div class="lucky-number text-xs w-8 h-8">3</div>
+                        <div class="lucky-number text-xs w-8 h-8">7</div>
+                        <div class="lucky-number text-xs w-8 h-8">12</div>
+                        <div class="lucky-number text-xs w-8 h-8">21</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: SHOP ==================== -->
+        <div id="screen-shop" class="screen">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="screen-header">
+                <div class="icon animate-float">🪙</div>
+                <h1>Sikke Yükle</h1>
+                <p>Mevcut bakiye: <span id="shopTokenDisplay" class="text-mystic-gold font-mono">150</span> 🪙</p>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Packages -->
+            <div class="px-5">
+                <div class="token-package" onclick="buyTokens(50, 14.99)">
+                    <div class="text-3xl">🪙</div>
+                    <div class="flex-1">
+                        <div class="font-decorative text-white text-sm">50 Sikke</div>
+                        <div class="text-gray-500 text-xs">Başlangıç paketi</div>
+                    </div>
+                    <div class="font-mono text-mystic-gold font-bold">₺14.99</div>
+                </div>
+                
+                <div class="token-package featured" onclick="buyTokens(150, 34.99)">
+                    <div class="package-badge">POPÜLER</div>
+                    <div class="text-3xl">💰</div>
+                    <div class="flex-1">
+                        <div class="font-decorative text-white text-sm">150 Sikke</div>
+                        <div class="text-gray-500 text-xs">Standart paket · 4-5 fal</div>
+                    </div>
+                    <div class="font-mono text-mystic-gold font-bold">₺34.99</div>
+                </div>
+                
+                <div class="token-package" onclick="buyTokens(350, 69.99)">
+                    <div class="text-3xl">🏺</div>
+                    <div class="flex-1">
+                        <div class="font-decorative text-white text-sm">350 Sikke</div>
+                        <div class="text-gray-500 text-xs">Değer paketi · 10+ fal</div>
+                    </div>
+                    <div class="font-mono text-mystic-gold font-bold">₺69.99</div>
+                </div>
+                
+                <div class="token-package" onclick="buyTokens(800, 129.99)">
+                    <div class="text-3xl">👑</div>
+                    <div class="flex-1">
+                        <div class="font-decorative text-white text-sm">800 Sikke</div>
+                        <div class="text-gray-500 text-xs">Kaderin efendisi · Sınırsız</div>
+                    </div>
+                    <div class="font-mono text-mystic-gold font-bold">₺129.99</div>
+                </div>
+            </div>
+            
+            <div class="px-5 mt-6 text-center">
+                <p class="text-gray-600 text-xs leading-relaxed">
+                    🔒 Güvenli ödeme · App Store üzerinden işlenir<br>
+                    Sikkeler hiç sona ermez · İade politikası geçerlidir
+                </p>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: HISTORY ==================== -->
+        <div id="screen-history" class="screen">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="pt-28 px-5">
+                <h1 class="font-decorative text-xl text-mystic-gold tracking-wider mb-1">Fal Geçmişim</h1>
+                <p class="text-gray-500 text-xs font-body italic">Kader günlüğünüz</p>
+            </div>
+            
+            <!-- Stats -->
+            <div class="px-5 mt-4 grid grid-cols-3 gap-2">
+                <div class="glass-panel rounded-xl p-3 text-center">
+                    <div class="font-mono text-lg text-mystic-gold font-bold" id="historyCount">0</div>
+                    <div class="text-gray-500 text-[10px]">Toplam Fal</div>
+                </div>
+                <div class="glass-panel rounded-xl p-3 text-center">
+                    <div class="font-mono text-lg text-mystic-cyan font-bold" id="historyTokens">150</div>
+                    <div class="text-gray-500 text-[10px]">Kalan Sikke</div>
+                </div>
+                <div class="glass-panel rounded-xl p-3 text-center">
+                    <div class="font-mono text-lg text-mystic-purple font-bold">7</div>
+                    <div class="text-gray-500 text-[10px]">Günlük Seri</div>
+                </div>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- History List -->
+            <div class="px-5" id="historyList">
+                <div class="text-center py-12 text-gray-500 font-body italic text-sm" id="emptyHistory">
+                    Henüz fal bakmadınız.<br>İlk falınıza bakmaya başlayın!
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: AD / LOADING ==================== -->
+        <div id="screen-ad" class="screen no-scroll">
+            <div class="flex-1 flex flex-col items-center justify-center px-6 text-center">
+                <div class="loading-orb mb-6"></div>
+                <h2 class="font-decorative text-lg text-mystic-gold tracking-wider mb-3" id="adTitle">Falınız Hazırlanıyor</h2>
+                <p class="text-gray-400 text-xs font-body italic mb-6 leading-relaxed" id="adText">
+                    Yıldızların hizalanmasını bekliyoruz.<br>Kahin enerjinizi okuyor...
+                </p>
+                
+                <!-- Ad Container -->
+                <div class="ad-container w-full max-w-xs">
+                    <div class="ad-placeholder">
+                        <span class="text-4xl">📺</span>
+                        <span class="text-gray-500 text-sm font-body">Reklam</span>
+                    </div>
+                    <p class="text-gray-400 text-xs font-body mb-3">Kısa bir reklam molamız var</p>
+                    <div class="ad-progress">
+                        <div class="ad-progress-fill" id="adProgress" style="width: 0%"></div>
+                    </div>
+                    <p class="text-mystic-gold text-xs font-mono mt-2"><span id="adSeconds">5</span> saniye</p>
+                </div>
+                
+                <button class="btn-secondary mt-6 hidden" id="adSkipBtn" onclick="skipAd()">
+                    REKLAMI ATLA 🪙 5
+                </button>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: RESULT ==================== -->
+        <div id="screen-result" class="screen">
+            <button class="back-btn" onclick="router.navigate('home')">← Geri</button>
+            
+            <div class="pt-20 px-5 text-center">
+                <div class="text-4xl mb-2 animate-float" id="resultIcon">☕</div>
+                <h1 class="font-decorative text-lg text-mystic-gold tracking-wider mb-1" id="resultTitle">Kahve Falınız</h1>
+                <p class="text-gray-500 text-xs font-mono" id="resultDate">8 Mart 2025</p>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Parchment Result -->
+            <div class="parchment-result mx-5 relative">
+                <div class="relative z-10">
+                    <div class="flex items-center gap-2 mb-3 text-mystic-goldDim text-xs font-mono tracking-widest uppercase">
+                        <span>✦</span>
+                        <span>Kaderin Sesi</span>
+                        <span>✦</span>
+                    </div>
+                    
+                    <p class="text-gray-200 text-sm font-body italic leading-relaxed mb-4" id="resultText">
+                        Fincanınızda derin bir geçiş dönemi okudum. Sol taraftaki kuş figürü özgürlüğe olan derin özleminizi yansıtıyor. Fincanın dibindeki yol çizgisi önünüzdeki yolculuğa işaret ediyor — bu yolculuk içsel bir dönüşüm. Üst kenardaki çiçek motifi ise beklenmedik bir müjdenin habercisi.
+                    </p>
+                    
+                    <div class="border-t border-mystic-gold/20 pt-3 flex items-center gap-3">
+                        <div class="text-xl">🔮</div>
+                        <div>
+                            <div class="text-white text-sm font-medium">Nexlify Mystic</div>
+                            <div class="text-gray-500 text-xs font-body italic">Yapay Zeka Kahini</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="mt-4 space-y-3">
+                <button class="btn-primary" onclick="saveResult()">
+                    ✦ KADER GÜNLÜĞÜNE KAYDET
+                </button>
+                <button class="btn-secondary" onclick="shareResult()">
+                    ↗ PAYLAŞ
+                </button>
+            </div>
+            
+            <!-- Warning -->
+            <div class="px-5 mt-4 text-center">
+                <p class="text-gray-600 text-[10px] font-mono leading-relaxed">
+                    Bu fal kişisel rehberlik amaçlıdır.<br>Tıbbi/hukuki karar almada kullanmayınız.
+                </p>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: RESULT TAROT ==================== -->
+        <div id="screen-result-tarot" class="screen">
+            <div class="pt-20 px-5 text-center">
+                <div class="text-4xl mb-2 animate-float" id="tarotResultIcon">🃏</div>
+                <h1 class="font-decorative text-lg text-mystic-gold tracking-wider mb-1">Tarot Falınız</h1>
+                <p class="text-gray-500 text-xs font-mono" id="tarotResultDate"></p>
+            </div>
+            
+            <div class="ornament">✦ ✧ ✦</div>
+            
+            <!-- Selected Cards Display -->
+            <div class="flex justify-center gap-4 px-5 mb-4" id="tarotResultCards"></div>
+            
+            <!-- Parchment Result -->
+            <div class="parchment-result mx-5 relative">
+                <div class="relative z-10">
+                    <div class="flex items-center gap-2 mb-3 text-mystic-goldDim text-xs font-mono tracking-widest uppercase">
+                        <span>✦</span>
+                        <span>Kaderin Sesi</span>
+                        <span>✦</span>
+                    </div>
+                    <p class="text-gray-200 text-sm font-body italic leading-relaxed mb-4" id="tarotResultText"></p>
+                    <div class="border-t border-mystic-gold/20 pt-3 flex items-center gap-3">
+                        <div class="text-xl">🔮</div>
+                        <div>
+                            <div class="text-white text-sm font-medium">Nexlify Mystic</div>
+                            <div class="text-gray-500 text-xs font-body italic">Yapay Zeka Kahini</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 space-y-3">
+                <button class="btn-primary" onclick="saveTarotResult()">✦ KADER GÜNLÜĞÜNE KAYDET</button>
+                <button class="btn-secondary" onclick="shareResult()">↗ PAYLAŞ</button>
+            </div>
+            
+            <div class="px-5 mt-4 mb-6 text-center">
+                <p class="text-gray-600 text-[10px] font-mono leading-relaxed">
+                    Bu fal kişisel rehberlik amaçlıdır.<br>Tıbbi/hukuki karar almada kullanmayınız.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation - 3 Items -->
+        <div class="bottom-nav">
+            <button class="nav-btn active" onclick="router.navigate('home')" id="nav-home">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Ana Sayfa</span>
+            </button>
+            <button class="nav-btn" onclick="router.navigate('history')" id="nav-history">
+                <span class="nav-icon">📜</span>
+                <span class="nav-label">Geçmiş</span>
+            </button>
+            <button class="nav-btn" onclick="router.navigate('shop')" id="nav-shop">
+                <span class="nav-icon">🪙</span>
+                <span class="nav-label">Sikke</span>
+            </button>
+        </div>
+        
+        <!-- Home Indicator -->
+        <div class="home-indicator"></div>
+        
+        <!-- Global Floating Back Button (for all non-home screens) -->
+        <button id="globalBackBtn" onclick="globalBack()" style="display:none; position:absolute; top:60px; left:20px; height:36px; padding:0 14px; background:rgba(201,162,39,0.12); border:1px solid rgba(201,162,39,0.25); border-radius:10px; font-size:12px; color:#A09070; cursor:pointer; z-index:300; align-items:center; gap:6px; font-family:'Space Grotesk',sans-serif; font-weight:500; letter-spacing:0.5px; transition:all 0.2s; white-space:nowrap;">← Geri</button>
+        
+        <!-- Toast -->
+        <div id="toast" class="toast"></div>
+        
+        <!-- Modal -->
+        <div id="modal" class="modal-overlay" onclick="if(event.target === this) closeModal()">
+            <div class="modal-content" id="modalContent">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // NEXLIFY MYSTIC - CORE SYSTEM
+        // ==========================================
+        
+        // State Management
+        const state = {
+            tokens: 150,
+            readings: [],
+            dailyReadings: {
+                coffee: false,
+                tarot: false,
+                palm: false,
+                water: false,
+                angel: false,
+                crystal: false,
+                dream: false
+            },
+            currentReading: null,
+            selectedZodiac: localStorage.getItem('selectedZodiac') || null,
+            tarotCards: [],
+            tarotSlots: [null, null, null],
+            privacyMode: false,
+            adSkipping: false,
+            coffeeImages: { cup1: null, cup2: null, plate: null }
+        };
+        
+        // Costs
+        const costs = {
+            coffee: 30,
+            tarot: 25,
+            palm: 40,
+            water: 35,
+            angel: 45,
+            crystal: 35,
+            dream: 20
+        };
+        
+        // Tarot Deck
+        const tarotDeck = [
+            { emoji: '🌟', name: 'Yıldız', keyword: 'Umut · Rehberlik' },
+            { emoji: '🌙', name: 'Ay', keyword: 'Sırlar · Sezgi' },
+            { emoji: '☀️', name: 'Güneş', keyword: 'Başarı · Neşe' },
+            { emoji: '⚡', name: 'Kule', keyword: 'Değişim · Uyanış' },
+            { emoji: '⚖️', name: 'Adalet', keyword: 'Denge · Hakikat' },
+            { emoji: '🔮', name: 'Büyücü', keyword: 'Güç · İrade' },
+            { emoji: '👑', name: 'İmparatoriçe', keyword: 'Bereket · Yaratım' },
+            { emoji: '🏆', name: 'İmparator', keyword: 'Otorite · Yapı' },
+            { emoji: '🌊', name: 'Yüksek Rahibe', keyword: 'Gizem · Bilgelik' },
+            { emoji: '🌹', name: 'Aşıklar', keyword: 'Bağ · Seçim' },
+            { emoji: '🕊️', name: 'Ahmak', keyword: 'Özgürlük · Cesaret' },
+            { emoji: '🌀', name: 'Kader', keyword: 'Döngü · Fırsat' },
+            { emoji: '🦁', name: 'Güç', keyword: 'Cesaret · Sabır' },
+            { emoji: '🧘', name: 'Münzevi', keyword: 'Arayış · Sessizlik' },
+            { emoji: '💀', name: 'Ölüm', keyword: 'Dönüşüm · Son' },
+            { emoji: '😇', name: 'Yargı', keyword: 'Çağrı · Yeniden Doğuş' },
+            { emoji: '🌈', name: 'Dünya', keyword: 'Tamamlanma · Bütünlük' },
+            { emoji: '🤝', name: 'Ilımlılık', keyword: 'Uyum · Sabır' },
+            { emoji: '😈', name: 'Şeytan', keyword: 'Bağımlılık · Özgürlük' },
+            { emoji: '🎠', name: 'Savaş Arabası', keyword: 'Zafer · Kontrol' }
+        ];
+        
+        // Zodiac Texts
+        const zodiacTexts = {
+            'Aries': 'Mars size bugün güçlü bir enerji gönderiyor. Uzun süredir ertelediğiniz bir kararı almak için doğru zaman.',
+            'Taurus': 'Venüs gökyüzündeki yolculuğunda size bereket saçıyor. Maddi konularda temkinli olun.',
+            'Gemini': 'Merkür\'ün etkisiyle iletişim gücünüz zirveye çıkıyor. Yaratıcı projeler için mükemmel bir dönem.',
+            'Cancer': 'Ay\'ın etkisiyle sezgileriniz son derece güçlü. Duygusal konularda aceleci kararlar almaktan kaçının.',
+            'Leo': 'Güneş size bugün şans getiriyor. Kendinizi ifade etmekten çekinmeyin.',
+            'Virgo': 'Merkür\'ün rehberliğinde detaylara olan dikkatiniz sizi öne çıkarıyor.',
+            'Libra': 'Venüs ilişkilerinize olumlu bir enerji katıyor. Denge arayışınız bugün meyvesini verecek.',
+            'Scorpio': 'Plüton\'un dönüşümcü enerjisi sizi derinden etkiliyor. İçgüdülerinize güvenin.',
+            'Sagittarius': 'Jüpiter\'in genişletici etkisiyle ufkunuz açılıyor. Öğrenme tutkusu sizi yeni kapılara götürecek.',
+            'Capricorn': 'Satürn\'ün disiplinli etkisiyle uzun vadeli planlarınız şekilleniyor.',
+            'Aquarius': 'Uranüs\'ün özgürlükçü enerjisi sizi benzersiz çözümlere yöneltiyor.',
+            'Pisces': 'Neptün\'ün mistik etkisiyle rüyalarınız anlam kazanıyor. Spiritüel uygulamalarınızı ihmal etmeyin.'
+        };
+        
+        // Reading Results Templates
+        const readingResults = {
+            coffee: [
+                'Fincanınızda derin bir geçiş dönemi okudum. Sol taraftaki kuş figürü özgürlüğe olan derin özleminizi yansıtıyor. Fincanın dibindeki yol çizgisi önünüzdeki yolculuğa işaret ediyor — bu yolculuk içsel bir dönüşüm. Üst kenardaki çiçek motifi ise beklenmedik bir müjdenin habercisi.',
+                'Telvenizde beliren at figürü hızlı bir değişimi işaret ediyor. Fincanın sağ tarafındaki dağ sembolü aşmanız gereken zorlukları, dibindeki balık ise bereketi temsil ediyor. Maddi konularda 40 gün içinde olumlu gelişmeler bekliyorum.',
+                'Fincanınızda bir kalp ve yanında yılan figürü dikkatimi çekti. Bu, tutkulu bir ilişkinin hem zehir hem de panzehir olabileceğini gösteriyor. Dikkatli olun, ama korkmayın. Fincanın kenarındaki kapı sembolü yeni bir başlangıca işaret ediyor.'
+            ],
+            tarot: [
+                'Geçmişten gelen bir hikaye tamamlanıyor. Şimdiki anın fırsatlarını değerlendirmek için bilinçdışınızdaki güce dokunun. Gelecek parlak görünüyor — cesaretinizi koruyun.',
+                'Eski kalıpların yerini yeni bir anlayış alıyor. Şimdiki kaostan bir düzen doğmak üzere. Yıldızlar ileriki aylarda büyük bir dönüşümü işaret ediyor.',
+                'Geçmişte bıraktığınız bir şeyin özgürlüğünü bulmanın zamanı geldi. Mevcut dengeniz kırılgan ama güçlü. Önünüzdeki yol berrak — güvenle adım atın.'
+            ],
+            palm: [
+                'Kalp çizginiz derin ve net — güçlü duygusal bağlar kuruyorsunuz. Kader çizginizdeki kırılma noktası yakında önemli bir dönüşüm yaşayacağınızı gösteriyor. Beyin çizginiz analitik düşünce yapınızı ortaya koyuyor.',
+                'Avuç içindeki ay şekli sezgisel güçlerinizin yüksek olduğunu gösteriyor. Yaşam çizginiz uzun ve sağlıklı. Başarı çizginiz orta yaş sonrası yükselişe geçecek.',
+                'El falınızda nadir görülen bir mücevher şekli var. Bu, özel bir kaderi işaret eder. Hem mantık hem de sezgi sizin için güçlü araçlar olacak.'
+            ],
+            water: [
+                'Su yüzeyinde beliren dağ sembolü karşınızdaki engelleri, etrafındaki daire ise bu engelleri aşacak gücünüzü temsil ediyor. Sabır ve süreklilik sizi başarıya götürecek.',
+                'Damlanın oluşturduğu dalgalarda bir kuş figürü gördüm. Bu, özgürlüğe giden yolunuzun su gibi akışkan olması gerektiğini söylüyor. Direnmek yerine akışa bırakın.',
+                'Su yüzeyinde beliren ayna görüntüsü içsel bir arayışa işaret ediyor. Dış dünyada aradığınız cevaplar aslında içinizde. Meditasyon yapmak için ideal zaman.'
+            ],
+            angel: [
+                'Melekler size sabır mesajı gönderiyor. Acele etmeyin, doğru zaman kendiliğinden gelecek. Koruyucu meleğiniz bu dönemde sizi özellikle yakından izliyor.',
+                'İlham meleği sizinle çalışmak istiyor. Yaratıcı projelere yönelin, özellikle yazı ve sanat alanlarında. Evren size özel mesajlar göndermeye hazır.',
+                'Şifa meleği enerjinizi temizliyor. Geçmiş yaraların iyileşme zamanı geldi. Affetmek sizi özgür kılacak — başkalarını değil, kendinizi.'
+            ],
+            crystal: [
+                'Kristal kürede beliren mor ışık spiritüel bir uyanışı işaret ediyor. Üçüncü gözünüz açılmak üzere. Rüyalarınıza dikkat edin, semboller size rehberlik edecek.',
+                'Kürede görünen altın tozları maddi bolluğun habercisi. Ancak bu bolluk geleneksel yollarla değil, tutkunuzu takip ederek gelecek.',
+                'Kristal içindeki bulutlar yakında netleşecek bir durumu temsil ediyor. Şu an kararsız hissetseniz de, 7 gün içinde her şey yerine oturacak.'
+            ],
+            dream: [
+                'Gördüğünüz uçan balina bilinçaltınızın özgürlük arayışını temsil ediyor. Okyanus derinlikleri henüz keşfetmediğiniz duygusal katmanlarınızı simgeliyor. Bu rüya, kendinizi sınırlayan inançlardan kurtulma zamanının geldiğini söylüyor.',
+                'Rüyanızdaki düşen diş kayb ve dönüşüm korkularınızı temsil ediyor. Ancak bu düşüş aslında yeni bir büyüme için gereken alanın açılması. Endişelenmeyin, doğal bir süreç.',
+                'Rüyanızda görülen eski ev çocukluk travmalarınızın çözülme sürecinde olduğunu gösteriyor. İç çocuğunuzla konuşma zamanı. Şifa mümkün ve yakın.'
+            ]
+        };
+        
+        // Router
+        // Screens that use global floating back btn (scrollable ones where position:absolute btn scrolls away)
+        const scrollableScreens = ['coffee', 'history', 'shop', 'result', 'horoscope', 'dream'];
+        // Global back destinations
+        const backDestinations = {
+            coffee: 'home', history: 'home', shop: 'home', result: 'home',
+            horoscope: 'home', dream: 'home', tarot: 'home', palm: 'home',
+            water: 'home', angel: 'home', crystal: 'home', 'result-tarot': 'tarot'
+        };
+        
+        const router = {
+            navigate: function(screen) {
+                // Hide all screens
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                
+                // Show target screen
+                const target = document.getElementById('screen-' + screen);
+                if (target) {
+                    target.classList.add('active');
+                    target.scrollTop = 0;
+                }
+                
+                // Manage global back button
+                const globalBtn = document.getElementById('globalBackBtn');
+                if (screen === 'home' || screen === 'ad') {
+                    globalBtn.style.display = 'none';
+                } else {
+                    globalBtn.style.display = 'flex';
+                    globalBtn._dest = backDestinations[screen] || 'home';
+                }
+                
+                // Update nav
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                const navBtn = document.getElementById('nav-' + screen);
+                if (navBtn) navBtn.classList.add('active');
+                
+                // Update displays
+                if (screen === 'home') {
+                    updateTokenDisplay();
+                    updateHomeZodiac();
+                }
+                if (screen === 'shop') document.getElementById('shopTokenDisplay').textContent = state.tokens;
+                if (screen === 'history') updateHistoryScreen();
+                if (screen === 'tarot') initTarotDeck();
+                if (screen === 'horoscope' && state.selectedZodiac) restoreZodiacSelection();
+            }
+        };
+        window.router = router;
+        
+        function globalBack() {
+            const btn = document.getElementById('globalBackBtn');
+            const dest = btn._dest || 'home';
+            router.navigate(dest);
+        }
+        window.globalBack = globalBack;
+        
+        // Initialize
+        function init() {
+            generateStars();
+            updateClock();
+            updateDate();
+            updateTokenDisplay();
+            loadState();
+            initTarotDeck();
+            
+            // Clock interval
+            setInterval(updateClock, 1000);
+            
+            // Check daily reset
+            checkDailyReset();
+            
+            // Update home zodiac display
+            updateHomeZodiac();
+        }
+        
+        // Generate Stars
+        function generateStars() {
+            const field = document.getElementById('starField');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.opacity = Math.random() * 0.5 + 0.2;
+                const size = Math.random() * 2 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                field.appendChild(star);
+            }
+        }
+        
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const h = now.getHours().toString().padStart(2, '0');
+            const m = now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('clock').textContent = h + ':' + m;
+        }
+        
+        // Date
+        function updateDate() {
+            const now = new Date();
+            const months = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+            document.getElementById('todayDate').textContent = now.getDate() + ' ' + months[now.getMonth()];
+        }
+        
+        // Token Display
+        function updateTokenDisplay() {
+            document.getElementById('tokenDisplay').textContent = state.tokens;
+            document.getElementById('shopTokenDisplay').textContent = state.tokens;
+            document.getElementById('historyTokens').textContent = state.tokens;
+        }
+        
+        // Update Home Zodiac Display
+        function updateHomeZodiac() {
+            if (state.selectedZodiac) {
+                document.getElementById('homeZodiacIcon').textContent = state.selectedZodiac.symbol;
+                document.getElementById('homeZodiacName').textContent = state.selectedZodiac.name;
+            }
+        }
+        
+        // Start Reading
+        function startReading(type) {
+            state.currentReading = type;
+            
+            // Check if daily free reading available
+            if (!state.dailyReadings[type]) {
+                // First reading of the day - show ad
+                showAd(type);
+            } else {
+                // Subsequent reading - check tokens
+                if (state.tokens < costs[type]) {
+                    showToast('Yetersiz sikke!');
+                    setTimeout(() => router.navigate('shop'), 1000);
+                    return;
+                }
+                // Deduct tokens and proceed
+                state.tokens -= costs[type];
+                updateTokenDisplay();
+                proceedToRitual(type);
+            }
+        }
+        window.startReading = startReading;
+        
+        // Show Ad
+        function showAd(type) {
+            router.navigate('ad');
+            
+            const titles = {
+                coffee: 'Kahve Falınız Hazırlanıyor',
+                tarot: 'Tarot Kartlarınız Seçiliyor',
+                palm: 'El Çizgileriniz Analiz Ediliyor',
+                water: 'Su Falınız Hazırlanıyor',
+                angel: 'Meleklerden Rehberlik İsteniyor',
+                crystal: 'Kristal Küre Parıldıyor',
+                dream: 'Rüyanız Yorumlanıyor'
+            };
+            
+            const texts = {
+                coffee: 'Fincanınızdaki semboller inceleniyor...',
+                tarot: 'Kartlar karılıyor ve enerjinize uyum sağlanıyor...',
+                palm: 'El çizgileriniz taranıyor...',
+                water: 'Su yüzeyindeki semboller belirleniyor...',
+                angel: 'Melek kartlarından mesaj alınıyor...',
+                crystal: 'Kristal kürenin derinlikleri görülüyor...',
+                dream: 'Rüya sembolleri analiz ediliyor...'
+            };
+            
+            document.getElementById('adTitle').textContent = titles[type] || 'Falınız Hazırlanıyor';
+            document.getElementById('adText').innerHTML = texts[type] || 'Enerjiniz okunuyor...';
+            
+            // Progress animation
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 2;
+                document.getElementById('adProgress').style.width = progress + '%';
+                document.getElementById('adSeconds').textContent = Math.ceil((100 - progress) / 20);
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    state.dailyReadings[type] = true;
+                    saveState();
+                    proceedToRitual(type);
+                }
+            }, 100);
+            
+            // Show skip button after 2 seconds
+            setTimeout(() => {
+                document.getElementById('adSkipBtn').classList.remove('hidden');
+            }, 2000);
+        }
+        
+        // Skip Ad
+        function skipAd() {
+            if (state.tokens < 5) {
+                showToast('Atlama için 5 sikke gerekli!');
+                return;
+            }
+            state.tokens -= 5;
+            updateTokenDisplay();
+            state.dailyReadings[state.currentReading] = true;
+            saveState();
+            proceedToRitual(state.currentReading);
+        }
+        window.skipAd = skipAd;
+        
+        // Proceed to Ritual
+        function proceedToRitual(type) {
+            switch(type) {
+                case 'coffee':
+                    router.navigate('coffee');
+                    break;
+                case 'tarot':
+                    router.navigate('tarot');
+                    break;
+                case 'palm':
+                    router.navigate('palm');
+                    break;
+                case 'water':
+                    router.navigate('water');
+                    break;
+                case 'angel':
+                    router.navigate('angel');
+                    break;
+                case 'crystal':
+                    router.navigate('crystal');
+                    break;
+                case 'dream':
+                    router.navigate('dream');
+                    break;
+            }
+        }
+        
+        // Coffee Upload
+        // YENİ KOD:
+function handleCoffeeUpload(event, type) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        if (type === 'cup') {
+            // İlk boş fincan slotunu bul
+            if (!state.coffeeImages.cup1) {
+                state.coffeeImages.cup1 = e.target.result;
+                updateCupIndicators();
+                // İkinci fotoğraf için input'u sıfırla
+                document.getElementById('coffeeInput').value = '';
+                showToast('1. fincan fotoğrafı yüklendi. 2. açıdan çekin 📸');
+            } else if (!state.coffeeImages.cup2) {
+                state.coffeeImages.cup2 = e.target.result;
+                updateCupIndicators();
+                document.getElementById('coffeePreviewImg').src = e.target.result;
+                document.getElementById('coffeePreview').classList.remove('hidden');
+                document.getElementById('coffeeUpload').classList.add('hidden');
+                showToast('Fincan fotoğrafları tamam! ✓');
+            }
+        } else {
+            state.coffeeImages.plate = e.target.result;
+            document.getElementById('platePreviewImg').src = e.target.result;
+            document.getElementById('platePreview').classList.remove('hidden');
+            document.getElementById('plateUpload').classList.add('hidden');
+            updatePlateIndicators();
+            showToast('Tabak fotoğrafı tamam! ✓');
+        }
+        checkCoffeeReady();
+    };
+    reader.readAsDataURL(file);
+}
+
+function updateCupIndicators() {
+    const ind1 = document.getElementById('cupIndicator1');
+    const ind2 = document.getElementById('cupIndicator2');
+    
+    if (state.coffeeImages.cup1) {
+        ind1.style.background = '#C9A227';
+        ind1.style.boxShadow = '0 0 8px #C9A227';
+    }
+    if (state.coffeeImages.cup2) {
+        ind2.style.background = '#C9A227';
+        ind2.style.boxShadow = '0 0 8px #C9A227';
+    }
+}
+
+function updatePlateIndicators() {
+    const ind1 = document.getElementById('plateIndicator1');
+    if (state.coffeeImages.plate) {
+        ind1.style.background = '#C9A227';
+        ind1.style.boxShadow = '0 0 8px #C9A227';
+    }
+}
+
+function checkCoffeeReady() {
+    // 2 fincan + 1 tabak = 3 fotoğraf
+    if (state.coffeeImages.cup1 && state.coffeeImages.cup2 && state.coffeeImages.plate) {
+        document.getElementById('coffeeStartBtn').disabled = false;
+        showToast('Tüm fotoğraflar hazır! Fal başlatabilirsiniz ✨');
+    }
+}
+        
+        // Start Coffee Ritual
+        function startCoffeeRitual() {
+            setTimeout(() => {
+                showResult('coffee');
+            }, 2000);
+            showToast('Falınız hazırlanıyor...');
+        }
+        window.startCoffeeRitual = startCoffeeRitual;
+        
+        // TAROT TAP-TO-SELECT SYSTEM
+        let draggedCard = null;
+let draggedCardData = null;
+let dragGhost = null;
+
+function initTarotDeck() {
+    const deck = document.getElementById('tarotDeck');
+    deck.innerHTML = '';
+
+    const extendedDeck = [];
+    for (let i = 0; i < 2; i++) { extendedDeck.push(...tarotDeck); }
+    const shuffled = extendedDeck.sort(() => Math.random() - 0.5).slice(0, 25);
+
+    shuffled.forEach((card, index) => {
+        const cardEl = document.createElement('div');
+        cardEl.className = 'tarot-deck-card';
+        cardEl.style.setProperty('--index', index % 10);
+        cardEl.dataset.cardData = JSON.stringify(card);
+        cardEl.dataset.cardId = index;
+        cardEl.draggable = true;
+
+        // ── Desktop: HTML5 drag & drop (slot'a bırakma) ──
+        cardEl.addEventListener('dragstart', (e) => {
+            draggedCard = cardEl;
+            draggedCardData = card;
+            cardEl.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', JSON.stringify(card));
+        });
+        cardEl.addEventListener('dragend', () => {
+            cardEl.classList.remove('dragging');
+            draggedCard = null;
+            draggedCardData = null;
+        });
+
+        // ── Touch olayları ──
+        // Mantık: yatay hareket → scroll, dikey hareket → slot drag, kısa tap → select
+        let tStartX = 0, tStartY = 0;
+        let tMoved = false;
+        let tDragActive = false;
+        let tGhost = null;
+        let tTimer = null;
+        let tDirection = null; // 'x' | 'y' | null
+
+        cardEl.addEventListener('touchstart', (e) => {
+            if (cardEl.classList.contains('selected')) return;
+            const t = e.touches[0];
+            tStartX = t.clientX;
+            tStartY = t.clientY;
+            tMoved = false;
+            tDragActive = false;
+            tDirection = null;
+            if (tGhost) { tGhost.remove(); tGhost = null; }
+
+            // 250ms basılı tutulursa drag aktif
+            tTimer = setTimeout(() => {
+                if (!tMoved && tDirection !== 'x') {
+                    tDragActive = true;
+                    cardEl.classList.add('dragging');
+                    tGhost = cardEl.cloneNode(true);
+                    tGhost.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;width:65px;height:95px;opacity:0.9;transform:scale(1.15) rotate(0deg);transition:none;';
+                    tGhost.style.left = (tStartX - 32) + 'px';
+                    tGhost.style.top  = (tStartY - 47) + 'px';
+                    document.body.appendChild(tGhost);
+                }
+            }, 250);
+        }, { passive: true });
+
+        cardEl.addEventListener('touchmove', (e) => {
+            const t = e.touches[0];
+            const dx = t.clientX - tStartX;
+            const dy = t.clientY - tStartY;
+            const adx = Math.abs(dx), ady = Math.abs(dy);
+
+            // İlk harekette yönü belirle
+            if (!tDirection && (adx > 5 || ady > 5)) {
+                tMoved = true;
+                tDirection = adx > ady ? 'x' : 'y';
+                if (tDirection === 'x') {
+                    // Yatay → timer iptal, native scroll devam et
+                    clearTimeout(tTimer);
+                    if (tGhost) { tGhost.remove(); tGhost = null; }
+                    tDragActive = false;
+                }
+            }
+
+            if (tDragActive && tGhost) {
+                e.preventDefault(); // sadece drag modunda sayfayı kilitle
+                tGhost.style.left = (t.clientX - 32) + 'px';
+                tGhost.style.top  = (t.clientY - 47) + 'px';
+                document.querySelectorAll('.tarot-slot').forEach(slot => {
+                    const r = slot.getBoundingClientRect();
+                    slot.classList.toggle('drag-over',
+                        t.clientX >= r.left && t.clientX <= r.right &&
+                        t.clientY >= r.top  && t.clientY <= r.bottom);
+                });
+            }
+        }, { passive: false });
+
+        cardEl.addEventListener('touchend', (e) => {
+            clearTimeout(tTimer);
+            const t = e.changedTouches[0];
+
+            if (tGhost) { tGhost.remove(); tGhost = null; }
+            cardEl.classList.remove('dragging');
+
+            if (tDragActive) {
+                // Slot'a bırak
+                document.querySelectorAll('.tarot-slot').forEach((slot, idx) => {
+                    const r = slot.getBoundingClientRect();
+                    if (t.clientX >= r.left && t.clientX <= r.right &&
+                        t.clientY >= r.top  && t.clientY <= r.bottom) {
+                        if (!state.tarotSlots[idx]) {
+                            fillSlot(idx, card);
+                            cardEl.classList.add('selected');
+                        }
+                    }
+                    slot.classList.remove('drag-over');
+                });
+            } else if (!tMoved) {
+                // Tap → sırayla ekle
+                if (!cardEl.classList.contains('selected')) {
+                    selectTarotCard(card, cardEl);
+                }
+            }
+
+            tDragActive = false;
+            tDirection = null;
+        }, { passive: true });
+
+        deck.appendChild(cardEl);
+    });
+
+    // ── Desktop: fare ile scroll (document üzerinde dinle ki dışa çıkınca kesilmesin) ──
+    let mDown = false, mStartX = 0, mScrollX = 0, mDragged = false;
+
+    deck.addEventListener('mousedown', (e) => {
+        // Sadece kartın üzerinde değil, boş alanlarda da çalışsın
+        mDown = true;
+        mDragged = false;
+        mStartX = e.clientX;
+        mScrollX = deck.scrollLeft;
+        deck.style.cursor = 'grabbing';
+        // preventDefault YOK — HTML5 drag&drop çalışmaya devam etsin
+    });
+
+    // mousemove ve mouseup document'te — pencere dışına çıksa bile takip et
+    const onMMove = (e) => {
+        if (!mDown) return;
+        const dx = e.clientX - mStartX;
+        if (Math.abs(dx) > 2) mDragged = true;
+        deck.scrollLeft = mScrollX - dx;
+    };
+    const onMUp = () => {
+        if (!mDown) return;
+        mDown = false;
+        deck.style.cursor = 'grab';
+        document.removeEventListener('mousemove', onMMove);
+        document.removeEventListener('mouseup', onMUp);
+    };
+    deck.addEventListener('mousedown', () => {
+        document.addEventListener('mousemove', onMMove);
+        document.addEventListener('mouseup', onMUp);
+    });
+
+    // Click olayında: eğer fare sürüklendi ise kartı seçme
+    deck.addEventListener('click', (e) => {
+        if (mDragged) { e.stopPropagation(); mDragged = false; }
+    }, true);
+
+    // Reset slots
+    state.tarotSlots = [null, null, null];
+    document.querySelectorAll('.tarot-slot').forEach((slot, i) => {
+        slot.innerHTML = `<span class="text-2xl text-mystic-gold/30">?</span><span class="tarot-slot-label">${['Geçmiş', 'Şimdi', 'Gelecek'][i]}</span>`;
+        slot.classList.remove('filled');
+    });
+    const counter = document.getElementById('tarotCounter');
+    if (counter) counter.textContent = '0 / 3 kart seçildi';
+    const btn = document.getElementById('tarotDrawBtn');
+    if (btn) {
+        btn.textContent = 'DESTENİ İNCELET — 🪙 25';
+        btn.style.background = btn.style.boxShadow = btn.style.animation = '';
+    }
+}
+
+// Touch drag handlers
+let touchStartX = 0;
+let touchStartY = 0;
+let touchCurrentCard = null;
+
+function handleTouchStart(e) {
+    touchCurrentCard = e.currentTarget;
+    const touch = e.touches[0];
+    touchStartX = touch.clientX;
+    touchStartY = touch.clientY;
+    
+    // Create ghost element
+    dragGhost = touchCurrentCard.cloneNode(true);
+    dragGhost.classList.add('dragging');
+    dragGhost.style.position = 'fixed';
+    dragGhost.style.zIndex = '9999';
+    dragGhost.style.pointerEvents = 'none';
+    dragGhost.style.width = '65px';
+    dragGhost.style.height = '95px';
+    dragGhost.style.opacity = '0.9';
+    document.body.appendChild(dragGhost);
+    
+    touchCurrentCard.classList.add('dragging');
+    updateGhostPosition(touch);
+}
+
+function handleTouchMove(e) {
+    if (!touchCurrentCard || !dragGhost) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    updateGhostPosition(touch);
+    
+    // Check if over any slot
+    const slots = document.querySelectorAll('.tarot-slot');
+    slots.forEach(slot => {
+        const rect = slot.getBoundingClientRect();
+        if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+            touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+            slot.classList.add('drag-over');
+        } else {
+            slot.classList.remove('drag-over');
+        }
+    });
+}
+
+function handleTouchEnd(e) {
+    if (!touchCurrentCard) return;
+    
+    const touch = e.changedTouches[0];
+    const slots = document.querySelectorAll('.tarot-slot');
+    let dropped = false;
+    
+    slots.forEach((slot, index) => {
+        const rect = slot.getBoundingClientRect();
+        if (touch.clientX >= rect.left && touch.clientX <= rect.right &&
+            touch.clientY >= rect.top && touch.clientY <= rect.bottom) {
+            if (!state.tarotSlots[index]) {
+                const cardData = JSON.parse(touchCurrentCard.dataset.cardData);
+                fillSlot(index, cardData);
+                touchCurrentCard.classList.add('selected');
+                dropped = true;
+            }
+        }
+        slot.classList.remove('drag-over');
+    });
+    
+    // Cleanup
+    if (dragGhost) {
+        dragGhost.remove();
+        dragGhost = null;
+    }
+    touchCurrentCard.classList.remove('dragging');
+    touchCurrentCard = null;
+}
+
+function updateGhostPosition(touch) {
+    if (dragGhost) {
+        dragGhost.style.left = (touch.clientX - 32) + 'px';
+        dragGhost.style.top = (touch.clientY - 47) + 'px';
+    }
+}
+
+function allowDrop(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.classList.add('drag-over');
+}
+
+function leaveDrop(e) {
+    e.currentTarget.classList.remove('drag-over');
+}
+
+function dropCard(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.currentTarget.classList.remove('drag-over');
+    
+    try {
+        const cardData = JSON.parse(e.dataTransfer.getData('text/plain'));
+        const position = parseInt(e.currentTarget.dataset.position);
+        
+        if (!state.tarotSlots[position]) {
+            fillSlot(position, cardData);
+            // Kartı deck'te işaretle
+            if (draggedCard) {
+                draggedCard.classList.add('selected');
+                draggedCard.classList.remove('dragging');
+            }
+        }
+    } catch (err) {
+        console.log('Drop error:', err);
+    }
+}
+        
+        function selectTarotCard(card, cardEl) {
+            // Find next empty slot
+            const nextSlot = state.tarotSlots.findIndex(s => s === null);
+            if (nextSlot === -1) return; // All slots full
+            
+            // Animate card as selected
+            cardEl.style.borderColor = '#C9A227';
+            cardEl.style.opacity = '0.35';
+            cardEl.style.pointerEvents = 'none';
+            cardEl.style.transform = 'scale(0.92)';
+            
+            fillSlot(nextSlot, card);
+            
+            // Update counter
+            const filled = state.tarotSlots.filter(s => s !== null).length;
+            const counter = document.getElementById('tarotCounter');
+            if (counter) counter.textContent = filled + ' / 3 kart seçildi';
+        }
+        
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.cardData);
+            e.dataTransfer.setData('cardIndex', e.target.dataset.cardIndex);
+            e.target.classList.add('dragging');
+        }
+        
+        function allowDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+        
+        function leaveDrop(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        
+        function dropCard(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            const cardData = JSON.parse(e.dataTransfer.getData('text/plain'));
+            const position = parseInt(e.currentTarget.dataset.position);
+            fillSlot(position, cardData);
+        }
+        
+        // Touch events for mobile drag and drop (kept for compatibility)
+        let touchDragElement = null;
+        let touchDragData = null;
+        
+        function touchStart(e) {
+            touchDragElement = e.currentTarget;
+            touchDragData = JSON.parse(e.currentTarget.dataset.cardData);
+        }
+        
+        function touchMove(e) { }
+        
+        function touchEnd(e) {
+            touchDragElement = null;
+            touchDragData = null;
+        }
+        
+        function fillSlot(position, cardData) {
+    if (state.tarotSlots[position]) return; // Already filled
+    
+    state.tarotSlots[position] = cardData;
+    const slot = document.getElementById(`slot-${position}`);
+    
+    slot.innerHTML = `
+        <div class="tarot-slot-card">
+            <span class="emoji">${cardData.emoji}</span>
+            <span class="name">${cardData.name}</span>
+        </div>
+        <span class="tarot-slot-label">${['Geçmiş', 'Şimdi', 'Gelecek'][position]}</span>
+    `;
+    slot.classList.add('filled');
+    
+    // When all 3 slots filled, highlight button
+    if (state.tarotSlots.every(s => s !== null)) {
+        const btn = document.getElementById('tarotDrawBtn');
+        btn.style.background = 'linear-gradient(135deg, #C9A227, #E8C547)';
+        btn.style.boxShadow = '0 4px 20px rgba(201,162,39,0.5)';
+        btn.style.animation = 'glowPulse 2s ease-in-out infinite';
+        showToast('3 kart seçildi! Desteni incelet →');
+    }
+    
+    // Update counter
+    const filled = state.tarotSlots.filter(s => s !== null).length;
+    const counter = document.getElementById('tarotCounter');
+    if (counter) counter.textContent = filled + ' / 3 kart seçildi';
+}
+        
+        function showTarotReading() {
+            const results = readingResults.tarot;
+            const result = results[Math.floor(Math.random() * results.length)];
+            
+            // Populate tarot result screen
+            document.getElementById('tarotResultText').textContent = result;
+            document.getElementById('tarotResultDate').textContent = new Date().toLocaleDateString('tr-TR');
+            
+            // Show selected cards
+            const cardsEl = document.getElementById('tarotResultCards');
+            cardsEl.innerHTML = state.tarotSlots.map((card, i) => `
+                <div style="text-align:center;">
+                    <div style="width:60px;height:85px;background:linear-gradient(135deg,rgba(201,162,39,0.2),rgba(192,38,211,0.1));border:1px solid rgba(201,162,39,0.4);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:4px;">
+                        <span style="font-size:22px;">${card.emoji}</span>
+                    </div>
+                    <span style="font-size:9px;color:#A09070;font-family:'Space Grotesk',sans-serif;">${['GEÇMİŞ','ŞİMDİ','GELECEK'][i]}</span>
+                </div>
+            `).join('');
+            
+            // Save state for potential saving
+            state.lastResult = {
+                type: 'tarot',
+                title: 'Tarot Falınız',
+                text: result,
+                date: new Date().toISOString()
+            };
+            
+            router.navigate('result-tarot');
+        }
+        
+        function saveTarotResult() {
+            if (!state.lastResult) return;
+            state.readings.unshift(state.lastResult);
+            saveState();
+            showToast('Kader Günlüğüne kaydedildi ✓');
+        }
+        window.saveTarotResult = saveTarotResult;
+        
+        function resetTarot() {
+            // If all 3 slots filled, show the reading
+            if (state.tarotSlots.every(s => s !== null)) {
+                showTarotReading();
+            } else {
+                // Not all selected yet, reinit
+                initTarotDeck();
+            }
+        }
+        window.resetTarot = resetTarot;
+        
+        // Palm Functions
+        function handlePalmUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('palmPreview').src = e.target.result;
+                document.getElementById('palmPreview').classList.remove('hidden');
+                document.getElementById('palmPlaceholder').classList.add('hidden');
+                document.getElementById('palmStartBtn').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+        window.handlePalmUpload = handlePalmUpload;
+        
+        function startPalmRitual() {
+            document.getElementById('palmScanLine').classList.remove('hidden');
+            setTimeout(() => {
+                showResult('palm');
+            }, 3000);
+            showToast('El çizgileriniz taranıyor...');
+        }
+        window.startPalmRitual = startPalmRitual;
+        
+        // Water Animation
+        function animateWater() {
+            const bowl = document.getElementById('waterEffects');
+            
+            // Create drop
+            const drop = document.createElement('div');
+            drop.className = 'water-drop';
+            drop.style.left = '50%';
+            drop.style.top = '0';
+            drop.style.transform = 'translateX(-50%)';
+            bowl.appendChild(drop);
+            
+            // Create splash rings
+            setTimeout(() => {
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        const ring = document.createElement('div');
+                        ring.className = 'splash-ring';
+                        ring.style.left = '50%';
+                        ring.style.top = '50%';
+                        ring.style.transform = 'translate(-50%, -50%)';
+                        ring.style.animationDelay = (i * 0.2) + 's';
+                        bowl.appendChild(ring);
+                        setTimeout(() => ring.remove(), 1500);
+                    }, i * 200);
+                }
+            }, 500);
+            
+            setTimeout(() => drop.remove(), 1500);
+        }
+        window.animateWater = animateWater;
+        
+        function startWaterRitual() {
+            animateWater();
+            setTimeout(() => {
+                showResult('water');
+            }, 2500);
+            showToast('Su yüzeyindeki semboller belirleniyor...');
+        }
+        window.startWaterRitual = startWaterRitual;
+        
+        // Angel Functions
+        let selectedAngelCard = null;
+        
+        function selectAngelCard(index) {
+            document.querySelectorAll('.angel-card').forEach((c, i) => {
+                c.classList.toggle('selected', i === index);
+            });
+            selectedAngelCard = index;
+        }
+        window.selectAngelCard = selectAngelCard;
+        
+        function startAngelRitual() {
+            if (selectedAngelCard === null) {
+                showToast('Lütfen bir kart seçin');
+                return;
+            }
+            
+            // Feather animation
+            const area = document.getElementById('featherArea');
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const feather = document.createElement('div');
+                    feather.className = 'feather';
+                    feather.textContent = '🪶';
+                    feather.style.left = (20 + Math.random() * 60) + '%';
+                    feather.style.animationDelay = (i * 0.2) + 's';
+                    area.appendChild(feather);
+                    setTimeout(() => feather.remove(), 3000);
+                }, i * 200);
+            }
+            
+            setTimeout(() => {
+                showResult('angel');
+            }, 3000);
+            showToast('Meleklerden mesaj alınıyor...');
+        }
+        window.startAngelRitual = startAngelRitual;
+        
+        // Crystal Animation
+        function animateCrystal() {
+            const ball = document.getElementById('crystalEffects');
+            
+            // Flash effect
+            const flash = document.createElement('div');
+            flash.className = 'crystal-flash';
+            ball.appendChild(flash);
+            setTimeout(() => flash.remove(), 500);
+            
+            // Particles
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'crystal-particle';
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                const angle = (i / 8) * Math.PI * 2;
+                const distance = 60 + Math.random() * 40;
+                particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+                ball.appendChild(particle);
+                setTimeout(() => particle.remove(), 2000);
+            }
+        }
+        window.animateCrystal = animateCrystal;
+        
+        function startCrystalRitual() {
+            animateCrystal();
+            setTimeout(() => {
+                showResult('crystal');
+            }, 2500);
+            showToast('Kristalin derinliklerine bakın...');
+        }
+        window.startCrystalRitual = startCrystalRitual;
+        
+        // Dream Functions
+        let dreamCategory = 'general';
+        
+        function selectDreamCategory(cat, btn) {
+            dreamCategory = cat;
+            document.querySelectorAll('.category-badge').forEach(b => {
+                b.style.opacity = '0.5';
+            });
+            btn.style.opacity = '1';
+        }
+        window.selectDreamCategory = selectDreamCategory;
+        
+        function interpretDream() {
+            const input = document.getElementById('dreamInput');
+            if (!input.value.trim()) {
+                showToast('Lütfen rüyanızı anlatın');
+                return;
+            }
+            setTimeout(() => {
+                showResult('dream');
+            }, 2000);
+            showToast('Rüyanız yorumlanıyor...');
+        }
+        window.interpretDream = interpretDream;
+        
+        // Zodiac Functions
+        function selectZodiac(el, symbol, name, dates, eng) {
+            document.querySelectorAll('.zodiac-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            
+            state.selectedZodiac = { symbol, name, dates, eng };
+            localStorage.setItem('selectedZodiac', JSON.stringify(state.selectedZodiac));
+            
+            document.getElementById('hSymbol').textContent = symbol;
+            document.getElementById('hName').textContent = name;
+            document.getElementById('hDates').textContent = dates;
+            document.getElementById('hText').textContent = zodiacTexts[eng] || 'Yıldızlar bugün size özel mesajlar gönderiyor.';
+            
+            // Random aspects
+            const aspects = ['Love', 'Career', 'Health', 'Money'];
+            aspects.forEach(a => {
+                const val = Math.floor(Math.random() * 40) + 60;
+                document.getElementById('a' + a + 'Val').textContent = val + '%';
+                document.getElementById('a' + a + 'Bar').style.width = val + '%';
+            });
+            
+            document.getElementById('horoscopeDetail').classList.remove('hidden');
+        }
+        window.selectZodiac = selectZodiac;
+        
+        function restoreZodiacSelection() {
+            if (state.selectedZodiac) {
+                const items = document.querySelectorAll('.zodiac-item');
+                items.forEach(item => {
+                    if (item.querySelector('.z-name').textContent === state.selectedZodiac.name) {
+                        item.classList.add('selected');
+                    }
+                });
+                
+                document.getElementById('hSymbol').textContent = state.selectedZodiac.symbol;
+                document.getElementById('hName').textContent = state.selectedZodiac.name;
+                document.getElementById('hDates').textContent = state.selectedZodiac.dates;
+                document.getElementById('hText').textContent = zodiacTexts[state.selectedZodiac.eng] || 'Yıldızlar bugün size özel mesajlar gönderiyor.';
+                document.getElementById('horoscopeDetail').classList.remove('hidden');
+            }
+        }
+        
+        // Show Result
+        function showResult(type) {
+            const icons = {
+                coffee: '☕',
+                tarot: '🃏',
+                palm: '✋',
+                water: '💧',
+                angel: '👼',
+                crystal: '🔮',
+                dream: '🌙'
+            };
+            
+            const titles = {
+                coffee: 'Kahve Falınız',
+                tarot: 'Tarot Falınız',
+                palm: 'El Falınız',
+                water: 'Su Falınız',
+                angel: 'Melek Mesajınız',
+                crystal: 'Kristal Görüntünüz',
+                dream: 'Rüya Yorumunuz'
+            };
+            
+            const results = readingResults[type];
+            const result = results[Math.floor(Math.random() * results.length)];
+            
+            document.getElementById('resultIcon').textContent = icons[type];
+            document.getElementById('resultTitle').textContent = titles[type];
+            document.getElementById('resultDate').textContent = new Date().toLocaleDateString('tr-TR');
+            document.getElementById('resultText').textContent = result;
+            
+            state.lastResult = {
+                type: type,
+                title: titles[type],
+                text: result,
+                date: new Date().toISOString()
+            };
+            
+            router.navigate('result');
+        }
+        
+        // Save Result
+        function saveResult() {
+            if (!state.lastResult) return;
+            
+            state.readings.unshift(state.lastResult);
+            saveState();
+            showToast('Kader Günlüğüne kaydedildi ✓');
+        }
+        window.saveResult = saveResult;
+        
+        // Share Result
+        function shareResult() {
+            if (!state.lastResult) return;
+            
+            const text = '🔮 Nexlify Mystic falım:\n\n' + state.lastResult.text + '\n\nnexlifymystic.com';
+            const url = 'https://wa.me/?text=' + encodeURIComponent(text);
+            window.open(url, '_blank');
+        }
+        window.shareResult = shareResult;
+        
+        // Update History Screen
+        function updateHistoryScreen() {
+            document.getElementById('historyCount').textContent = state.readings.length;
+            document.getElementById('historyTokens').textContent = state.tokens;
+            
+            const list = document.getElementById('historyList');
+            if (state.readings.length === 0) {
+                document.getElementById('emptyHistory').classList.remove('hidden');
+                return;
+            }
+            
+            document.getElementById('emptyHistory').classList.add('hidden');
+            list.innerHTML = state.readings.map((r, i) => `
+                <div class="history-item" onclick="viewHistoryItem(${i})">
+                    <div class="history-icon">${getIconForType(r.type)}</div>
+                    <div class="history-info">
+                        <h4>${r.title}</h4>
+                        <p>${r.subtitle || r.text.substring(0, 50)}...</p>
+                        <div class="h-date">${new Date(r.date).toLocaleDateString('tr-TR')}</div>
+                    </div>
+                    <div class="history-fav" onclick="event.stopPropagation(); toggleFav(this)">☆</div>
+                </div>
+            `).join('');
+        }
+        
+        function getIconForType(type) {
+            const icons = {
+                coffee: '☕',
+                tarot: '🃏',
+                palm: '✋',
+                water: '💧',
+                angel: '👼',
+                crystal: '🔮',
+                dream: '🌙'
+            };
+            return icons[type] || '🔮';
+        }
+        
+        function viewHistoryItem(index) {
+            const r = state.readings[index];
+            state.lastResult = r;
+            document.getElementById('resultIcon').textContent = getIconForType(r.type);
+            document.getElementById('resultTitle').textContent = r.title;
+            document.getElementById('resultDate').textContent = new Date(r.date).toLocaleDateString('tr-TR');
+            document.getElementById('resultText').textContent = r.text;
+            router.navigate('result');
+        }
+        window.viewHistoryItem = viewHistoryItem;
+        
+        function toggleFav(el) {
+            el.textContent = el.textContent === '☆' ? '★' : '☆';
+            el.classList.toggle('active');
+            showToast(el.textContent === '★' ? 'Favorilere eklendi' : 'Favorilerden çıkarıldı');
+        }
+        window.toggleFav = toggleFav;
+        
+        // Buy Tokens
+        function buyTokens(amount, price) {
+            showModal(`
+                <div class="text-center">
+                    <div class="text-4xl mb-4">🪙</div>
+                    <h3 class="font-decorative text-lg text-mystic-gold mb-2">${amount} Sikke Satın Al</h3>
+                    <p class="text-gray-400 text-sm mb-6">Fiyat: ₺${price}</p>
+                    <div class="flex flex-col items-center gap-3">
+                        <button class="btn-primary btn-gold w-full" onclick="completePurchase(${amount})">Satın Al</button>
+                        <button class="btn-secondary w-full" onclick="closeModal()">İptal</button>
+                    </div>
+                </div>
+            `);
+        }
+        window.buyTokens = buyTokens;
+        
+        function completePurchase(amount) {
+            state.tokens += amount;
+            updateTokenDisplay();
+            closeModal();
+            showToast(`${amount} sikke eklendi! 🪙`);
+            saveState();
+        }
+        
+        // Modal
+        function showModal(content) {
+            document.getElementById('modalContent').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+        }
+        window.showModal = showModal;
+        
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        window.closeModal = closeModal;
+        
+        // Toast
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+        window.showToast = showToast;
+        
+        // State Persistence
+        function saveState() {
+            localStorage.setItem('nexlifyMystic', JSON.stringify({
+                tokens: state.tokens,
+                readings: state.readings,
+                dailyReadings: state.dailyReadings,
+                privacyMode: state.privacyMode,
+                lastReset: new Date().toDateString(),
+                selectedZodiac: state.selectedZodiac
+            }));
+        }
+        
+        function loadState() {
+            const saved = localStorage.getItem('nexlifyMystic');
+            if (saved) {
+                const data = JSON.parse(saved);
+                state.tokens = data.tokens || 150;
+                state.readings = data.readings || [];
+                state.dailyReadings = data.dailyReadings || {};
+                state.privacyMode = data.privacyMode || false;
+                state.selectedZodiac = data.selectedZodiac || null;
+            }
+        }
+        
+        function checkDailyReset() {
+            const saved = localStorage.getItem('nexlifyMystic');
+            if (saved) {
+                const data = JSON.parse(saved);
+                const lastReset = data.lastReset;
+                const today = new Date().toDateString();
+                
+                if (lastReset !== today) {
+                    // New day - reset daily readings
+                    state.dailyReadings = {
+                        coffee: false,
+                        tarot: false,
+                        palm: false,
+                        water: false,
+                        angel: false,
+                        crystal: false,
+                        dream: false
+                    };
+                    saveState();
+                    showToast('Yeni gün! Günlük ücretsiz fallarınız hazır.');
+                }
+            }
+        }
+        
+        // Touch feedback
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                const btn = e.target.tagName === 'BUTTON' ? e.target : e.target.closest('button');
+                
+                // Create ripple
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                const rect = btn.getBoundingClientRect();
+                ripple.style.left = (e.clientX - rect.left) + 'px';
+                ripple.style.top = (e.clientY - rect.top) + 'px';
+                btn.style.position = 'relative';
+                btn.style.overflow = 'hidden';
+                btn.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            }
+        });
+        
+        // Prevent zoom on double tap
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // Initialize
+        init();
+        
+        // Console easter egg
+        console.log('%c🔮 Nexlify Mystic', 'color: #C9A227; font-size: 24px; font-weight: bold;');
+        console.log('%cKaderin kapısı aralanıyor...', 'color: #00F0FF; font-size: 14px;');
+    </script>
+</body>
+</html>

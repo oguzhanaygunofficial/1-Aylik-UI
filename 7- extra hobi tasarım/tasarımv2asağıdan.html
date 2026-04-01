@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibella - iPhone 16 Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@1,800&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* iPhone 16 Pro Frame - Natural Titanium */
+        .iphone-frame {
+            width: 402px;
+            height: 874px;
+            background: #000;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 
+                0 0 0 2px #3a3a3a,
+                0 0 0 4px #1a1a1a,
+                0 25px 80px rgba(0,0,0,0.6),
+                0 50px 120px rgba(0,0,0,0.4),
+                inset 0 0 30px rgba(255,255,255,0.03);
+            position: relative;
+        }
+
+        /* Titanium Frame Shine */
+        .iphone-frame::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 55px;
+            padding: 2px;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,0.4) 0%, 
+                rgba(255,255,255,0.1) 30%,
+                rgba(255,255,255,0.05) 50%,
+                rgba(255,255,255,0.1) 70%, 
+                rgba(255,255,255,0.3) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* Side Buttons */
+        .side-btn {
+            position: absolute;
+            background: linear-gradient(180deg, #4a4a4a 0%, #2a2a2a 100%);
+            border-radius: 2px;
+        }
+        .volume-up { width: 3px; height: 35px; left: -3px; top: 120px; }
+        .volume-down { width: 3px; height: 35px; left: -3px; top: 165px; }
+        .action-btn { width: 3px; height: 50px; left: -3px; top: 220px; }
+        .power-btn { width: 3px; height: 60px; right: -3px; top: 150px; }
+
+        /* Screen */
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            border-radius: 47px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 11px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #0a0a0a;
+            border-radius: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow:
+                0 0 0 1.5px rgba(255,255,255,0.06),
+                0 4px 16px rgba(0,0,0,0.9),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        .island-cam {
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle at 35% 35%, #1c2a3a 0%, #050505 100%);
+            border-radius: 50%;
+            box-shadow: inset 0 0 3px rgba(255,255,255,0.25), 0 0 4px rgba(0,150,255,0.15);
+        }
+        .island-time {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* App Content - Fixed Layout */
+        .app {
+            width: 100%;
+            height: 100%;
+            background: #0a0a0f;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px; /* Space for Dynamic Island */
+            overflow: hidden; /* TAŞMAYI ENGELLE */
+            border-radius: 47px;
+        }
+
+        .app::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px; /* bottom nav'dan biraz fazla */
+    background: #0a0a0f; /* bottom nav ile aynı renk */
+    pointer-events: none; /* tıklamaya engel olma */
+    z-index: 999; /* content üstünde, bottom nav altında */
+    border-radius: 0 0 43px 43px; /* köşeler uysun */
+}
+
+        /* Fixed Header - Below Dynamic Island */
+        .header {
+            padding: 8px 16px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, #0f0f14 0%, #0a0a0f 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .discover-pill {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #000;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 6px 14px;
+        }
+
+        /* Montserrat Black for KEŞFET */
+        .discover-text {
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            font-style: italic;
+            transform: skewX(-6deg);
+            display: inline-block;
+            background: linear-gradient(90deg, #45D3D0 0%, #8E82E6 50%, #F07BB0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            filter: drop-shadow(0 0 8px rgba(142,130,230,0.5));
+        }
+
+        .header-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .h-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s;
+        }
+        .h-btn.plus-btn {
+    border: 1.5px solid rgba(255,255,255,0.25);
+    background: linear-gradient(135deg, #2d2d30 0%, #1c1c1e 100%);
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.h-btn.plus-btn:active { 
+    transform: scale(0.95); 
+}
+
+.h-btn.plus-btn i {
+    background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 16px;
+    filter: drop-shadow(0 0 6px rgba(168,85,247,0.5));
+}
+
+        /* Event Button */
+        .h-btn.event {
+            background: linear-gradient(135deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%);
+            border: 1.5px solid rgba(255,255,255,0.4);
+            box-shadow: 
+                0 0 20px rgba(131,56,236,0.6), 
+                0 0 40px rgba(131,56,236,0.4),
+                inset 0 0 15px rgba(255,255,255,0.2);
+            position: relative;
+        }
+        .h-btn.event::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            filter: blur(12px);
+            opacity: 0.7;
+            z-index: -1;
+            border-radius: 14px;
+            transform: scale(1.1);
+        }
+        .h-btn.event i {
+            color: #fff;
+            filter: drop-shadow(0 0 4px rgba(255,255,255,0.6));
+            animation: swing 3s ease-in-out infinite;
+        }
+        @keyframes swing {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        /* Message Button */
+        .h-btn.msg {
+            border: 1.5px solid rgba(255,255,255,0.25);
+            background: linear-gradient(135deg, #2d2d30 0%, #1c1c1e 100%);
+        }
+        .h-btn.msg i {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(59,130,246,0.8));
+        }
+
+        /* Notification Button */
+        .h-btn.notif {
+            border: 1.5px solid rgba(255,255,255,0.25);
+            background: linear-gradient(135deg, #2d2d30 0%, #1c1c1e 100%);
+            position: relative;
+        }
+        .h-btn.notif i {
+            background: linear-gradient(135deg, #f472b6 0%, #ec4899 50%, #db2777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(236,72,153,0.8));
+        }
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff375f;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #000;
+        }
+
+        /* Stories - Scrolls with content */
+        .stories-wrap {
+            background: linear-gradient(180deg, #0a0a0f 0%, #050508 100%);
+        }
+        .stories {
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+        }
+        .stories::-webkit-scrollbar { display: none; }
+
+        .story {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .story-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #6d28d9 100%);
+            padding: 2.5px;
+            position: relative;
+            cursor: pointer;
+        }
+        .story-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #000;
+            overflow: hidden;
+            position: relative;
+        }
+        .story-avatar-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Fixed add button - positioned outside */
+        .add-btn {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2.5px solid #000;
+            color: #fff;
+            font-size: 12px;
+            z-index: 10;
+        }
+        .story span {
+            font-size: 13px;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        /* Scrollable Content Area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 0 100px;
+            background: #050508;
+        }
+        .content::-webkit-scrollbar { display: none; }
+        .content .stories-wrap {
+            padding: 0;
+            margin-bottom: 4px;
+        }
+        .content-posts {
+            padding: 0 16px;
+        }
+
+        /* Post */
+        .post {
+            background: linear-gradient(135deg, rgba(124,58,237,0.15) 0%, rgba(0,0,0,0) 50%, rgba(6,182,212,0.1) 100%);
+            padding: 1.5px;
+            border-radius: 24px;
+            margin-bottom: 20px;
+        }
+        .post-inner {
+            background: #0d0d12;
+            border-radius: 22.5px;
+            overflow: hidden;
+        }
+        .post-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #7c3aed;
+        }
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .post-info h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+        .post-info p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .post-menu {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #1c1c1e;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            cursor: pointer;
+        }
+        .post-tags {
+            padding: 0 16px 12px;
+            font-size: 15px;
+            color: #fff;
+        }
+        .post-img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+        .post-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+       /* Fixed Bottom Nav */
+.bottom-nav {
+    position: absolute;
+    bottom: -4px; /* ESKİ: 0 → YENİ: -2px (2 piksel aşağı) */
+    left: 0px;      /* SOL boşluk - yuvarlak köşeye girsin */
+    right: 0px;     /* SAĞ boşluk - yuvarlak köşeye girsin */
+    width: auto;    /* left+right ile genişlik */
+    background: rgba(10, 10, 15, 0.98);
+    padding: 8px 12px 30px;
+    height: 85px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 76px 1fr 1fr;
+    place-items: center;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0 0 39px 39px;;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    margin: 0;
+    box-sizing: border-box;
+}
+.nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+.nav-btn.active {
+    background: rgba(139,92,246,0.2);
+    box-shadow: 0 0 25px rgba(139,92,246,0.5);
+}
+
+/* Düzeltilmiş - daha spesifik seçici */
+.bottom-nav .nav-btn.play-btn.active {
+    background: rgba(139,92,246,0.2);
+    box-shadow: 0 0 25px rgba(139,92,246,0.5);
+    border-color: #a855f7;
+    border-radius: 50%;
+}
+
+.bottom-nav .nav-btn.play-btn.active i {
+    color: #a855f7;
+    filter: drop-shadow(0 0 8px rgba(168,85,247,0.8));
+}
+.nav-btn i {
+    font-size: 18px;
+    color: #9ca3af;
+}
+.nav-btn.active i {
+    color: #a855f7;
+    filter: drop-shadow(0 0 8px rgba(168,85,247,0.8));
+}
+.play-btn {
+    border: 2px solid #4b5563;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+}
+.play-btn i {
+    font-size: 12px;
+    margin-left: 2px;
+}
+
+        /* Center Button */
+        .center-btn-wrap {
+    position: relative;
+    margin-top: 0;  /* DÜZ HATTA */
+}
+        .center-btn {
+    width: 56px;      /* 76px'den 56px'ye düşür */
+    height: 56px;     /* 76px'den 56px'ye düşür */
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    overflow: visible;
+    position: relative;
+    display: flex;           /* EKLE */
+    align-items: center;      /* EKLE */
+    justify-content: center;  /* EKLE */
+}
+        .center-btn::before {
+            content: none;
+        }
+        .center-btn::after {
+            content: none;
+        }
+
+
+        
+        /* SVG ring */
+        .ring-svg {
+            position: absolute;
+            inset: 6px;
+            width: calc(100% - 12px);
+            height: calc(100% - 12px);
+            border-radius: 50%;
+            z-index: 2;
+            pointer-events: none;
+            overflow: visible;
+        }
+        .ring-svg circle {
+            fill: none;
+            stroke: rgba(255,255,255,0.95);
+            stroke-width: 1;
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.6));
+        }
+        @property --sweep {
+            syntax: '<angle>';
+            inherits: false;
+            initial-value: 0deg;
+        }
+        .center-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            position: relative;
+            z-index: 1;
+            display: block;
+        }
+
+        /* Post Actions Bar */
+        .post-actions {
+            padding: 12px 16px 16px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        .post-date {
+            font-size: 12px;
+            color: #4b5563;
+            font-weight: 500;
+            margin-left: auto;
+            letter-spacing: 0.2px;
+        }
+        .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            order: -1;
+        }
+        .act-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.15s;
+            position: relative;
+        }
+        .act-btn:active { transform: scale(0.88); }
+        .act-btn i {
+            font-size: 17px;
+            transition: color 0.2s, filter 0.2s;
+        }
+        .act-btn.like i {
+            color: #f43f5e;
+            filter: drop-shadow(0 0 5px rgba(244,63,94,0.65));
+        }
+        .act-btn.like.liked i {
+            color: #f43f5e;
+            filter: drop-shadow(0 0 8px rgba(244,63,94,0.9));
+        }
+        .act-btn.comment i {
+            color: #60a5fa;
+            filter: drop-shadow(0 0 5px rgba(96,165,250,0.65));
+        }
+        .act-btn.share i {
+            color: #34d399;
+            filter: drop-shadow(0 0 5px rgba(52,211,153,0.65));
+        }
+        .act-btn.save i {
+            color: #a855f7;
+            filter: drop-shadow(0 0 5px rgba(168,85,247,0.65));
+        }
+        .act-btn.save.saved i {
+            color: #a855f7;
+            filter: drop-shadow(0 0 8px rgba(168,85,247,0.9));
+        }
+        .act-count {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: left;
+            margin-left: -2px;
+            margin-right: 6px;
+        }
+
+        /* Create Tray */
+    
+        .create-tray {
+    position: absolute;
+    bottom: 80px;      /* ESKİ: 70px → YENİ: 74px (4px yukarı) */
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: calc(90% + 8px);  /* ESKİ: 90% → YENİ: 4px sağ + 4px sol fazla */
+    max-width: 364px;        /* ESKİ: 360px → YENİ: 8px fazla */
+    height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 10px 12px;     /* ESKİ: 8px → YENİ: 12px (4px fazla) */
+    background: rgba(10,10,18,0.75);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px 24px 0 0;
+    z-index: 99;
+    opacity: 0;
+    transition: transform 0.38s cubic-bezier(0.34,1.1,0.64,1), opacity 0.28s ease;
+    pointer-events: none;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
+}
+
+.create-tray.open {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Butonları düzelt */
+.tray-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 70px;
+    min-width: 70px;
+    height: 65px;
+    justify-content: flex-start;
+    position: relative;
+    transition: transform 0.15s;
+}
+
+.tray-btn:active {
+    transform: scale(0.92);
+}
+
+/* İKON STİLLERİ (eskiyle aynı kalabilir, ama küçültelim) */
+.tray-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.18s;
+    flex-shrink: 0;
+    margin-bottom: 4px;
+}
+
+.tray-icon i {
+    font-size: 16px;
+    color: #fff;
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4));
+}
+
+.tray-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: rgba(255,255,255,0.75);
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+}
+
+/* Renkler aynı kalsın */
+.tray-icon.live {
+    background: linear-gradient(135deg, #ec4899, #f43f5e);
+    box-shadow: 0 4px 18px rgba(244,63,94,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+}
+.tray-icon.live::after {
+    content: 'LIVE';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #f43f5e;
+    color: #fff;
+    font-size: 7px;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 6px rgba(244,63,94,0.8);
+    animation: livePulse 1.4s infinite;
+}
+.tray-icon.post {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    box-shadow: 0 4px 18px rgba(139,92,246,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+}
+.tray-icon.story {
+    background: linear-gradient(135deg, #45D3D0, #6366f1);
+    box-shadow: 0 4px 18px rgba(69,211,208,0.45), 0 0 0 1px rgba(255,255,255,0.1);
+}
+.tray-icon.reel {
+    background: linear-gradient(135deg, #10b981, #34d399);
+    box-shadow: 0 4px 18px rgba(52,211,153,0.45), 0 0 0 1px rgba(255,255,255,0.1);
+}
+
+        .tray-icon i {
+    font-size: 18px;
+    color: #fff; /* Bu zaten beyaz */
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4));
+}
+
+        .tray-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 72px;
+    min-width: 72px;
+    height: 65px; /* SABİT yükseklik - auto değil */
+    justify-content: flex-start;
+    position: relative;
+}
+
+.tray-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: transform 0.18s;
+    flex-shrink: 0;
+    margin-bottom: 4px;
+}
+
+.tray-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: rgba(255,255,255,0.75);
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    display: block; /* flex değil */
+    position: absolute;
+    bottom: 0; /* ALTA SABİTLE */
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    /* margin-top ve height kaldırıldı */
+}
+
+/* Gradient Çizgiler - Ortada güçlü, köşelerde silik */
+.tray-divider {
+    width: 2px;
+    height: 50px;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(255,255,255,0.05) 15%,
+        rgba(255,255,255,0.25) 40%,  /* Orta kısım daha güçlü */
+        rgba(255,255,255,0.35) 50%,  /* Merkez en güçlü */
+        rgba(255,255,255,0.25) 60%,  /* Orta kısım daha güçlü */
+        rgba(255,255,255,0.05) 85%,
+        transparent 100%
+    );
+    border-radius: 1px;
+    flex-shrink: 0;
+    margin: 0 2px;
+}
+
+/* Alternatif: Renkli gradient (mor-mavi tonları) */
+.tray-divider.colored {
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(168,85,247,0.1) 20%,
+        rgba(168,85,247,0.4) 45%,
+        rgba(99,102,241,0.5) 50%,
+        rgba(168,85,247,0.4) 55%,
+        rgba(168,85,247,0.1) 80%,
+        transparent 100%
+    );
+}
+
+        .tray-icon.live {
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+            box-shadow: 0 4px 18px rgba(244,63,94,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+        }
+        .tray-icon.live::after {
+            content: 'LIVE';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #f43f5e;
+            color: #fff;
+            font-size: 7px;
+            font-weight: 900;
+            padding: 1px 4px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 0 6px rgba(244,63,94,0.8);
+            animation: livePulse 1.4s infinite;
+        }
+        @keyframes livePulse {
+            0%,100% { opacity:1; box-shadow: 0 0 6px rgba(244,63,94,0.8); }
+            50% { opacity:0.7; box-shadow: 0 0 12px rgba(244,63,94,1); }
+        }
+        .tray-icon.post {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            box-shadow: 0 4px 18px rgba(139,92,246,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+        }
+        .tray-icon.story {
+            background: linear-gradient(135deg, #45D3D0, #6366f1);
+            box-shadow: 0 4px 18px rgba(69,211,208,0.45), 0 0 0 1px rgba(255,255,255,0.1);
+        }
+        .tray-icon.reel {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            box-shadow: 0 4px 18px rgba(52,211,153,0.45), 0 0 0 1px rgba(255,255,255,0.1);
+        }
+
+        /* Home Indicator */
+        .home-bar {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: #fff;
+            border-radius: 3px;
+            z-index: 101;
+        }
+
+        .live-camera-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 2px solid rgba(255,255,255,0.3);
+    box-shadow: 0 0 20px rgba(255,0,110,0.5), 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.live-camera-icon i {
+    font-size: 22px;
+    color: #fff;
+    filter: drop-shadow(0 0 4px rgba(255,255,255,0.6));
+}
+
+.live-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: #ff006e;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 900;
+    padding: 2px 5px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(255,0,110,0.8);
+    animation: livePulse 1.5s infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <!-- Side Buttons -->
+        <div class="side-btn volume-up"></div>
+        <div class="side-btn volume-down"></div>
+        <div class="side-btn action-btn"></div>
+        <div class="side-btn power-btn"></div>
+
+        <div class="screen">
+            <!-- Dynamic Island -->
+            <div class="dynamic-island">
+                <div class="island-cam"></div>
+                <span class="island-time">9:41</span>
+            </div>
+
+            <!-- App -->
+            <div class="app">
+                <!-- Fixed Header - Below Dynamic Island -->
+                <div class="header">
+
+                    <button class="h-btn plus-btn" onclick="toggleTrayFromHeader()">
+        <i class="fas fa-plus"></i>
+    </button>
+                    <div class="discover-pill">
+                        <span class="discover-text">KEŞFET</span>
+                        <i class="fas fa-chevron-down" style="color: rgba(255,255,255,0.7); font-size: 11px;"></i>
+                    </div>
+                    <div class="header-btns">
+                        <button class="h-btn event">
+                            <i class="fas fa-theater-masks"></i>
+                        </button>
+                        <button class="h-btn msg">
+                            <i class="far fa-paper-plane"></i>
+                        </button>
+                        <button class="h-btn notif">
+                            <i class="far fa-bell"></i>
+                            <span class="badge">2</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="content">
+                    <!-- Stories - now scrolls with content -->
+                    <div class="stories-wrap">
+                        <div class="stories">
+                            <div class="story">
+                                <div class="story-avatar">
+                                    <div class="story-avatar-inner">
+                                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face" alt="You">
+                                    </div>
+                                    <div class="add-btn">
+                                        <i class="fas fa-plus"></i>
+                                    </div>
+                                </div>
+                                <span>You</span>
+                            </div>
+                            <div class="story">
+                                <div class="story-avatar">
+                                    <div class="story-avatar-inner">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="User1">
+                                    </div>
+                                </div>
+                                <span>Sarah</span>
+                            </div>
+                            <div class="story">
+                                <div class="story-avatar">
+                                    <div class="story-avatar-inner">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face" alt="User2">
+                                    </div>
+                                </div>
+                                <span>Mike</span>
+                            </div>
+                            <div class="story">
+                                <div class="story-avatar">
+                                    <div class="story-avatar-inner">
+                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" alt="User3">
+                                    </div>
+                                </div>
+                                <span>Emma</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Posts -->
+                    <div class="content-posts">
+                    <!-- Post 1 -->
+                    <div class="post">
+                        <div class="post-inner">
+                            <div class="post-header">
+                                <div class="post-user">
+                                    <div class="post-avatar">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" alt="SiNeRJi">
+                                    </div>
+                                    <div class="post-info">
+                                        <h3>SiNeRJi</h3>
+                                        <p>@SiNeRJi</p>
+                                    </div>
+                                </div>
+                                <button class="post-menu">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                            </div>
+                            <div class="post-tags">#ramazan #omurdedigin #yenigelecek</div>
+                            <div class="post-img">
+                                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=800&fit=crop" alt="Post">
+                            </div>
+                            <div class="post-actions">
+                                <span class="post-date">2 saat önce</span>
+                                <div class="action-btns">
+                                    <button class="act-btn like" onclick="toggleLike(this)">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <span class="act-count">2,4B</span>
+                                    <button class="act-btn comment">
+                                        <i class="far fa-comment"></i>
+                                    </button>
+                                    <span class="act-count">318</span>
+                                    <button class="act-btn share">
+                                        <i class="fas fa-share-nodes"></i>
+                                    </button>
+                                    <button class="act-btn save" onclick="toggleSave(this)">
+                                        <i class="far fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post 2 -->
+                    <div class="post">
+                        <div class="post-inner">
+                            <div class="post-header">
+                                <div class="post-user">
+                                    <div class="post-avatar">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="Sarah">
+                                    </div>
+                                    <div class="post-info">
+                                        <h3>Sarah Chen</h3>
+                                        <p>@sarahchen</p>
+                                    </div>
+                                </div>
+                                <button class="post-menu">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                            </div>
+                            <div class="post-tags">#travel #japan #tokyo #photography</div>
+                            <div class="post-img">
+                                <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&h=800&fit=crop" alt="Post 2">
+                            </div>
+                            <div class="post-actions">
+                                <span class="post-date">5 saat önce</span>
+                                <div class="action-btns">
+                                    <button class="act-btn like" onclick="toggleLike(this)">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <span class="act-count">1,1B</span>
+                                    <button class="act-btn comment">
+                                        <i class="far fa-comment"></i>
+                                    </button>
+                                    <span class="act-count">204</span>
+                                    <button class="act-btn share">
+                                        <i class="fas fa-share-nodes"></i>
+                                    </button>
+                                    <button class="act-btn save" onclick="toggleSave(this)">
+                                        <i class="far fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div><!-- end content-posts -->
+                </div>
+
+                <!-- Fixed Bottom Nav -->
+                <!-- Create Tray -->
+<div class="create-tray" id="createTray">
+    <button class="tray-btn">
+        <div class="tray-icon post"><i class="fas fa-plus-square"></i></div>
+        <span class="tray-label">Gönderi Ekle</span>
+    </button>
+    
+    <div class="tray-divider"></div>
+    
+    <button class="tray-btn">
+        <div class="tray-icon live"><i class="fas fa-video"></i></div>
+        <span class="tray-label">Canlı Yayın</span>
+    </button>
+    
+    <div class="tray-divider"></div>
+    
+    <button class="tray-btn">
+        <div class="tray-icon reel"><i class="fas fa-film"></i></div>
+        <span class="tray-label">Reel Ekle</span>
+    </button>
+    
+    <div class="tray-divider"></div>
+    
+    <button class="tray-btn">
+        <div class="tray-icon story"><i class="fas fa-circle-plus"></i></div>
+        <span class="tray-label">Hikaye Ekle</span>
+    </button>
+</div>
+
+                <div class="bottom-nav">
+    <button class="nav-btn active" onclick="setActiveNav(this)">
+        <i class="fas fa-home"></i>
+    </button>
+    <button class="nav-btn play-btn" onclick="setActiveNav(this)">
+        <i class="fas fa-play"></i>
+    </button>
+    <div class="center-btn-wrap">
+        <button class="center-btn">
+    <div class="live-camera-icon">
+        <i class="fas fa-video"></i>
+        <div class="live-badge">CANLI</div>
+    </div>
+    <div class="live-pulse-ring"></div>
+</button>
+    </div>
+    <button class="nav-btn" onclick="setActiveNav(this)">
+        <i class="fas fa-search"></i>
+    </button>
+    <button class="nav-btn" onclick="setActiveNav(this)">
+        <i class="far fa-user"></i>
+    </button>
+</div>
+
+                <!-- Home Bar -->
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+function setActiveNav(clickedBtn) {
+    // Tüm nav butonlarından active class'ını kaldır
+    document.querySelectorAll('.bottom-nav .nav-btn, .bottom-nav .center-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Tıklanan butona active class'ı ekle
+    clickedBtn.classList.add('active');
+}
+
+function toggleCreateTray() {
+    const tray = document.getElementById('createTray');
+    tray.classList.toggle('open');
+}
+
+function toggleTray(btn) {
+    const tray = document.getElementById('createTray');
+    tray.classList.toggle('open');
+}
+
+function toggleTrayFromHeader() {
+    const tray = document.getElementById('createTray');
+    tray.classList.toggle('open');
+}
+
+document.addEventListener('click', function(e) {
+    const tray = document.getElementById('createTray');
+    const plusBtn = document.querySelector('.plus-btn');
+    
+    if (tray.classList.contains('open') && 
+        !tray.contains(e.target) && 
+        !plusBtn.contains(e.target)) {
+        tray.classList.remove('open');
+    }
+});
+
+function playRingAnimation(duration = 1400, reverse = false) {
+    const circle = document.getElementById('ringCircle');
+    const svg = document.getElementById('ringsvg');
+    const circumference = 194.8;
+    const start = performance.now();
+    
+    // Reset
+    svg.style.opacity = '1';
+    circle.style.filter = 'drop-shadow(0 0 2px rgba(255,255,255,0.6))';
+    circle.style.transition = 'none';
+    
+    function draw(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // easeInOut
+        const eased = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        
+        if (reverse) {
+            // Ters: dolu çemberden boşa doğru (silme)
+            circle.style.strokeDashoffset = eased * circumference;
+        } else {
+            // Normal: boştan dolu çembere doğru (çizme)
+            circle.style.strokeDashoffset = circumference * (1 - eased);
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(draw);
+        } else {
+            if (!reverse) {
+                // Normal animasyonda parlama efekti
+                circle.style.strokeDashoffset = 0;
+                circle.style.filter = 'drop-shadow(0 0 4px white) drop-shadow(0 0 8px white) brightness(16)';
+                circle.style.transition = 'filter 0.15s ease-in';
+                setTimeout(() => {
+                    svg.style.transition = 'opacity 0.2s ease-out';
+                    svg.style.opacity = '0';
+                }, 180);
+            } else {
+                // Ters animasyonda sadece fadeout
+                circle.style.strokeDashoffset = circumference;
+                svg.style.transition = 'opacity 0.15s ease-out';
+                svg.style.opacity = '0';
+            }
+        }
+    }
+    requestAnimationFrame(draw);
+}
+</script>
+</html>

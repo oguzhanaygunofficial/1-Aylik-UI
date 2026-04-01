@@ -1,0 +1,132 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+
+ADIM SAYMA & TOKEN EKONOMİSİ
+├── Gerçek zamanlı adım sayacı (10,000 adım hedefli)
+├── AdımCoin → NEX token dönüşüm sistemi (10:1 oran)
+├── Hedef tamamlama bonusu (+5,000 AdımCoin)
+└── Otomatik pasif adım artışı (5 saniyede bir)
+BOOST SİSTEMİ
+├── 2X Boost (1 saat, 99 NEX) - Gold tema
+├── 3X Boost (2 saat, 249 NEX) - Purple tema
+├── Oto-Adım (24 saat arka plan, 499 NEX) - Cyan tema
+└── Boost aktif görsel efektleri (animasyonlu halkalar)
+GÜNLÜK ÖDÜL & SERİ SİSTEMİ
+├── 7 günlük seri takvimi (Pzt-Paz)
+├── Artan ödül yapısı (50→50→50→50→50→50→150 NEX)
+├── Seri koruma mekanizması
+└── Günlük ödül claim butonu
+MARKET & ENVANTER
+├── Premium üyelik (299 NEX/ay)
+├── Güçlendirici satın alma (2x, 3x, Oto)
+├── Özel ayakkabı koleksiyonu (6 çeşit, +5%/+20% verimlilik)
+├── Mega Paket (sınırlı stoklu bundle)
+└── Başarım kilidi açma entegrasyonu
+BAŞARIM SİSTEMİ
+├── 6 adet başarım (Maratoncu, Ateş Kesilmiyor, Adım Kralı vb.)
+├── Sayfalama yapısı (3 başarım/sayfa)
+├── Başarım ödülleri (300-5,000 NEX)
+└── Başarım kilidi → Ayakkabı açma bağlantısı
+İSTATİSTİK & ANALİTİK
+├── Haftalık performans bar grafiği (7 gün)
+├── Toplam adım, kalori, mesafe, token özetleri
+├── Yüzdelik artış göstergeleri (+23%, +15%)
+└── Hover tooltip değerleri
+LİDERLİK TABLOSU
+├── Haftalık sıralama (Top 5 + Kullanıcı)
+├── Podium görseli (Altın/Gümüş/Bronz)
+├── Seviye ve rozet gösterimi
+└── İlerleme yüzdesi göstergesi
+AYARLAR & PROFİL
+├── Kullanıcı profili (seviye, rozet, istatistik)
+├── Toggle switch'ler (Bildirim, Arka Plan, Sağlık)
+├── Token bakiyesi gösterimi
+└── Profil düzenleme butonu
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+LAYOUT & FRAME
+├── iOS Frame simülasyonu (390x844px, 50px border-radius)
+├── Dynamic Island (126x37px, saat gösterimi)
+├── Bottom Navigation (4 tab: Ana Sayfa, İstatistik, Market, Profil)
+├── Screen Container (4 ekran, opacity geçişli)
+└── Safe area padding (top: 48px, bottom: 95px)
+GLASSMORPHISM BİLEŞENLERİ
+├── .glass (rgba(255,255,255,0.03) + blur 20px)
+├── .glass-strong (mor temalı vurgulu)
+├── .glass-cyan (cyan vurgulu)
+├── .glass-card (gradient arka planlı)
+└── .modal (backdrop blur 15px + koyu overlay)
+ANİMASYON & EFEKT
+├── @keyframes pulseGlow (neon parıltı)
+├── @keyframes float (yüzen efekt)
+├── @keyframes spin-slow (12s dönüş)
+├── @keyframes shimmer (parlaklık kayması)
+├── @keyframes particleFloat (tıklama partikülleri)
+└── @keyframes boostGold/Purple/Cyan (aktif boost halkaları)
+PROGRESS & DATA VİSUALİZASYON
+├── SVG Progress Ring (339.292 circumference, stroke-dashoffset)
+├── Linear gradient tanımları (gradient, gradient-gold, gradient-cyan)
+├── Bar Chart (flex layout, height percentage)
+├── Circular Level Badge (gold gradient)
+└── Streak Day Indicators (7 günlük daireler)
+MODAL SİSTEMİ
+├── Info Modal (Nasıl Çalışır açıklaması)
+├── Convert Modal (AdımCoin → NEX dönüşüm)
+├── Boost Modal (aktif boost durumu)
+├── Reward Modal (günlük ödül toplama)
+├── Success Modal (işlem onay)
+└── Streak Modal (seri detayları)
+INTERAKTİF ELEMENTLER
+├── Toggle Switch (50x28px, slide animasyonlu)
+├── Carousel Track (shoes kaydırma, 140px item genişliği)
+├── Button States (hover, active, disabled, claimed)
+├── Nav Item Active State (glow efekti)
+└── Click Particle System (12 partikül, random trajectory)
+TİPOGRAFİ
+├── Inter (body text, 300-900 weight)
+├── Orbitron (display font, başlıklar)
+├── Font size scale: 10px-3xl arası
+└── Neon text-shadow efektleri
+İKONOGRAFİ
+├── SVG Icon Set (24x24, stroke-width: 2)
+├── Emoji kullanımı (👟👑⚡🔥🎁🏃)
+├── Gradient ikon arka planları
+└── Achievement & Shoe ikonları
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+
+PRIMARY (Brand Colors)
+Nex Purple        : #C026D3  (Ana vurgu, butonlar, gradient başlangıcı)
+Nex Magenta       : #FF00AA  (Gradient bitişi, vurgu detayları)
+
+SECONDARY (Accent Colors)
+Nex Cyan          : #00F0FF  (İkincil vurgu, canlılık, bilgi göstergeleri)
+Cyan Dark         : #0099FF  (Gradient bitişi, derinlik)
+
+ACCENT (Reward & Boost)
+Nex Gold          : #FFD700  (Token, ödül, premium vurgular)
+Nex Orange        : #FF6B35  (İndirim, aciliyet, altın gradient bitişi)
+Nex Amber         : #FFA500  (Ara ton, ısı)
+
+SEMANTIC (Status Colors)
+Nex Green         : #39FF14  (Başarı, artış, onay)
+Success Dark      : #22c55e  (Yeşil buton arka planları)
+
+DARK THEME (Backgrounds)
+Nex Dark          : #0A0A1F  (Ana arka plan)
+Nex Darker        : #050510  (Derin arka plan, modal altı)
+Card Dark         : #1a1a3e  (Kart arka planı)
+Card Darker       : #0f0f2d  (Gradient kart bitişi)
+
+GLASSMORPHISM (Transparency)
+Glass Base        : rgba(255,255,255,0.03)  (Temel cam efekti)
+Glass Border      : rgba(255,255,255,0.1)   (Ince border)
+Glass Purple      : rgba(192,38,211,0.1)    (Vurgulu cam)
+Glass Cyan        : rgba(0,240,255,0.05)    (Cyan temalı cam)
+Glass Yellow      : rgba(255,215,0,0.1)     (Gold temalı cam)
+
+UTILITY (Text & UI)
+White             : #FFFFFF  (Ana metin)
+Gray 400          : #9ca3af  (İkincil metin, açıklamalar)
+Gray 500          : #6b7280  (Pasif durum, hint text)
+Gray 700          : #374151  (Input arka plan, separator)
+================================================================================ SONUÇ: Nexlify StepCounter, glassmorphism prensipleriyle tasarlanmış, neon renk paletine sahip, 4 ekranlı mobil-first bir fitness-tokenizasyon uygulamasıdır; adım sayma, boost ekonomisi, günlük ödül mekanikleri ve görsel efekt zenginliğiyle kullanıcı motivasyonunu artıran kapsamlı bir UI/UX sistem sunar.

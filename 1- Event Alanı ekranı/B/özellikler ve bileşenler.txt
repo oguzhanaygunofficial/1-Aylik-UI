@@ -1,0 +1,154 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+
+CİHAZ ÇERÇEVESİ (iPhone 16 Pro Frame)
+├── Dynamic Island (Kamera + Hoparlör simülasyonu)
+├── Status Bar (Saat, Sinyal, WiFi, Batarya)
+├── Home Bar (Gesture indicator)
+└── Side Buttons (Volume, Power - Dekoratif)
+NAVİGASYON SİSTEMİ
+├── Header (Back button, Title, Actions)
+├── Tab Switcher (Canlı / Ses / Oyun)
+├── Hamburger Menu (Modül erişimi)
+└── Create Room Button (+) Floating action
+ODA OLUŞTURMA SİSTEMİ (Bottom Sheet)
+├── Room Type Selector (Canlı Yayın / Ses Odası / Oyun)
+├── Form Wizard (Başlık, Kategori, Oda Tipi)
+├── VIP Package Selector (Giriş/Orta/İleri Seviye)
+├── Token Input (1-2000 arası giriş ücreti)
+├── Friend Invitation Chips (DM davet sistemi)
+└── Submit with Cost Display (Token maliyeti gösterimi)
+MODÜL KEŞİF SİSTEMİ (Overlay Panel)
+├── Module Cards (7 farklı modül)
+├── Category Grouping (Sosyal / Kazan / Araçlar)
+├── Status Badges (HOT / NEW / AI / EARN / PRO)
+└── Soon Chips (Yakında gelen özellikler)
+CANLI YAYINLAR (Live Streams)
+├── Category Filter Bar (21 kategori)
+├── Stream Cards (Twitch-style anatomy)
+├── Hero Card (Full-width featured stream)
+├── Live Badge (Pulsing red indicator)
+├── Viewer Count (Real-time display)
+├── Streamer Info (Avatar + Flag + Name)
+└── Engagement Metrics (Likes + Tokens)
+SES ODALARI (Audio Rooms - Clubhouse Style)
+├── Category Filter (20 kategori)
+├── Room Cards (Left accent bar color-coded)
+├── Speaker Grid (3-slot layout)
+├── Active Speaker Wave Animation
+├── Queue System (Söz kuyruğu)
+└── Join Button (Category-tinted)
+Oyun SİSTEMİ (3 Sub-tab)
+├── Games Browser (Steam Library style)
+├── Game Rooms (Discord + Hago hybrid)
+├── Ranking System (Leaderboard)
+└── Streak System (Daily login rewards)
+SIRALAMA/RANKING SİSTEMİ
+├── User Card (Self position display)
+├── Podium Display (Top 3 users)
+├── XP Progress Bar (Level indicator)
+├── Period Selector (Günlük/Haftalık/Aylık)
+├── Category Tabs (Token/XP/Streak)
+└── XP Info Bottom Sheet (Kazanç kuralları)
+TOKEN EKONOMİSİ
+├── VIP Room Entry Fees
+├── Earning Tiers (3 seviye)
+├── Cost Calculation (Submit button integration)
+└── Balance Indicators (🪙 iconography)
+SÖZ KUYRUĞU (Speaking Queue)
+├── Queue Sheet Overlay
+├── Rank Display (Sıralama)
+├── Wait Time Indicator
+└── Hand Raise System
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+LAYOUT & CONTAINER BİLEŞENLERİ
+├── iphone-frame (Cihaz çerçevesi)
+├── iphone-screen (Scrollable viewport)
+├── app-container (Main scroll area)
+├── content-area (Tab içerik alanı)
+└── modules-scroll (Modül listesi)
+OVERLAY & MODAL BİLEŞENLERİ
+├── create-room-overlay (Backdrop + Sheet)
+├── module-overlay (Blur + Panel)
+├── queue-sheet-overlay (Söz kuyruğu)
+├── rk-xpinfo-overlay (XP bilgi sheet)
+├── games-all-overlay (Tüm oyunlar modal)
+└── gro-browser-overlay (Oyun gezgini)
+KART BİLEŞENLERİ (Cards)
+├── stream-card (Canlı yayın - Twitch style)
+├── room-card (Ses odası - Clubhouse style)
+├── game-card (Oyun listesi - Steam style)
+├── gro-card (Oyun odası - Discord+Hago)
+├── module-card (Modül tanıtım)
+└── rk-me-card (Kendi sıralama kartı)
+NAVİGASYON BİLEŞENLERİ
+├── tab-switcher (Ana tab bar)
+├── category-filter (Yatay scroll chip list)
+├── game-subnav (Oyun alt navigasyonu)
+├── header-actions (Üst bar aksiyonları)
+└── hamburger-btn (Modül menü trigger)
+FORM BİLEŞENLERİ
+├── rp-input (Text input)
+├── rp-select-btn (Custom dropdown trigger)
+├── rp-dropdown (Custom select list)
+├── rp-room-type-opt (Radio-style selector)
+├── rp-vip-pkg (Package selector)
+├── rp-player-opt (Mikrofon/oyuncu sayısı)
+└── rp-invite-chip (Friend selector chip)
+BUTON BİLEŞENLERİ
+├── create-room-btn (Floating action)
+├── header-close (Gradient border button)
+├── join-btn (Category-colored outline)
+├── rp-submit (Gradient submit)
+├── game-card-play-btn (Steam style)
+├── gro-act (Join/Watch action)
+└── rk-info-btn (Info pill button)
+GÖRSEL & İKON BİLEŞENLERİ
+├── streamer-avatar (Rounded avatar + border)
+├── room-speaker-av (Active speaker ring)
+├── twitch-live-badge (Pulsing live indicator)
+├── category-chip (Filter pill)
+├── module-badge (Status label)
+└── stream-category-tag (Tag badge)
+ANİMASYON & EFEKT BİLEŞENLERİ
+├── room-wave (Ses dalgası animasyonu)
+├── tlb-dot (Pulse animasyonu)
+├── entering (Slide-in animasyonu)
+├── backdrop-filter (Blur effects)
+└── box-shadow (Glow effects)
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+NEON CORE COLORS
+Neon Magenta      : #FF00AA  (Primary accent)
+Neon Cyan         : #00F0FF  (Secondary accent)
+Neon Gold         : #FFD700  (Token/VIP indicator)
+
+VIBELLA BRAND COLORS
+Vibella Purple    : #8B5CF6  (Brand purple)
+Vibella Cyan      : #45D3D0  (Brand teal)
+
+DARK THEME BACKGROUNDS
+Deep Black        : #06040E  (Darkest base)
+Dark Purple       : #110826  (Mid gradient)
+Dark Blue         : #060B18  (Cool gradient)
+Card Background   : #0C0C18  (Card surfaces)
+
+GLASSMORPHISM
+Glass BG          : rgba(255,255,255,0.08)
+Glass Border      : rgba(255,255,255,0.15)
+Glass Blur        : 20px (backdrop-filter)
+
+CATEGORY ACCENT COLORS
+Live/Stream       : #E91916 (Twitch red)
+Audio/Chat        : #0EA5E9 (Sky blue)
+Game              : #F97316 (Orange)
+Music             : #EC4899 (Pink)
+Sports            : #22C55E (Green)
+Comedy            : #EAB308 (Yellow)
+VIP/Gold          : #F59E0B (Amber)
+
+GRADIENTS
+Primary Gradient  : linear-gradient(135deg, #FF00AA, #00F0FF)
+Gold Gradient     : linear-gradient(135deg, #FFD700, #FF00AA)
+Card Gradients    : Category-specific (per module)
+================================================================================ SONUÇ: iPhone 16 Pro form faktöründe, neon-temalı dark mode bir sosyal eğlence platformu; canlı yayın, ses odası ve oyun sistemlerini Twitch/Clubhouse/Steam UI patternleriyle birleştiren, token ekonomisi entegre edilmiş kapsamlı bir mobil web uygulaması prototipi.

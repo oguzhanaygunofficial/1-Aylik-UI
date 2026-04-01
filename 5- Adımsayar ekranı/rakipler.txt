@@ -1,0 +1,61 @@
+--------------------------------------------------------------------------------------
+
+
+1. SWEATCOIN
+
+Güçlü Yanı: Merkezi Halka tasarımı. Adımların "enerjiye" dönüşme hissi çok güçlü.
+Zayıf Yanı: Çok kalabalık ve ucuz duran reklam alanları (Premium hissi düşük).
+2026 Güncellemesi: "Sweat Hero" NFT oyun entegrasyonu ile adımları fiziksel bir dövüş mekaniğine bağlama denemesi.
+
+Nexlify Stratejisi: Adım dairesini "Nexlify Core" olarak neon ve glow efektli bir "reaktör" şeklinde premiumlaştıracağız.
+
+
+--------------------------------------------------------------------------------------
+
+
+2. STEPN
+
+Güçlü Yanı: Gamification başarısı. Ayakkabı upgrade ve enerji barı mantığı bağımlılık yaratıyor.
+Zayıf Yanı: Giriş bariyeri yüksek ve UI çok karmaşık (Aşırı GameFi yoğunluğu).
+2026 Güncellemesi: "FSL ID" ekosistemi ile birden fazla uygulama arasında ortak puan sistemi (Airdrop odaklı sadakat).
+
+Nexlify Stratejisi: "Nex-Soles" (Sanal tabanlık) mantığıyla, kullanıcıyı yormadan "Upgrade" üzerinden para harcatma mekaniği kuracağız.
+
+
+--------------------------------------------------------------------------------------
+
+
+3. STEPBET
+
+Güçlü Yanı: Social Pressure (Sosyal Baskı). Ortaya para koyma ve gruplarla yarışma hırsı.
+Zayıf Yanı: Arayüz 2015'ten kalma gibi duruyor; çok donuk ve heyecansız.
+2026 Güncellemesi: "Squad Challenges" özelliği ile mikro-toplulukların birbirine karşı bahis açabildiği kapalı devre ligler.
+
+Nexlify Stratejisi: Bento-grid yapısında "Arkadaşların şu an yürüyor" canlı verisiyle rekabeti Cyberpunk estetiğiyle sunacağız.
+
+
+--------------------------------------------------------------------------------------
+
+
+4. WINWALK
+
+Güçlü Yanı: Micro-Rewards. Her 100 adımda bir "tıkla topla" ödülüyle anlık dopamin veriyor.
+Zayıf Yanı: Çok fazla popup ve görsel kirlilik (Kullanıcıyı boğuyor).
+2026 Güncellemesi: "Instant Gift Cards" havuzunu genişleterek Amazon ve Starbucks entegrasyonlarını tamamen otomatize etmesi.
+
+Nexlify Stratejisi: Haptic Feedback kullanarak; adım attıkça ekranda küçük altın parlamaları (NXT) çıkarıp kullanıcıyı ekranda tutacağız.
+
+
+--------------------------------------------------------------------------------------
+
+
+5. MACADAM
+
+Güçlü Yanı: Temiz Tipografi. Sade ve veriye dayalı, okunması kolay dashboard.
+Zayıf Yanı: Fazla steril; Nexlify'ın "gece kulübü/cyberpunk" ruhuna çok aykırı ve soğuk.
+2026 Güncellemesi: "Social Map" özelliği ile çevrendeki diğer kullanıcıların adım yoğunluğunu ısı haritası olarak göstermesi.
+
+Nexlify Stratejisi: Bento Layout kullanacağız; verileri Apple Health temizliğinde ama Nexlify’ın koyu mor/magenta paletinde işleyeceğiz.
+
+
+--------------------------------------------------------------------------------------

@@ -1,0 +1,165 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+AURA HOME DASHBOARD
+├── Zodiac Pill: Collapsible burç seçici (localStorage persistency)
+├── Energy Badge: Token display + shop navigation
+├── Fal Bubbles: 2-tier grid (big cards + small bubbles)
+├── Quick Links: Fal geçmişi + Rüya günlüğü shortcut
+└── Daily Quote: Static Mevlana alıntısı
+KAHVE FALI MODÜLÜ
+├── Dual Upload: Fincan (2 açı) + Tabak fotoğrafı
+├── Visual Steps: 3 adımlı hazırlanma rehberi
+├── Progress Indicator: Checkmark transformation on upload
+└── Element Theme: Toprak (earth) elementi, warm orange gradient
+TAROT FALI MODÜLÜ
+├── 22 Kart Destesi: Horizontal scrollable deck
+├── Drag-Drop + Tap: Hibrit seçim mekanizması
+├── 3 Slot Sistem: Geçmiş/Şimdi/Gelecek (reversible deste)
+├── Reversed Cards: Ters bırakma desteği (65% threshold)
+└── Drop Zones: Visual feedback (border-color change)
+EL FALI MODÜLÜ
+├── Dual Input: Kamera (live) veya Galeri (file)
+├── Selection Highlight: Border color state management
+├── Palm Lines Info: Kalp/Kader/Akıl çizgisi açıklamaları
+└── Element Theme: Toprak elementi, cyan accent
+SU FALI MODÜLÜ
+├── Interactive Canvas: 210x210px touch-responsive water bowl
+├── Ripple Physics: Particle system with decay animation
+├── Activation Threshold: 15+ ripple triggers enable button
+├── Hint Overlay: Fade-out on first interaction
+└── Element Theme: Su elementi, ocean blue palette
+MELEK FALI MODÜLÜ
+├── Question Input: Textarea with min-length validation (3 chars)
+├── 4 Kart Seçimi: Uriel, Mikail, Cebrail, Raphael
+├── Angel Info Panel: Sembol ve enerji açıklamaları
+├── Card Reveal: Inner emoji + numeral display on selection
+└── Element Theme: Hava elementi, soft white/pink
+KRİSTAL FALI MODÜLÜ
+├── Interactive Canvas: 190x190px crystal sphere
+├── Particle Trail: Mouse/touch drag spawns colored particles
+├── Activation Threshold: 40+ particle triggers enable button
+├── Hint Overlay: Icon-based initial state
+└── Element Theme: Ateş elementi, purple gradient
+RÜYA YORUMU MODÜLÜ
+├── Free Text Input: Multi-line textarea
+├── Category Tags: Genel/Aşk/Kariyer/Para (single-select)
+├── Dream Journal: Persistent entry list with date stamps
+└── Element Theme: Su elementi, deep blue
+GÜNLÜK BURÇ MODÜLÜ
+├── 12 Zodiac Grid: 4x3 responsive layout
+├── Dynamic Content: Günlük/Haftalık/Aylık modları
+├── Aspect Bars: Aşk/Kariyer/Sağlık/Para progress bars
+├── Lucky Numbers: (Görsel olarak mevcut, numerik data yok)
+└── LocalStorage: Seçili burç persistency
+PROFİL MODÜLÜ
+├── Personal Info: Ad, Doğum tarihi/yeri/saati
+├── Chip Selectors: Cinsiyet, Medeni durum, İş durumu
+├── Validation: Min-length ve required field checks
+└── Save Feedback: Toast confirmation
+RÜYA GÜNLÜĞÜ MODÜLÜ
+├── Entry List: Tarih sıralamalı kartlar
+├── Empty State: Illustrative placeholder
+└── Persistent Storage: Array-based in-memory (session only)
+ENERJI (TOKEN) EKONOMİSİ
+├── Balance Display: Global header + shop screen
+├── 4 Tier Packages: 50/150/350/800 birim
+├── Visual Badges: Popular tag, gradient orbs
+└── Mock Purchase: Toast-based simulation
+SONUÇ EKRANI
+├── Dynamic Content: Fal tipine göre icon/title/text
+├── Glass Card: Organic glassmorphism container
+├── Confidence Score: %94 güven göstergesi
+└── Action Buttons: Kaydet + Paylaş (mock)
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+LAYOUT ARCHITECTURE
+├── Device Frame: iPhone 14 Pro (393x852px, 55px radius)
+├── Aurora Background: CSS gradient animation (400% size, 15s loop)
+├── Floating Orbs: Absolute positioned blur circles (3 instances)
+├── Dynamic Island: Static pill (120x35px, blur backdrop)
+└── Safe Area: 54px top, 70px bottom nav padding
+NAVIGATION SYSTEM
+├── Vanilla Router: navigateTo() screen switching
+├── Soft Back Button: Circular glass button (absolute positioned)
+├── Screen Reset: Entry/exit state cleanup functions
+└── Scroll Management: el.scrollTop = 0 on navigation
+GLASSMORPHISM SYSTEM
+├── Organic Glass: backdrop-filter: blur(20px), rgba(255,255,255,0.08)
+├── Gradient Overlays: 135deg multi-stop gradients (before pseudo)
+├── Border Treatment: 1px solid rgba(255,255,255,0.15)
+└── Inner Glow: Radial gradient highlights (fal-card-big::after)
+INTERACTIVE CANVAS ELEMENTS
+├── Water Bowl: 2D context, particle-based ripple system
+├── Crystal Sphere: 2D context, trail particle animation
+├── Hit Detection: Circle-based boundary checking
+└── Animation Loop: requestAnimationFrame based rendering
+CARD COMPONENTS
+├── Fal Card Big: Gradient backgrounds, icon containers, price tags
+├── Fal Bubble: Compact grid items, radial glow effects
+├── Tarot Card: CSS transform rotation, drag states
+└── Angel Card: Selection states, inner reveal pattern
+ANIMATION SYSTEM
+├── Breathe: Scale + opacity oscillation (6s ease-in-out)
+├── Float Soft: TranslateY + rotate combination (8s)
+├── Morph: Border-radius shape shifting (8s, organic blob)
+├── Aurora: Background-position shift (15s, 400% size)
+└── Ripple: Scale expansion with opacity decay (3s)
+FORM ELEMENTS
+├── Text Inputs: Custom styled with focus states
+├── Textareas: Auto-resize disabled, fixed min-height
+├── Chip Buttons: Toggle selection, group management
+└── File Upload: Hidden input, visual proxy triggers
+FEEDBACK MECHANISMS
+├── Soft Toast: Blurred pill, slide-up animation (2.5s duration)
+├── Visual Checkmarks: Upload confirmation indicators
+├── Border Highlights: Active state color changes
+└── Particle Effects: Canvas-based interactive feedback
+TYPOGRAPHY SYSTEM
+├── Serif: 'Cormorant Garamond' (headers, quotes, italic body)
+├── Soft: 'Quicksand' (UI labels, buttons, small text)
+├── System: 'Inter' (fallback, inputs)
+└── Tracking: Wide letter-spacing on labels (2-4px)
+STATE MANAGEMENT
+├── LocalStorage: Zodiac selection persistence
+├── Session Arrays: Dream journal, tarot slots
+├── Boolean Flags: Canvas activation states
+└── Counter Variables: Upload counts, particle thresholds
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+
+AURA GRADIENT COLORS (Primary Palette)
+Dawn Pink-Purple  : #FF66FF  (Primary accent, dawn energy)
+Dusk Magenta      : #CC00FF  (Secondary accent, twilight)
+Ocean Cyan        : #00B4FF  (Tertiary accent, water themes)
+Twilight Blue     : #3366FF  (Deep accent, night sky)
+Mist Pink         : #FF33FF  (Soft accent, ethereal glow)
+NEUTRAL & BASE COLORS
+
+Sand              : #FFE4E1  (Warm light, text highlights)
+Pearl             : #F8F8FF  (Cool light, backgrounds)
+Dark Navy         : #1a1a2e  (Primary dark background)
+Deeper Navy       : #16213e  (Secondary dark, depth)
+GLASSMORPHISM ALPHAS
+
+Glass BG          : rgba(255,255,255,0.08)  (Standard panels)
+Glass BG Light    : rgba(255,255,255,0.06)  (Input fields)
+Glass Border      : rgba(255,255,255,0.15)  (Subtle borders)
+Glass Border Thin : rgba(255,255,255,0.10)  (Input borders)
+GRADIENT COMBINATIONS
+
+Aurora BG: -45deg gradient with 5 stops (dawn/dusk/ocean/twilight/mist)
+Organic Glass: 135deg (dawn 10%, ocean 5%, white 5%)
+Fal Card Big: 145deg (thematic color 14%, white 5%)
+
+TEXT COLORS
+White Primary     : rgba(255,255,255,0.90)  (Main content)
+White Secondary   : rgba(255,255,255,0.65)  (Body text)
+White Muted       : rgba(255,255,255,0.40)  (Labels, hints)
+White Subtle      : rgba(255,255,255,0.25)  (Disabled, metadata)
+
+THEMATIC ACCENTS
+Coffee Warm       : rgba(255,102,80,0.15)  (Kahve falı cards)
+Tarot Purple      : rgba(120,60,255,0.16)  (Tarot cards)
+Water Blue        : rgba(0,180,255,0.12)   (Su falı cards)
+Angel Gold        : rgba(255,210,80,0.10)  (Melek cards)
+Crystal Magenta   : rgba(204,0,255,0.12)   (Kristal cards)
+================================================================================ SONUÇ: Nexlify Aura, organik glassmorphism ve aurora gradient sistemleriyle zenginleştirilmiş, canvas tabanlı interaktif fal deneyimleri sunan, element temalı (Toprak/Ateş/Su/Hava) görsel bir web uygulamasıdır; vanilla JS mimarisi, CSS keyframe animasyonları ve dokunmatik canvas etkileşimleriyle mobil-first mystical UX sağlar.

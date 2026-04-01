@@ -1,0 +1,126 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+
+Canlı Yayın Keşfi
+├── Öne çıkan yayın (featured stream)
+├── Popüler yayınlar grid görünümü (2 kolon)
+├── Yeni başlayanlar yatay scroll
+├── "Senin İçin" kişiselleştirilmiş öneriler
+├── Sonsuz kaydırma (infinite scroll / auto-load)
+└── Tüm yayınlar listesi overlay
+Yayın Kategorileri
+├── Herkes (tüm kullanıcılar)
+├── Arkadaşlar (sosyal bağlantılar)
+└── Takip Ettiklerin (abonelikler)
+Canlı Yayın İzleme
+├── Tam ekran yayın görüntüleyici
+├── Canlı sohbet (chat overlay)
+├── Kalp/Beğeni sistemi
+├── Token gönderme (monetization)
+├── Yayıncı takip etme
+├── İzleyici sayacı (real-time)
+└── Paylaşım fonksiyonu
+Yayın Açma (Go Live)
+├── Kamera ön/arka yüz değiştirme
+├── Yayın başlığı girişi
+├── Katılım kısıtlama (restricted mode)
+├── Canlı yayın başlatma
+└── Yayın önizleme
+Sosyal Özellikler
+├── Arkadaşların canlı yayınları
+├── Son görünenler (past activity)
+├── Arkadaşların takip ettikleri
+├── Son etkinlikler (offline activity)
+└── Kullanıcı profil kartları
+Navigasyon & Erişim
+├── Tab bazlı kategori geçişi (slide animasyon)
+├── Alt navigasyon (5 butonlu dock)
+├── Arama butonu
+├── Geri navigasyonu
+└── Dynamic Island entegrasyonu
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+Kapsayıcı & Çerçeve
+├── iPhone frame simülasyonu (402x874px)
+├── Side button simülasyonu (volume/power)
+├── Dynamic Island (notch simulation)
+├── Screen container (border-radius 47px)
+└── Safe area padding
+Navigasyon Bileşenleri
+├── Header (logo + arama + yayın aç)
+├── Tab bar (3 kategori + animasyonlu indicator)
+├── Bottom nav (5 ikonlu dock)
+├── Geri butonu (overlay'lerde)
+└── "Tümünü gör" linkleri
+Kart & Liste Bileşenleri
+├── Featured card (hero banner)
+├── Live card (9:14 aspect ratio)
+├── Horizontal scroll card (110px genişlik)
+├── Friend card (96x148px)
+├── All-item list (detaylı liste öğesi)
+└── Grid container (2 kolon)
+Overlay & Modal Sistemleri
+├── All streams overlay (tam liste)
+├── Watch overlay (yayın izleme)
+├── Go Live overlay (yayın açma)
+├── Friends All overlay
+└── Fade/slide transition'lar
+Etkileşim Bileşenleri
+├── Beğeni butonu (kalp toggle)
+├── Token butonu (coin animasyonu)
+├── Takip butonu (gradient)
+├── Yorum input alanı
+├── Checkbox (custom styled)
+└── Katıl/Join butonu
+Durum & Geri Bildirim
+├── Loading spinner (circle-notch)
+├── Canlı göstergesi (LIVE pill + pulse dot)
+├── İzleyici sayacı (eye ikonu)
+├── Token float animasyonu
+└── Scroll indicator (sentinel)
+Medya Bileşenleri
+├── Thumbnail görselleri
+├── Avatar (yuvarlak, border'lı)
+├── Yayın arka planı (fullscreen)
+├── Gradient overlay'ler (dim)
+└── Kamera flip animasyonu
+Tipografi & İkonografi
+├── Montserrat (başlıklar, 700-900)
+├── Inter (gövde metni, 300-800)
+├── Font Awesome 6.4 (ikonlar)
+├── Gradient text (logo)
+└── Text shadow efektleri
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+
+Ana Tema Renkleri (Brand)
+--teal             : #45D3D0              (Turkuaz - primary accent)
+--purple           : #8E82E6              (Mor - secondary accent)
+--pink             : #F07BB0              (Pembe - tertiary accent)
+--grad             : linear-gradient(135deg,#45D3D0 0%,#8E82E6 55%,#F07BB0 100%) (Ana gradyan)
+
+Arka Plan & Yüzeyler
+--bg               : #09090f              (Ana arka plan - çok koyu)
+--card             : rgba(255,255,255,.04) (Kart arka planı)
+--card-solid       : #14141c              (Kart yüzeyi - solid)
+--border           : rgba(255,255,255,.07) (Kenarlıklar)
+
+Metin Renkleri
+Beyaz (primary)    : #FFFFFF              (Ana metin)
+Beyaz %82          : rgba(255,255,255,.82) (İkincil metin)
+Beyaz %75          : rgba(255,255,255,.75) (Placeholder)
+Beyaz %55          : rgba(255,255,255,.55) (Pasif metin)
+Beyaz %45          : rgba(255,255,255,.45) (Gölge metin)
+Beyaz %35          : rgba(255,255,255,.35) (Zayıf metin)
+Beyaz %28          : rgba(255,255,255,.28) (Çok zayıf metin)
+Beyaz %25          : rgba(255,255,255,.25) (Disabled metin)
+
+Durum Renkleri
+Canlı kırmızı      : rgba(220,0,60,.9)    (LIVE badge)
+Beğeni kırmızı     : #ff4d6d              (Kalp/Like aktif)
+Token sarı         : #FFD700              (Coin/Token)
+Nav aktif mor      : #a855f7              (Aktif tab ikonu)
+
+Body Background
+Body gradyan       : linear-gradient(135deg,#667eea 0%,#764ba2 100%) (iPhone dış çerçeve)
+================================================================================
+SONUÇ: Nexlify Canlı Yayınlar, TikTok Live benzeri modern bir live streaming platformu olup, gradient-forward UI, sosyal keşif mekanizmaları ve token bazlı monetization sistemiyle donatılmış kapsamlı bir mobil web deneyimi sunar.

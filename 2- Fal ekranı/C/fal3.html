@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nexlify • Aura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        aura: {
+                            dawn: '#FF66FF',      // Pink-Purple - şafak
+                            dusk: '#CC00FF',      // Vibrant Magenta - akşam
+                            ocean: '#00B4FF',     // Cyan - okyanus
+                            twilight: '#3366FF',  // Deep Blue - alacakaranlık
+                            mist: '#FF33FF',      // Pink-Purple - sis
+                            sand: '#FFE4E1',
+                            pearl: '#F8F8FF',
+                            dark: '#1a1a2e',
+                            deeper: '#16213e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                        soft: ['Quicksand', 'sans-serif']
+                    },
+                    animation: {
+                        'breathe': 'breathe 6s ease-in-out infinite',
+                        'float-soft': 'floatSoft 8s ease-in-out infinite',
+                        'ripple': 'ripple 3s ease-out infinite',
+                        'morph': 'morph 8s ease-in-out infinite',
+                        'aurora': 'aurora 15s ease-in-out infinite',
+                        'sway': 'sway 4s ease-in-out infinite',
+                        'pulse-soft': 'pulseSoft 4s ease-in-out infinite',
+                        'wave': 'wave 10s linear infinite'
+                    },
+                    keyframes: {
+                        breathe: {
+                            '0%, 100%': { transform: 'scale(1)', opacity: '0.8' },
+                            '50%': { transform: 'scale(1.05)', opacity: '1' }
+                        },
+                        floatSoft: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '33%': { transform: 'translateY(-15px) rotate(2deg)' },
+                            '66%': { transform: 'translateY(-8px) rotate(-1deg)' }
+                        },
+                        ripple: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0.6' },
+                            '100%': { transform: 'scale(2)', opacity: '0' }
+                        },
+                        morph: {
+                            '0%, 100%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' },
+                            '25%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%' },
+                            '50%': { borderRadius: '50% 60% 30% 60% / 30% 60% 70% 40%' },
+                            '75%': { borderRadius: '60% 40% 60% 30% / 60% 30% 40% 70%' }
+                        },
+                        aurora: {
+                            '0%, 100%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' }
+                        },
+                        sway: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' }
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { opacity: '0.4' },
+                            '50%': { opacity: '0.8' }
+                        },
+                        wave: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* iPhone Frame */
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            background: linear-gradient(180deg, #2d1b69 0%, #1a1a2e 50%, #16213e 100%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 0 12px #1a1a1a,
+                0 0 0 14px #333,
+                0 20px 60px rgba(0,0,0,0.5),
+                0 0 100px rgba(255, 102, 255, 0.1);
+            border-radius: 55px;
+        }
+        
+        .dynamic-island {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 35px;
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            z-index: 1000;
+        }
+        
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            z-index: 1000;
+        }
+        
+        /* Organic Background */
+        .aurora-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(-45deg, 
+                rgba(255, 102, 255, 0.3), 
+                rgba(204, 0, 255, 0.2),
+                rgba(0, 180, 255, 0.3),
+                rgba(51, 102, 255, 0.2),
+                rgba(255, 51, 255, 0.3)
+            );
+            background-size: 400% 400%;
+            animation: aurora 15s ease-in-out infinite;
+            filter: blur(60px);
+            opacity: 0.6;
+        }
+        
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: floatSoft 8s ease-in-out infinite;
+        }
+        
+        /* Glassmorphism Organic */
+        .organic-glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .organic-glass::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(255, 102, 255, 0.1) 0%, 
+                rgba(0, 180, 255, 0.05) 50%,
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            pointer-events: none;
+        }
+        
+        /* Morphing Blob */
+        .morph-blob {
+            background: linear-gradient(135deg, 
+                rgba(255, 102, 255, 0.4), 
+                rgba(0, 180, 255, 0.3),
+                rgba(204, 0, 255, 0.2)
+            );
+            animation: morph 8s ease-in-out infinite;
+            filter: blur(20px);
+        }
+        
+        /* Wave Separator */
+        .wave-separator {
+            position: absolute;
+            width: 200%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.1' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: 50% 100%;
+            animation: wave 20s linear infinite;
+            opacity: 0.3;
+        }
+        
+        /* Breathing Card */
+        .breathing-card {
+            animation: breathe 6s ease-in-out infinite;
+            transition: all 0.4s ease;
+        }
+        
+        .breathing-card:hover, .breathing-card:active {
+            transform: scale(1.03);
+            box-shadow: 0 20px 40px rgba(255, 102, 255, 0.2);
+        }
+        
+        /* Petal Button */
+        .petal-btn {
+            background: linear-gradient(135deg, 
+                rgba(255, 102, 255, 0.3), 
+                rgba(0, 180, 255, 0.2)
+            );
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 16px 32px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .petal-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, 
+                rgba(255, 255, 255, 0.2) 0%, 
+                transparent 70%
+            );
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .petal-btn:hover::before, .petal-btn:active::before {
+            opacity: 1;
+        }
+        
+        .petal-btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* Status Bar */
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 54px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 0 28px 8px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        .status-time {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+        
+        .status-icons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        .status-icons svg {
+            width: 16px;
+            height: 16px;
+            fill: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* Screen */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            display: none;
+            flex-direction: column;
+            z-index: 10;
+        }
+        
+        .screen::-webkit-scrollbar { display: none; }
+        .screen.active { display: flex; animation: fadeIn 0.6s ease; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Floating Navigation */
+        .float-nav {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            z-index: 300;
+        }
+        
+        .float-nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+        
+        .float-nav-btn:hover, .float-nav-btn:active {
+            background: rgba(255, 102, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        /* Full Screen Menu */
+        .full-menu {
+            position: absolute;
+            inset: 0;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(30px);
+            z-index: 400;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        
+        .full-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .menu-item {
+            padding: 20px 40px;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .menu-item:hover, .menu-item:active {
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .menu-item::after {
+            content: '';
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #FF66FF, transparent);
+            transition: width 0.3s ease;
+        }
+        
+        .menu-item:hover::after, .menu-item:active::after {
+            width: 80%;
+        }
+        
+        /* Close Menu */
+        .close-menu {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s;
+        }
+        
+        .close-menu:hover, .close-menu:active {
+            color: white;
+            transform: rotate(90deg);
+        }
+        
+        /* Water Drop Button */
+        .water-drop-btn {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(180deg, 
+                rgba(0, 180, 255, 0.4) 0%, 
+                rgba(0, 180, 255, 0.1) 100%
+            );
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 180, 255, 0.3);
+            animation: sway 4s ease-in-out infinite;
+        }
+        
+        .water-drop-btn:hover, .water-drop-btn:active {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 180, 255, 0.3);
+        }
+        
+        /* Leaf Card */
+        .leaf-card {
+            background: linear-gradient(135deg, 
+                rgba(255, 102, 255, 0.15), 
+                rgba(204, 0, 255, 0.1)
+            );
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px 0 30px 0;
+            padding: 20px;
+            transition: all 0.4s ease;
+        }
+        
+        .leaf-card:hover, .leaf-card:active {
+            border-radius: 0 30px 0 30px;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(255, 102, 255, 0.15);
+        }
+        
+        /* Pearl Orb */
+        .pearl-orb {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.9), 
+                rgba(255, 228, 225, 0.6),
+                rgba(255, 102, 255, 0.3),
+                rgba(0, 180, 255, 0.2)
+            );
+            box-shadow: 
+                0 0 60px rgba(255, 255, 255, 0.3),
+                inset 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: pulseSoft 4s ease-in-out infinite;
+            position: relative;
+        }
+        
+        .pearl-orb::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 25%;
+            width: 30%;
+            height: 20%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            filter: blur(5px);
+        }
+        
+        /* Ripple Container */
+        .ripple-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+        
+        .ripple-ring {
+            position: absolute;
+            inset: 0;
+            border: 2px solid rgba(0, 180, 255, 0.3);
+            border-radius: 50%;
+            animation: ripple 3s ease-out infinite;
+        }
+        
+        .ripple-ring:nth-child(2) { animation-delay: 1s; }
+        .ripple-ring:nth-child(3) { animation-delay: 2s; }
+        
+        /* Soft Toast */
+        .soft-toast {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 14px 28px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 13px;
+            color: white;
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 9999;
+        }
+        
+        .soft-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        /* Back Button Soft */
+        .back-soft {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+        
+        .back-soft:hover, .back-soft:active {
+            background: rgba(255, 102, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        /* Text Styles */
+        .text-gradient-aura {
+            background: linear-gradient(135deg, #FF66FF, #00B4FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Flower Grid */
+        .flower-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 0 20px;
+        }
+        
+        .flower-item {
+            aspect-ratio: 1;
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            background: linear-gradient(135deg, 
+                rgba(255, 102, 255, 0.2), 
+                rgba(0, 180, 255, 0.15)
+            );
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            animation: breathe 5s ease-in-out infinite;
+        }
+        
+        .flower-item:nth-child(2) { animation-delay: 0.5s; }
+        .flower-item:nth-child(3) { animation-delay: 1s; }
+        .flower-item:nth-child(4) { animation-delay: 1.5s; }
+        .flower-item:nth-child(5) { animation-delay: 2s; }
+        .flower-item:nth-child(6) { animation-delay: 2.5s; }
+        
+        .flower-item:hover, .flower-item:active {
+            transform: scale(1.05) rotate(5deg);
+            border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%;
+        }
+        
+        /* Scroll Indicator */
+        .scroll-hint {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.6;
+            animation: floatSoft 3s ease-in-out infinite;
+        }
+        .scroll-hint span {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+        }
+
+        /* Tarot card backs */
+        .tarot-card-aura {
+            width: 52px; height: 80px;
+            border-radius: 8px;
+            background: linear-gradient(160deg,#2a0a4a,#120820);
+            border: 1.5px solid rgba(255,102,255,0.3);
+            flex-shrink: 0;
+            cursor: grab;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s;
+            transform: rotate(calc((var(--ci,0) - 7) * 1.1deg));
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .tarot-card-aura::before {
+            content:''; position:absolute; inset:4px;
+            border:1px solid rgba(255,102,255,0.15); border-radius:5px;
+            pointer-events:none;
+        }
+        .tarot-card-aura::after {
+            content:'✦'; position:absolute;
+            top:50%; left:50%; transform:translate(-50%,-50%);
+            font-size:16px; color:rgba(255,102,255,0.2);
+            pointer-events:none;
+        }
+        .tarot-card-aura:hover { transform:rotate(0deg) translateY(-12px) scale(1.08); border-color:rgba(255,102,255,0.7); box-shadow:0 12px 28px rgba(255,102,255,0.3); z-index:10; }
+        .tarot-card-aura.selected { opacity:0.15; transform:scale(0.82); }
+        .tarot-card-aura:active { cursor:grabbing; }
+
+        /* Tarot slots */
+        .tarot-slot {
+            width: 88px; height: 122px;
+            border-radius: 16px;
+            border: 1.5px dashed rgba(255,102,255,0.25);
+            background: rgba(255,102,255,0.03);
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .tarot-slot.filled { border-color:rgba(255,102,255,0.5); border-style:solid; background:rgba(255,102,255,0.07); }
+        .tarot-slot.drag-over { border-color:rgba(255,102,255,0.8); background:rgba(255,102,255,0.12); }
+        .tarot-slot .slot-name { font-family:'Cormorant Garamond',serif; font-size:11px; font-weight:600; color:rgba(255,102,255,0.9); text-align:center; line-height:1.3; }
+        .ts-reversed { position:absolute; top:4px; right:4px; font-family:'Quicksand',sans-serif; font-size:8px; color:rgba(255,80,80,0.8); background:rgba(255,80,80,0.1); border:1px solid rgba(255,80,80,0.25); border-radius:4px; padding:1px 4px; }
+
+        /* Angel cards */
+        .angel-card-aura {
+            aspect-ratio: 2/3;
+            border-radius: 12px;
+            background: linear-gradient(160deg,#2a0a4a,#0e1028);
+            border: 1.5px solid rgba(255,228,225,0.15);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s; position: relative; overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .angel-card-aura::before { content:''; position:absolute; inset:5px; border:1px solid rgba(255,228,225,0.08); border-radius:8px; pointer-events:none; }
+        .angel-card-aura .angel-inner { font-size:0; opacity:0; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); transition:all 0.3s; }
+        .angel-card-aura .angel-num { font-family:'Cormorant Garamond',serif; font-size:14px; color:rgba(255,228,225,0.25); z-index:1; }
+        .angel-card-aura.sel { border-color:rgba(255,228,225,0.6); box-shadow:0 0 24px rgba(255,102,255,0.25); transform:translateY(-4px); }
+
+        /* Zodiac grid — bubbles */
+        .horo-z-item {
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            border-radius:50%; aspect-ratio:1;
+            cursor:pointer;
+            border:1px solid rgba(255,255,255,0.1);
+            background:rgba(255,255,255,0.06);
+            transition:all 0.2s;
+            overflow:hidden;
+        }
+        .horo-z-item.sel { background:rgba(255,102,255,0.2); border-color:rgba(255,102,255,0.45); box-shadow:0 0 14px rgba(255,102,255,0.18); }
+        .horo-z-item:active { transform:scale(0.92); }
+        .hz-sym { font-size:16px; line-height:1; display:block; }
+        .hz-lbl { display:none; }
+
+        /* Zodiac pill items */
+        .zp-item-aura {
+            display:flex; flex-direction:column; align-items:center; gap:2px;
+            padding:8px 4px; border-radius:12px; cursor:pointer;
+            border:1px solid transparent; background:rgba(255,255,255,0.04);
+            transition:all 0.2s;
+        }
+        .zp-item-aura.sel { background:rgba(255,102,255,0.15); border-color:rgba(255,102,255,0.35); }
+        .zp-item-aura:active { transform:scale(0.93); }
+        .zp-sym { font-size:18px; }
+        .zp-lbl { font-family:'Quicksand',sans-serif; font-size:7px; color:rgba(255,255,255,0.35); }
+
+        /* Profile fields */
+        .profile-field { margin-bottom:4px; }
+        .pf-lbl { font-family:'Quicksand',sans-serif; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-bottom:5px; }
+        .pf-input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:14px; padding:10px 14px; color:white; font-family:'Quicksand',sans-serif; font-size:13px; outline:none; transition:all 0.2s; }
+        .pf-input:focus { border-color:rgba(255,102,255,0.4); }
+        .pf-chip { padding:6px 14px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); font-family:'Quicksand',sans-serif; font-size:11px; color:rgba(255,255,255,0.4); cursor:pointer; transition:all 0.2s; }
+        .pf-chip.sel { background:rgba(255,102,255,0.15); border-color:rgba(255,102,255,0.4); color:white; }
+
+        /* Dream tags */
+        .dream-tag { padding:6px 14px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); font-family:'Quicksand',sans-serif; font-size:10px; color:rgba(255,255,255,0.4); cursor:pointer; transition:all 0.2s; }
+        .dream-tag.active { background:rgba(0,180,255,0.15); border-color:rgba(0,180,255,0.35); color:rgba(0,180,255,0.9); }
+
+        /* Disabled petal btn */
+        .petal-btn:disabled { opacity:0.3; cursor:not-allowed; }
+        .petal-btn:disabled:hover::before { opacity:0; }
+
+        /* Fal cards */
+        .fal-card-big {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        .fal-card-big:active { transform: scale(0.97); }
+        .fal-card-big::after {
+            content:'';
+            position:absolute;
+            bottom:-10px; right:-10px;
+            width:80px; height:80px;
+            border-radius:50%;
+            pointer-events:none;
+            opacity:0.35;
+        }
+        .fal-bubble {
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+        .fal-bubble:active { transform: scale(0.95); }
+        .fal-bubble:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-black p-4">
+    
+    <div class="iphone-frame">
+        <!-- Aurora Background -->
+        <div class="aurora-bg"></div>
+        
+        <!-- Floating Orbs -->
+        <div class="floating-orb w-32 h-32 bg-aura-dawn/30 top-20 -left-10" style="animation-delay: 0s;"></div>
+        <div class="floating-orb w-48 h-48 bg-aura-ocean/20 top-40 -right-20" style="animation-delay: 2s;"></div>
+        <div class="floating-orb w-40 h-40 bg-aura-mist/25 bottom-32 -left-16" style="animation-delay: 4s;"></div>
+        
+        <!-- Dynamic Island -->
+        <div class="dynamic-island"></div>
+        
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span class="status-time" id="clock">09:41</span>
+            <div class="status-icons">
+                <svg viewBox="0 0 24 24"><path d="M12 3C7.46 3 3.34 4.78.29 7.67c-.18.18-.29.43-.29.71 0 .28.11.53.29.71l11 11c.39.39 1.02.39 1.41 0l11-11c.18-.18.29-.43.29-.71 0-.28-.11.53-.29-.71C20.66 4.78 16.54 3 12 3z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+            </div>
+        </div>
+        
+
+
+                <!-- ==================== SCREEN: HOME ==================== -->
+        <div id="screen-home" class="screen active">
+
+            <!-- Header -->
+            <div class="pt-20 px-7 relative z-10">
+                <div class="flex items-end justify-between">
+                    <div>
+                        <div class="font-serif italic text-white/40 text-sm mb-0.5">Nefes al, hisset, gör</div>
+                        <h1 class="font-serif text-[28px] text-white tracking-wide leading-none">Nexlify</h1>
+                        <div class="text-gradient-aura font-soft text-xs tracking-[4px] uppercase mt-0.5">Aura</div>
+                    </div>
+                    <div class="flex flex-col items-end gap-1 pb-0.5">
+                        <div onclick="navigateTo('shop')" class="flex items-center gap-2 px-3.5 py-2 rounded-full cursor-pointer transition-all active:scale-95" style="background:rgba(255,102,255,0.12);border:1px solid rgba(255,102,255,0.25);backdrop-filter:blur(12px);">
+                            <span class="font-serif text-lg text-gradient-aura leading-none">150</span>
+                            <span class="font-soft text-[9px] text-white/35 tracking-wider">enerji</span>
+                            <div class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold" style="background:rgba(255,102,255,0.25);border:1px solid rgba(255,102,255,0.4);color:rgba(255,102,255,0.9);">+</div>
+                        </div>
+                        <div onclick="navigateTo('profile')" class="font-soft text-[9px] text-white/25 tracking-wider cursor-pointer transition-colors">Profil ›</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zodiac Pill -->
+            <div class="px-7 mt-4 relative z-10">
+                <div id="zodiacPill" onclick="toggleZodiacPicker()" class="cursor-pointer px-4 py-2.5 rounded-2xl border border-white/10 flex items-center gap-3 transition-all duration-300" style="background:rgba(255,255,255,0.05);backdrop-filter:blur(20px);">
+                    <div class="w-6 h-6 rounded-full flex items-center justify-center text-xs" style="background:rgba(255,102,255,0.15);">✦</div>
+                    <div class="flex-1 min-w-0">
+                        <div id="pillLabel" class="font-soft text-[9px] tracking-[3px] text-aura-dawn/60 uppercase leading-none mb-0.5">Günün Mesajı</div>
+                        <div id="pillText" class="font-serif italic text-white/50 text-[13px] truncate leading-tight">Burcunu seç, mesajını al</div>
+                    </div>
+                    <div class="text-white/20 text-sm">›</div>
+                </div>
+                <div id="zodiacPicker" class="hidden mt-2 rounded-2xl border border-white/10 p-4" style="background:rgba(30,20,55,0.7);backdrop-filter:blur(32px);">
+                    <div class="font-soft text-[9px] tracking-[3px] text-white/30 text-center mb-3 uppercase">Burcunu seç</div>
+                    <div class="grid grid-cols-6 gap-x-2 gap-y-3" id="zodiacGrid"></div>
+                </div>
+            </div>
+
+            <!-- Fal Bubbles -->
+            <div class="px-6 mt-5 pb-5 relative z-10 flex-1 overflow-y-auto" style="scrollbar-width:none;">
+
+                <!-- Big two: Kahve + Tarot -->
+                <div class="grid grid-cols-2 gap-3 mb-3">
+
+                    <!-- Kahve -->
+                    <div onclick="navigateTo('coffee')" class="fal-card-big cursor-pointer rounded-3xl p-5 flex flex-col relative overflow-hidden" style="background:linear-gradient(145deg,rgba(255,80,60,0.14) 0%,rgba(255,255,255,0.05) 100%);border:1px solid rgba(255,100,60,0.2);backdrop-filter:blur(20px);min-height:130px;">
+                        <div class="absolute inset-0 rounded-3xl pointer-events-none" style="background:linear-gradient(135deg,rgba(255,102,80,0.15) 0%,transparent 55%);"></div>
+                        <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(255,102,80,0.35),transparent 70%);filter:blur(16px);"></div>
+                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl mb-auto" style="background:rgba(255,102,80,0.15);border:1px solid rgba(255,102,80,0.2);">☕</div>
+                        <div class="mt-3">
+                            <div class="font-serif text-white text-sm leading-tight">Kahve Falı</div>
+                            <div class="font-soft text-white/30 text-[10px] mt-0.5">Telvenin sessiz dili</div>
+                        </div>
+                        <div class="font-soft text-[9px] mt-2" style="color:rgba(255,102,255,0.5);">30 enerji</div>
+                    </div>
+
+                    <!-- Tarot -->
+                    <div onclick="navigateTo('tarot')" class="fal-card-big cursor-pointer rounded-3xl p-5 flex flex-col relative overflow-hidden" style="background:linear-gradient(145deg,rgba(120,60,255,0.16) 0%,rgba(255,255,255,0.04) 100%);border:1px solid rgba(120,60,255,0.22);backdrop-filter:blur(20px);min-height:130px;">
+                        <div class="absolute inset-0 rounded-3xl pointer-events-none" style="background:linear-gradient(135deg,rgba(120,60,255,0.18) 0%,transparent 55%);"></div>
+                        <div class="absolute -bottom-4 -right-4 w-24 h-24 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(140,70,255,0.4),transparent 70%);filter:blur(16px);"></div>
+                        <div class="w-11 h-11 rounded-2xl flex items-center justify-center text-2xl mb-auto" style="background:rgba(120,60,255,0.15);border:1px solid rgba(120,60,255,0.2);">🃏</div>
+                        <div class="mt-3">
+                            <div class="font-serif text-white text-sm leading-tight">Tarot</div>
+                            <div class="font-soft text-white/30 text-[10px] mt-0.5">Kartların fısıltısı</div>
+                        </div>
+                        <div class="font-soft text-[9px] mt-2" style="color:rgba(255,102,255,0.5);">25 enerji</div>
+                    </div>
+
+                </div>
+
+                <!-- Small bubbles row 1: El · Su · Melek -->
+                <div class="grid grid-cols-3 gap-2.5 mb-2.5">
+                    <div onclick="navigateTo('palm')" class="fal-bubble cursor-pointer rounded-2xl p-4 flex flex-col items-center gap-2 relative overflow-hidden" style="background:linear-gradient(145deg,rgba(0,180,255,0.12) 0%,rgba(255,255,255,0.04) 100%);border:1px solid rgba(0,180,255,0.18);backdrop-filter:blur(16px);">
+                        <div class="absolute inset-0 rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(0,180,255,0.12) 0%,transparent 60%);"></div>
+                        <div class="absolute -bottom-3 -right-3 w-14 h-14 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(0,180,255,0.3),transparent 70%);filter:blur(12px);"></div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl relative" style="background:rgba(0,180,255,0.12);border:1px solid rgba(0,180,255,0.18);">✋</div>
+                        <div class="text-center relative">
+                            <div class="font-serif text-white text-[11px] leading-tight">El Falı</div>
+                            <div class="font-soft text-white/25 text-[8px] mt-0.5">40</div>
+                        </div>
+                    </div>
+                    <div onclick="navigateTo('water')" class="fal-bubble cursor-pointer rounded-2xl p-4 flex flex-col items-center gap-2 relative overflow-hidden" style="background:linear-gradient(145deg,rgba(0,150,220,0.12) 0%,rgba(255,255,255,0.04) 100%);border:1px solid rgba(0,150,220,0.18);backdrop-filter:blur(16px);">
+                        <div class="absolute inset-0 rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(0,150,220,0.12) 0%,transparent 60%);"></div>
+                        <div class="absolute -bottom-3 -right-3 w-14 h-14 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(0,150,220,0.3),transparent 70%);filter:blur(12px);"></div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl relative" style="background:rgba(0,150,220,0.12);border:1px solid rgba(0,150,220,0.18);">💧</div>
+                        <div class="text-center relative">
+                            <div class="font-serif text-white text-[11px] leading-tight">Su Falı</div>
+                            <div class="font-soft text-white/25 text-[8px] mt-0.5">35</div>
+                        </div>
+                    </div>
+                    <div onclick="navigateTo('angel')" class="fal-bubble cursor-pointer rounded-2xl p-4 flex flex-col items-center gap-2 relative overflow-hidden" style="background:linear-gradient(145deg,rgba(255,210,80,0.1) 0%,rgba(255,255,255,0.04) 100%);border:1px solid rgba(255,210,80,0.16);backdrop-filter:blur(16px);">
+                        <div class="absolute inset-0 rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(255,210,80,0.12) 0%,transparent 60%);"></div>
+                        <div class="absolute -bottom-3 -right-3 w-14 h-14 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(255,210,80,0.25),transparent 70%);filter:blur(12px);"></div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl relative" style="background:rgba(255,210,80,0.12);border:1px solid rgba(255,210,80,0.18);">👼</div>
+                        <div class="text-center relative">
+                            <div class="font-serif text-white text-[11px] leading-tight">Melek</div>
+                            <div class="font-soft text-white/25 text-[8px] mt-0.5">45</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Small bubbles row 2: Kristal · Rüya · Burç -->
+                <div class="grid grid-cols-3 gap-2.5 mb-4">
+                    <div onclick="navigateTo('crystal')" class="fal-bubble cursor-pointer rounded-2xl p-4 flex flex-col items-center gap-2 relative overflow-hidden" style="background:linear-gradient(145deg,rgba(204,0,255,0.12) 0%,rgba(255,255,255,0.04) 100%);border:1px solid rgba(204,0,255,0.18);backdrop-filter:blur(16px);">
+                        <div class="absolute inset-0 rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(204,0,255,0.14) 0%,transparent 60%);"></div>
+                        <div class="absolute -bottom-3 -right-3 w-14 h-14 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(204,0,255,0.3),transparent 70%);filter:blur(12px);"></div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl relative" style="background:rgba(204,0,255,0.12);border:1px solid rgba(204,0,255,0.18);">🔮</div>
+                        <div class="text-center relative">
+                            <div class="font-serif text-white text-[11px] leading-tight">Kristal</div>
+                            <div class="font-soft text-white/25 text-[8px] mt-0.5">35</div>
+                        </div>
+                    </div>
+                    <div onclick="navigateTo('dream')" class="fal-bubble cursor-pointer rounded-2xl p-4 flex flex-col items-center gap-2 relative overflow-hidden" style="background:linear-gradient(145deg,rgba(80,60,200,0.13) 0%,rgba(255,255,255,0.04) 100%);border:1px solid rgba(80,60,200,0.18);backdrop-filter:blur(16px);">
+                        <div class="absolute inset-0 rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(80,60,200,0.14) 0%,transparent 60%);"></div>
+                        <div class="absolute -bottom-3 -right-3 w-14 h-14 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(80,60,200,0.3),transparent 70%);filter:blur(12px);"></div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl relative" style="background:rgba(80,60,200,0.12);border:1px solid rgba(80,60,200,0.18);">🌙</div>
+                        <div class="text-center relative">
+                            <div class="font-serif text-white text-[11px] leading-tight">Rüya</div>
+                            <div class="font-soft text-white/25 text-[8px] mt-0.5">20</div>
+                        </div>
+                    </div>
+                    <div onclick="navigateTo('horoscope')" class="fal-bubble cursor-pointer rounded-2xl p-4 flex flex-col items-center gap-2 relative overflow-hidden" style="background:linear-gradient(145deg,rgba(0,192,255,0.1) 0%,rgba(255,255,255,0.04) 100%);border:1px solid rgba(0,192,255,0.15);backdrop-filter:blur(16px);">
+                        <div class="absolute inset-0 rounded-2xl pointer-events-none" style="background:linear-gradient(135deg,rgba(0,192,255,0.1) 0%,transparent 60%);"></div>
+                        <div class="absolute -bottom-3 -right-3 w-14 h-14 rounded-full pointer-events-none" style="background:radial-gradient(circle,rgba(0,192,255,0.22),transparent 70%);filter:blur(12px);"></div>
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl relative" style="background:rgba(0,192,255,0.1);border:1px solid rgba(0,192,255,0.15);">✨</div>
+                        <div class="text-center relative">
+                            <div class="font-serif text-white text-[11px] leading-tight">Burç</div>
+                            <div class="font-soft text-[8px] mt-0.5" style="color:rgba(0,192,255,0.5);">Ücretsiz</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick links row -->
+                <div class="flex gap-2 mb-4">
+                    <div onclick="navigateTo('history')" class="flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);">
+                        <span class="text-sm">📜</span>
+                        <span class="font-soft text-white/45 text-[11px]">Fal Geçmişi</span>
+                    </div>
+                    <div onclick="navigateTo('dreamjournal')" class="flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl cursor-pointer" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);">
+                        <span class="text-sm">🌙</span>
+                        <span class="font-soft text-white/45 text-[11px]">Rüya Günlüğü</span>
+                    </div>
+                </div>
+
+                <!-- Daily quote -->
+                <div class="text-center pb-1">
+                    <div class="w-8 h-px mx-auto mb-2" style="background:rgba(255,255,255,0.1);"></div>
+                    <div class="font-serif italic text-white/25 text-[13px] leading-relaxed">"Yıldızlar yolu gösterir,<br>adımları sen atarsın."</div>
+                    <div class="font-soft text-[9px] text-white/15 mt-1.5">— Mevlana</div>
+                </div>
+
+            </div>
+        </div>
+
+                <!-- ==================== SCREEN: COFFEE ==================== -->
+        <div id="screen-coffee" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+
+            <div class="pt-20 px-8 text-center">
+                <div class="font-serif italic text-aura-sand/60 text-sm mb-1">Toprak elementi</div>
+                <h1 class="font-serif text-3xl text-white">Kahve</h1>
+                <div class="text-white/40 font-soft text-sm mt-1">Telvenin derinlikleri</div>
+            </div>
+
+            <div class="flex-1 flex flex-col items-center justify-center px-5 gap-3">
+                <!-- Upload zone 1 -->
+                <div id="coffeeUpload1" onclick="coffeeUpload(this,'coffeeBtn')" class="w-full rounded-2xl p-5 flex items-center gap-4 cursor-pointer transition-all duration-300" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(20px);">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0" style="background:rgba(255,102,80,0.12);border:1px solid rgba(255,102,80,0.2);">☕</div>
+                    <div class="flex-1">
+                        <div class="font-serif text-white text-sm">Fincan Fotoğrafı</div>
+                        <div class="font-soft text-white/40 text-xs mt-0.5">2 farklı açıdan çek</div>
+                    </div>
+                    <div class="font-soft text-white/25 text-xs coffee-check-1">+</div>
+                </div>
+                <!-- Upload zone 2 -->
+                <div id="coffeeUpload2" onclick="coffeeUpload(this,'coffeeBtn')" class="w-full rounded-2xl p-5 flex items-center gap-4 cursor-pointer transition-all duration-300" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(20px);">
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0" style="background:rgba(255,102,255,0.1);border:1px solid rgba(255,102,255,0.18);">🍽️</div>
+                    <div class="flex-1">
+                        <div class="font-serif text-white text-sm">Tabak Fotoğrafı</div>
+                        <div class="font-soft text-white/40 text-xs mt-0.5">Altındaki şekiller</div>
+                    </div>
+                    <div class="font-soft text-white/25 text-xs coffee-check-2">+</div>
+                </div>
+                <!-- Steps hint -->
+                <div class="w-full rounded-2xl p-4" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);">
+                    <div class="font-soft text-[9px] tracking-[2px] text-white/25 uppercase mb-2">Hazırlanma</div>
+                    <div class="space-y-1.5">
+                        <div class="flex items-center gap-2.5"><span class="text-aura-dawn/50 text-xs">1.</span><span class="font-soft text-white/40 text-xs">Türk kahvesini iç, niyet tut</span></div>
+                        <div class="flex items-center gap-2.5"><span class="text-aura-dawn/50 text-xs">2.</span><span class="font-soft text-white/40 text-xs">Tabağı kapat, ters çevir, bekle</span></div>
+                        <div class="flex items-center gap-2.5"><span class="text-aura-dawn/50 text-xs">3.</span><span class="font-soft text-white/40 text-xs">Fotoğrafları yükle</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-5 pb-8">
+                <button id="coffeeBtn" class="petal-btn w-full" disabled onclick="navigateTo('result'); setResult('coffee')">
+                    Falı gör → 30 enerji
+                </button>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: TAROT ==================== -->
+        <div id="screen-tarot" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center">
+                <div class="font-serif italic text-aura-sand/60 text-sm mb-1">Ateş elementi</div>
+                <h1 class="font-serif text-3xl text-white">Tarot</h1>
+                <div class="text-white/40 font-soft text-xs mt-1">Tıkla ya da sürükle · Ters bırakabilirsin</div>
+            </div>
+            <!-- Deck scroll -->
+            <div id="tarotDeckWrap" class="overflow-x-auto py-4 mt-2" style="scrollbar-width:none;">
+                <div id="tarotDeck" class="flex gap-2 px-5" style="width:max-content;"></div>
+            </div>
+            <!-- Slots -->
+            <div class="flex justify-center gap-3 px-5 mt-2 mb-4">
+                <div class="tarot-slot" id="ts0" ondragover="event.preventDefault()" ondrop="tarotDropAura(event,0)" ondragenter="this.style.borderColor='rgba(255,102,255,0.7)'" ondragleave="this.style.borderColor=''">
+                    <span class="slot-empty font-soft text-xs text-white/30">boş</span>
+                    <span class="slot-lbl font-soft" style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;color:rgba(255,102,255,0.5);text-transform:uppercase;white-space:nowrap;">GEÇMİŞ</span>
+                </div>
+                <div class="tarot-slot" id="ts1" ondragover="event.preventDefault()" ondrop="tarotDropAura(event,1)" ondragenter="this.style.borderColor='rgba(255,102,255,0.7)'" ondragleave="this.style.borderColor=''">
+                    <span class="slot-empty font-soft text-xs text-white/30">boş</span>
+                    <span class="slot-lbl font-soft" style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;color:rgba(255,102,255,0.5);text-transform:uppercase;white-space:nowrap;">ŞİMDİ</span>
+                </div>
+                <div class="tarot-slot" id="ts2" ondragover="event.preventDefault()" ondrop="tarotDropAura(event,2)" ondragenter="this.style.borderColor='rgba(255,102,255,0.7)'" ondragleave="this.style.borderColor=''">
+                    <span class="slot-empty font-soft text-xs text-white/30">boş</span>
+                    <span class="slot-lbl font-soft" style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;color:rgba(255,102,255,0.5);text-transform:uppercase;white-space:nowrap;">GELECEK</span>
+                </div>
+            </div>
+            <div class="px-5 mt-6 pb-8">
+                <!-- Info strip -->
+                <div class="rounded-2xl p-4 mb-4" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);">
+                    <div class="font-serif italic text-white/55 text-sm leading-relaxed text-center">
+                        "Zihnini boşalt. Parmakların hissettiği kartlara gitsin — onları hissettiğin zaman dilimine sürükle. Enerjin sana rehberlik eder."
+                    </div>
+                </div>
+                <button class="petal-btn w-full" id="tarotBtn" disabled onclick="navigateTo('result'); setResult('tarot')">
+                    Desteyi aç → 25 enerji
+                </button>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: PALM ==================== -->
+        <div id="screen-palm" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center">
+                <div class="font-serif italic text-aura-sand/60 text-sm mb-1">Toprak elementi</div>
+                <h1 class="font-serif text-3xl text-white">El Falı</h1>
+                <div class="text-white/40 font-soft text-sm mt-1">Çizgilerin şarkısı</div>
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-center px-5 gap-3">
+                <div class="flex gap-4 w-full">
+                    <div id="palmCam" onclick="palmChooseAura('cam')" class="flex-1 organic-glass rounded-3xl p-5 flex flex-col items-center gap-2 cursor-pointer transition-all duration-300">
+                        <span class="text-3xl">📷</span>
+                        <span class="font-serif text-white text-sm">Kamera</span>
+                        <span class="font-soft text-white/40 text-xs">Elini çek</span>
+                    </div>
+                    <div id="palmFile" onclick="palmChooseAura('file')" class="flex-1 organic-glass rounded-3xl p-5 flex flex-col items-center gap-2 cursor-pointer transition-all duration-300">
+                        <span class="text-3xl">🖼️</span>
+                        <span class="font-serif text-white text-sm">Dosya</span>
+                        <span class="font-soft text-white/40 text-xs">Galeriden</span>
+                    </div>
+                </div>
+                <div id="palmPreview" class="hidden organic-glass rounded-2xl p-4 text-center w-full">
+                    <span class="text-3xl">✋</span>
+                    <div class="font-soft text-aura-dawn/80 text-sm mt-2">El fotoğrafı hazır ✓</div>
+                </div>
+                <!-- El çizgileri -->
+                <div class="w-full rounded-2xl p-4" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);">
+                    <div class="font-soft text-[8px] tracking-widest text-white/25 uppercase mb-2.5">El çizgilerinin dili</div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="text-center p-2.5 rounded-xl" style="background:rgba(0,180,255,0.07);border:1px solid rgba(0,180,255,0.12);">
+                            <div class="font-serif text-white/70 text-xs mb-0.5">Kalp</div>
+                            <div class="font-soft text-white/35 text-[9px] leading-tight">Duygular & ilişkiler</div>
+                        </div>
+                        <div class="text-center p-2.5 rounded-xl" style="background:rgba(255,102,255,0.07);border:1px solid rgba(255,102,255,0.12);">
+                            <div class="font-serif text-white/70 text-xs mb-0.5">Kader</div>
+                            <div class="font-soft text-white/35 text-[9px] leading-tight">Yaşam yolculuğu</div>
+                        </div>
+                        <div class="text-center p-2.5 rounded-xl" style="background:rgba(120,60,255,0.07);border:1px solid rgba(120,60,255,0.12);">
+                            <div class="font-serif text-white/70 text-xs mb-0.5">Akıl</div>
+                            <div class="font-soft text-white/35 text-[9px] leading-tight">Düşünce & sezgi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-5 pb-8">
+                <button id="palmBtn" class="petal-btn w-full" disabled onclick="navigateTo('result'); setResult('palm')">
+                    Taramayı başlat → 40 enerji
+                </button>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: WATER ==================== -->
+        <div id="screen-water" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center">
+                <div class="font-serif italic text-aura-sand/60 text-sm mb-1">Su elementi</div>
+                <h1 class="font-serif text-3xl text-white">Su Falı</h1>
+                <div class="text-white/40 font-soft text-xs mt-1">Suyun yüzeyinde kaderiniz yansır</div>
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-center px-5">
+                <div class="relative mb-3" style="width:210px;height:210px;">
+                    <canvas id="waterCanvasAura" width="210" height="210" style="border-radius:50%;cursor:crosshair;display:block;"></canvas>
+                    <div id="waterHintAura" class="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-500">
+                        <div class="text-center px-6">
+                            <div class="font-serif italic text-aura-ocean/70 text-sm leading-relaxed">Parmağınızı kasede<br>dolaştırın…</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Su sembolleri -->
+                <div class="w-full rounded-2xl p-4" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);">
+                    <div class="font-soft text-[8px] tracking-widest text-white/25 uppercase mb-2.5">Su sembolizmi</div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🌊</span>
+                            <div><div class="font-serif text-white/60 text-[11px]">Daireler</div><div class="font-soft text-white/30 text-[9px]">Döngü & yenilenme</div></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">✨</span>
+                            <div><div class="font-serif text-white/60 text-[11px]">Kıvrımlar</div><div class="font-soft text-white/30 text-[9px]">Duygu akışı</div></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🔮</span>
+                            <div><div class="font-serif text-white/60 text-[11px]">Merkez</div><div class="font-soft text-white/30 text-[9px]">İçsel odak noktası</div></div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-base">🌙</span>
+                            <div><div class="font-serif text-white/60 text-[11px]">Kenarlar</div><div class="font-soft text-white/30 text-[9px]">Yakın çevre</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-5 pb-8">
+                <button id="waterBtn" class="petal-btn w-full" disabled onclick="navigateTo('result'); setResult('water')">
+                    Analizi başlat → 35 enerji
+                </button>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: ANGEL ==================== -->
+        <div id="screen-angel" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center">
+                <div class="font-serif italic text-aura-sand/60 text-sm mb-1">Hava elementi</div>
+                <h1 class="font-serif text-3xl text-white">Melek</h1>
+                <div class="text-white/40 font-soft text-xs mt-1 tracking-widest uppercase">Niyetini tut · Meleği seç</div>
+            </div>
+            <div class="px-5 mt-4">
+                <textarea id="angelQ" oninput="checkAngelAura()" placeholder="Aklındaki soruyu yaz… Örn: Bu ilişkide doğru yolda mıyım?" class="w-full rounded-2xl p-4 font-serif italic text-white/80 text-sm resize-none" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);outline:none;min-height:70px;backdrop-filter:blur(10px);" rows="2"></textarea>
+            </div>
+            <div class="flex-1 flex flex-col justify-center px-5 gap-3">
+                <div class="grid grid-cols-4 gap-3 w-full">
+                    <div class="angel-card-aura" data-angel="Uriel" data-msg="Uriel bilgelik ışığı sunuyor. Aklın ve sezgin bugün güçlü — doğru karar önünde." onclick="selAngelAura(this)">
+                        <div class="angel-inner">🔥</div><span class="angel-num">I</span>
+                    </div>
+                    <div class="angel-card-aura" data-angel="Mikail" data-msg="Mikail sana bolluk ve bereket getiriyor. Korku değil, güven ile ilerle." onclick="selAngelAura(this)">
+                        <div class="angel-inner">⚔️</div><span class="angel-num">II</span>
+                    </div>
+                    <div class="angel-card-aura" data-angel="Cebrail" data-msg="Cebrail sana bir mesaj taşıyor: Söylemek istediklerini artık söyleme vakti." onclick="selAngelAura(this)">
+                        <div class="angel-inner">🕊️</div><span class="angel-num">III</span>
+                    </div>
+                    <div class="angel-card-aura" data-angel="Raphael" data-msg="Raphael şifa gönderiyor. Bedenini ve ruhunu dinle, iyileşme yoldasın." onclick="selAngelAura(this)">
+                        <div class="angel-inner">💚</div><span class="angel-num">IV</span>
+                    </div>
+                </div>
+                <!-- Melek enerji bilgisi -->
+                <div class="w-full rounded-2xl p-4" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);">
+                    <div class="font-soft text-[8px] tracking-widest text-white/25 uppercase mb-2.5">Melek enerjileri</div>
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-sm w-5 text-center">🔥</span>
+                            <span class="font-serif text-white/60 text-xs w-12">Uriel</span>
+                            <span class="font-soft text-white/30 text-[10px]">Bilgelik · Aydınlanma · Netlik</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-sm w-5 text-center">⚔️</span>
+                            <span class="font-serif text-white/60 text-xs w-12">Mikail</span>
+                            <span class="font-soft text-white/30 text-[10px]">Koruma · Cesaret · Bereket</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-sm w-5 text-center">🕊️</span>
+                            <span class="font-serif text-white/60 text-xs w-12">Cebrail</span>
+                            <span class="font-soft text-white/30 text-[10px]">Mesaj · İletişim · Dönüşüm</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-sm w-5 text-center">💚</span>
+                            <span class="font-serif text-white/60 text-xs w-12">Raphael</span>
+                            <span class="font-soft text-white/30 text-[10px]">Şifa · Denge · İyileşme</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-5 pb-8">
+                <button id="angelBtn" class="petal-btn w-full" disabled onclick="navigateTo('result'); setResult('angel')">
+                    Mesaj iste → 45 enerji
+                </button>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: CRYSTAL ==================== -->
+        <div id="screen-crystal" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center">
+                <div class="font-serif italic text-aura-sand/60 text-sm mb-1">Ateş elementi</div>
+                <h1 class="font-serif text-3xl text-white">Kristal</h1>
+                <div class="text-white/40 font-soft text-xs mt-1">Parmağını küre üzerinde gezdir</div>
+            </div>
+            <div class="flex-1 flex flex-col items-center justify-center px-5">
+                <div class="relative mb-4" style="width:190px;height:190px;">
+                    <canvas id="crystalCanvasAura" width="190" height="190" style="border-radius:50%;cursor:crosshair;display:block;"></canvas>
+                    <div id="crystalHintAura" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <span class="text-5xl">🔮</span>
+                    </div>
+                </div>
+                <!-- Kristal bilgisi -->
+                <div class="w-full rounded-2xl p-4" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);">
+                    <div class="font-soft text-[8px] tracking-widest text-white/25 uppercase mb-2.5">Kristal kehaneti</div>
+                    <div class="grid grid-cols-3 gap-2 text-center">
+                        <div class="p-2 rounded-xl" style="background:rgba(204,0,255,0.07);border:1px solid rgba(204,0,255,0.12);">
+                            <div class="text-sm mb-1">💜</div>
+                            <div class="font-serif text-white/60 text-[10px]">Mor</div>
+                            <div class="font-soft text-white/30 text-[9px] mt-0.5">Dönüşüm</div>
+                        </div>
+                        <div class="p-2 rounded-xl" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);">
+                            <div class="text-sm mb-1">🤍</div>
+                            <div class="font-serif text-white/60 text-[10px]">Beyaz</div>
+                            <div class="font-soft text-white/30 text-[9px] mt-0.5">Netlik</div>
+                        </div>
+                        <div class="p-2 rounded-xl" style="background:rgba(0,180,255,0.07);border:1px solid rgba(0,180,255,0.12);">
+                            <div class="text-sm mb-1">💙</div>
+                            <div class="font-serif text-white/60 text-[10px]">Mavi</div>
+                            <div class="font-soft text-white/30 text-[9px] mt-0.5">Sezgi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-5 pb-8">
+                <button id="crystalBtn" class="petal-btn w-full" disabled onclick="navigateTo('result'); setResult('crystal')">
+                    Aktive et → 35 enerji
+                </button>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: HISTORY ==================== -->
+        <div id="screen-history" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            
+            <div class="pt-24 px-8 text-center mb-6">
+                <h1 class="font-serif text-3xl text-white mb-1">Geçmişim</h1>
+                <div class="text-white/40 font-soft text-sm">Yolculuğun izleri</div>
+            </div>
+            
+            <div class="px-5 space-y-4 pb-8">
+                <div class="organic-glass rounded-2xl p-5 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-aura-dawn/30 to-aura-ocean/30 flex items-center justify-center text-xl">☕</div>
+                    <div class="flex-1">
+                        <div class="font-serif text-white">Kahve Falı</div>
+                        <div class="text-white/40 font-soft text-xs">22 Mart • Gün batımı</div>
+                    </div>
+                    <div class="text-aura-dawn font-soft text-sm">✓</div>
+                </div>
+                
+                <div class="organic-glass rounded-2xl p-5 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-aura-dusk/30 to-aura-twilight/30 flex items-center justify-center text-xl">🃏</div>
+                    <div class="flex-1">
+                        <div class="font-serif text-white">Tarot</div>
+                        <div class="text-white/40 font-soft text-xs">20 Mart • Şafak vakti</div>
+                    </div>
+                    <div class="text-aura-dawn font-soft text-sm">✓</div>
+                </div>
+                
+                <div class="organic-glass rounded-2xl p-5 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-aura-ocean/30 to-aura-dawn/30 flex items-center justify-center text-xl">💧</div>
+                    <div class="flex-1">
+                        <div class="font-serif text-white">Su Falı</div>
+                        <div class="text-white/40 font-soft text-xs">18 Mart • Sisli sabah</div>
+                    </div>
+                    <div class="text-aura-dawn font-soft text-sm">✓</div>
+                </div>
+            </div>
+            
+            <!-- Summary -->
+            <div class="px-5 pb-8">
+                <div class="organic-glass rounded-2xl p-6 text-center">
+                    <div class="font-soft text-white/60 text-sm mb-2">Toplam fal</div>
+                    <div class="font-serif text-4xl text-gradient-aura">12</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: SHOP ==================== -->
+        <div id="screen-shop" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            
+            <div class="pt-24 px-8 text-center mb-6">
+                <h1 class="font-serif text-3xl text-white mb-1">Enerji Yükle</h1>
+                <div class="text-white/40 font-soft text-sm">Aura'nı güçlendir</div>
+            </div>
+            
+            <!-- Current Energy -->
+            <div class="px-5 mb-8">
+                <div class="organic-glass rounded-3xl p-8 text-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-aura-dawn/10 to-aura-ocean/10"></div>
+                    <div class="relative z-10">
+                        <div class="font-soft text-white/60 text-sm mb-2">Mevcut enerjin</div>
+                        <div class="font-serif text-5xl text-gradient-aura mb-1">150</div>
+                        <div class="font-soft text-white/40 text-xs">birim</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Packages -->
+            <div class="px-5 space-y-4 pb-8">
+                <div class="breathing-card organic-glass p-5 flex items-center gap-4 cursor-pointer" onclick="showToast('50 birim seçildi')">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-aura-dawn/20 to-aura-sand/20 flex items-center justify-center">
+                        <div class="w-3 h-3 rounded-full bg-aura-dawn shadow-[0_0_10px_#FF66FF]"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-serif text-white">50 Birim</div>
+                        <div class="text-white/40 font-soft text-xs">İlk adım</div>
+                    </div>
+                    <div class="text-aura-dawn font-soft text-lg">₺14.99</div>
+                </div>
+                
+                <div class="breathing-card organic-glass p-5 flex items-center gap-4 cursor-pointer border-aura-dawn/30" onclick="showToast('150 birim seçildi')">
+                    <div class="absolute -top-2 right-6 bg-aura-dawn text-black text-[10px] font-soft px-3 py-1 rounded-full">Popüler</div>
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-aura-dawn/30 to-aura-ocean/30 flex items-center justify-center gap-1">
+                        <div class="w-3 h-3 rounded-full bg-aura-dawn shadow-[0_0_10px_#FF66FF]"></div>
+                        <div class="w-3 h-3 rounded-full bg-aura-ocean shadow-[0_0_10px_#00B4FF]"></div>
+                        <div class="w-3 h-3 rounded-full bg-aura-dusk shadow-[0_0_10px_#CC00FF]"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-serif text-white">150 Birim</div>
+                        <div class="text-white/40 font-soft text-xs">Dengeli akış</div>
+                    </div>
+                    <div class="text-aura-dawn font-soft text-lg">₺34.99</div>
+                </div>
+                
+                <div class="breathing-card organic-glass p-5 flex items-center gap-4 cursor-pointer" onclick="showToast('350 birim seçildi')">
+                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-aura-dusk/30 to-aura-twilight/30 flex items-center justify-center gap-1">
+                        <div class="w-2 h-2 rounded-full bg-aura-dawn"></div>
+                        <div class="w-2 h-2 rounded-full bg-aura-ocean"></div>
+                        <div class="w-2 h-2 rounded-full bg-aura-dusk"></div>
+                        <div class="w-2 h-2 rounded-full bg-aura-twilight"></div>
+                        <div class="w-2 h-2 rounded-full bg-aura-mist"></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-serif text-white">350 Birim</div>
+                        <div class="text-white/40 font-soft text-xs">Sınırsız potansiyel</div>
+                    </div>
+                    <div class="text-aura-dawn font-soft text-lg">₺69.99</div>
+                </div>
+            </div>
+            
+            <div class="px-5 pb-8">
+                <button class="petal-btn w-full" onclick="showToast('Ödeme sayfasına yönlendiriliyor...')">
+                    Yükle →
+                </button>
+            </div>
+        </div>
+        
+        <!-- ==================== SCREEN: RESULT ==================== -->
+        <div id="screen-result" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center mb-4">
+                <div class="font-serif italic text-aura-sand/60 text-sm mb-1" id="resultSub">Yorumun hazır</div>
+                <h1 class="font-serif text-3xl text-white" id="resultTitle">Falın</h1>
+            </div>
+            <div class="flex-1 px-5 flex items-center justify-center">
+                <div class="organic-glass rounded-3xl p-7 relative overflow-hidden w-full max-w-xs">
+                    <div class="absolute -top-16 -right-16 w-32 h-32 rounded-full bg-aura-dawn/15 blur-3xl"></div>
+                    <div class="absolute -bottom-16 -left-16 w-32 h-32 rounded-full bg-aura-ocean/15 blur-3xl"></div>
+                    <div class="relative z-10">
+                        <div class="text-center text-3xl mb-4" id="resultIcon">🔮</div>
+                        <div class="font-serif text-base text-white/90 leading-relaxed mb-5" id="resultText">"Gelecek günlerde önemli bir geçiş yaşayacaksın."</div>
+                        <div class="flex items-center gap-3 pt-4 border-t border-white/10">
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center text-base" style="background:rgba(255,102,255,0.2);">✦</div>
+                            <div>
+                                <div class="font-soft text-white/70 text-sm">Nexlify Aura</div>
+                                <div class="text-white/35 font-soft text-xs">Güven: %94</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="px-5 pb-8 space-y-3 mt-4">
+                <button class="petal-btn w-full" onclick="showToast('Geçmişine kaydedildi ✦')">Kaydet →</button>
+                <button class="petal-btn w-full" style="background:linear-gradient(135deg,rgba(0,180,255,0.2),rgba(255,102,255,0.1));" onclick="showToast('Paylaşım hazırlanıyor…')">Paylaş →</button>
+            </div>
+        </div>
+
+        <!-- ==================== SCREEN: DREAM ==================== -->
+        <div id="screen-dream" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center">
+                <div class="font-serif italic text-aura-sand/60 text-sm mb-1">Su elementi</div>
+                <h1 class="font-serif text-3xl text-white">Rüya</h1>
+                <div class="text-white/40 font-soft text-sm mt-1">Bilinçaltının sesi</div>
+            </div>
+            <div class="flex-1 px-5 flex flex-col justify-center gap-4 mt-4">
+                <textarea id="dreamText" placeholder="Rüyanızı buraya yazın… Örn: Uçan bir balina gördüm…" class="w-full rounded-2xl p-4 font-serif italic text-white/80 text-sm resize-none" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);outline:none;min-height:120px;backdrop-filter:blur(10px);" rows="5"></textarea>
+                <div class="flex gap-2 flex-wrap">
+                    <button class="dream-tag active" onclick="selectDreamTag(this)">Genel</button>
+                    <button class="dream-tag" onclick="selectDreamTag(this)">Aşk</button>
+                    <button class="dream-tag" onclick="selectDreamTag(this)">Kariyer</button>
+                    <button class="dream-tag" onclick="selectDreamTag(this)">Para</button>
+                </div>
+            </div>
+            <div class="px-5 pb-8">
+                <button class="petal-btn w-full" onclick="saveDream(); navigateTo('result'); setResult('dream')">Rüyamı yorumla → 20 enerji</button>
+            </div>
+        </div>
+
+        <!-- ==================== SCREEN: HOROSCOPE ==================== -->
+        <div id="screen-horoscope" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center mb-4">
+                <h1 class="font-serif text-3xl text-white" id="horoTitle">Günlük Burç</h1>
+                <div class="text-white/40 font-soft text-sm mt-1" id="horoSub">Bugün yıldızlar sizin için ne diyor?</div>
+            </div>
+            <div class="px-5 mb-5">
+                <div class="grid grid-cols-4 gap-x-2 gap-y-3" id="horoZodiacGrid"></div>
+            </div>
+            <div class="px-5 pb-8">
+                <div id="horoDetail" class="organic-glass rounded-3xl p-5">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-3xl" id="horoSign">♏</span>
+                        <div><div class="font-serif text-white text-base" id="horoName">Akrep</div><div class="font-soft text-white/40 text-xs" id="horoDates">24 Eki – 21 Kas</div></div>
+                    </div>
+                    <p class="font-soft text-white/65 text-sm leading-relaxed mb-4" id="horoText">Bugün Pluton'un etkisiyle derin bir içgüdüsel uyanış yaşıyorsunuz. Gizli kalan bir gerçek yüzeye çıkabilir.</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><div class="flex justify-between font-soft text-xs text-white/40 mb-1"><span>Aşk</span><span class="text-white/65">85%</span></div><div class="h-1.5 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.08);"><div class="h-full rounded-full" style="width:85%;background:linear-gradient(90deg,#FF66FF,#CC00FF);"></div></div></div>
+                        <div><div class="flex justify-between font-soft text-xs text-white/40 mb-1"><span>Kariyer</span><span class="text-white/65">70%</span></div><div class="h-1.5 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.08);"><div class="h-full rounded-full" style="width:70%;background:linear-gradient(90deg,#00B4FF,#3366FF);"></div></div></div>
+                        <div><div class="flex justify-between font-soft text-xs text-white/40 mb-1"><span>Sağlık</span><span class="text-white/65">90%</span></div><div class="h-1.5 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.08);"><div class="h-full rounded-full" style="width:90%;background:linear-gradient(90deg,#FF66FF,#00B4FF);"></div></div></div>
+                        <div><div class="flex justify-between font-soft text-xs text-white/40 mb-1"><span>Para</span><span class="text-white/65">60%</span></div><div class="h-1.5 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.08);"><div class="h-full rounded-full" style="width:60%;background:linear-gradient(90deg,#CC00FF,#FF33FF);"></div></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SCREEN: PROFILE ==================== -->
+        <div id="screen-profile" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center mb-3">
+                <div class="w-14 h-14 rounded-full mx-auto mb-2 flex items-center justify-center text-2xl" style="background:radial-gradient(circle at 40% 40%,rgba(255,102,255,0.5),rgba(0,180,255,0.2));border:1px solid rgba(255,255,255,0.2);">🔮</div>
+                <div class="font-soft text-white/40 text-[10px] tracking-widest uppercase">Profil & Kişisel Bilgiler</div>
+                <div class="font-soft text-[9px] text-white/25 mt-1">Bu bilgiler fallarınızı kişiselleştirir</div>
+            </div>
+            <div class="px-5 flex-1 space-y-3 pb-8 overflow-y-auto">
+                <div class="profile-field"><div class="pf-lbl">Ad Soyad</div><input class="pf-input" type="text" placeholder="Adınız Soyadınız" value="Mystic Kullanıcı"></div>
+                <div class="profile-field"><div class="pf-lbl">Doğum Tarihi</div><input class="pf-input" type="text" placeholder="GG / AA / YYYY"></div>
+                <div class="profile-field"><div class="pf-lbl">Doğum Yeri</div><input class="pf-input" type="text" placeholder="Şehir, Ülke"></div>
+                <div class="profile-field"><div class="pf-lbl">Doğum Saati <span class="text-white/25 text-[9px]">(opsiyonel)</span></div><input class="pf-input" type="text" placeholder="SS:DD"></div>
+                <div class="profile-field">
+                    <div class="pf-lbl">Cinsiyet</div>
+                    <div class="flex gap-2 flex-wrap mt-1">
+                        <button class="pf-chip sel" onclick="pfChipAura(this,'g')">Kadın</button>
+                        <button class="pf-chip" onclick="pfChipAura(this,'g')">Erkek</button>
+                        <button class="pf-chip" onclick="pfChipAura(this,'g')">Belirtmek istemiyorum</button>
+                    </div>
+                </div>
+                <div class="profile-field">
+                    <div class="pf-lbl">Medeni Durum</div>
+                    <div class="flex gap-2 flex-wrap mt-1">
+                        <button class="pf-chip sel" onclick="pfChipAura(this,'m')">Bekar</button>
+                        <button class="pf-chip" onclick="pfChipAura(this,'m')">Evli</button>
+                        <button class="pf-chip" onclick="pfChipAura(this,'m')">Ayrılmış</button>
+                        <button class="pf-chip" onclick="pfChipAura(this,'m')">İlişkide</button>
+                    </div>
+                </div>
+                <div class="profile-field">
+                    <div class="pf-lbl">İş Durumu</div>
+                    <div class="flex gap-2 flex-wrap mt-1">
+                        <button class="pf-chip sel" onclick="pfChipAura(this,'j')">Çalışıyor</button>
+                        <button class="pf-chip" onclick="pfChipAura(this,'j')">Öğrenci</button>
+                        <button class="pf-chip" onclick="pfChipAura(this,'j')">Serbest</button>
+                    </div>
+                </div>
+                <button class="petal-btn w-full" onclick="saveProfileAura()">Kaydet →</button>
+            </div>
+        </div>
+
+        <!-- ==================== SCREEN: DREAM JOURNAL ==================== -->
+        <div id="screen-dreamjournal" class="screen">
+            <div class="back-soft" onclick="navigateTo('home')">←</div>
+            <div class="pt-20 px-8 text-center mb-4">
+                <h1 class="font-serif text-3xl text-white">Rüya Günlüğüm</h1>
+                <div class="text-white/40 font-soft text-sm mt-1">Bilinçaltının arşivi</div>
+            </div>
+            <div id="dreamJournalListAura" class="px-5 flex-1 overflow-y-auto pb-8 space-y-3">
+                <div id="dreamJournalEmptyAura" class="text-center py-12">
+                    <div class="text-4xl mb-3">🌙</div>
+                    <div class="font-serif italic text-white/30 text-sm">Henüz rüya yorumu yaptırmadınız.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Indicator -->
+        <div class="home-indicator"></div>
+        <!-- Toast -->
+        <div class="soft-toast" id="toast"></div>
+    </div>
+
+    <script>
+        // ===== CLOCK =====
+        function updateClock(){const n=new Date();document.getElementById('clock').textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');}
+        setInterval(updateClock,1000); updateClock();
+
+        // ===== MENU =====
+        function toggleMenu(){document.getElementById('fullMenu').classList.toggle('active');}
+
+        // ===== NAVIGATION =====
+        const resultData = {
+            coffee:{icon:'☕',title:'Kahve Falınız',sub:'Telvenin sırları açıldı',text:'"Fincanınızda derin bir geçiş dönemi okudum. Sol taraftaki kuş figürü özgürlüğe olan özleminizi yansıtıyor. Üst kenardaki çiçek motifi beklenmedik bir müjdenin habercisi."'},
+            tarot:{icon:'🃏',title:'Tarot Falınız',sub:'Kartlar konuştu',text:'"Seçtiğiniz kartlar güçlü bir dönüşüm enerjisi taşıyor. Geçmiş kartı sizi buraya getiren gizli gücü, gelecek kartı ise önünüzdeki kapıya işaret ediyor."'},
+            palm:{icon:'✋',title:'El Falınız',sub:'Çizgiler okundu',text:'"Kalp çizginiz derin duygusal bağlara işaret ediyor. Kader çizginizdeki dönüşüm bir kayıp değil — yeniden yönelimdir."'},
+            water:{icon:'💧',title:'Su Falınız',sub:'Suyun sırrı',text:'"Su yüzeyinde beliren izler içsel bir arınmaya işaret ediyor. Dairesel hareketler bir döngünün kapandığını, merkeze çekilen çizgiler odak ihtiyacını simgeliyor."'},
+            angel:{icon:'👼',title:'Melek Mesajınız',sub:'Rehberlik geldi',text:'"Melekler sana bu soruyla ilgili güçlü bir mesaj gönderiyor. Yanıt tam da beklediğin yerden gelecek. Şu an doğru yoldasın."'},
+            crystal:{icon:'🔮',title:'Kristal Kehanetiniz',sub:'Sihir uyandı',text:'"Kristal kürede beliren enerji dikkat çekici. Yakında hayatınıza yeni bir kişi girecek. Para konusunda beklediğiniz gelişme sandığınızdan erken gerçekleşecek."'},
+            dream:{icon:'🌙',title:'Rüya Yorumunuz',sub:'Bilinçaltı konuştu',text:'"Gördüğünüz rüya bilinçaltınızın ilettiği güçlü bir mesaj. Su sembolü duygusal akışı, yükseklik ise bakış açınızın genişlediğini gösteriyor."'},
+        };
+        let lastFal='coffee';
+
+        function setResult(fal){
+            lastFal=fal;
+            const d=resultData[fal]||resultData.coffee;
+            document.getElementById('resultIcon').textContent=d.icon;
+            document.getElementById('resultTitle').textContent=d.title;
+            document.getElementById('resultSub').textContent=d.sub;
+            document.getElementById('resultText').textContent=d.text;
+            // Angel special
+            if(fal==='angel'){
+                const sel=document.querySelector('.angel-card-aura.sel');
+                if(sel){document.getElementById('resultTitle').textContent=sel.dataset.angel+' Sana Şunu Söylüyor';document.getElementById('resultText').textContent='"'+sel.dataset.msg+'"';}
+            }
+        }
+
+        function navigateTo(screen){
+            document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+            const el=document.getElementById('screen-'+screen);
+            if(el){el.classList.add('active');el.scrollTop=0;}
+            // Reset screens on re-entry
+            if(screen==='water') resetWaterAura();
+            if(screen==='crystal') resetCrystalAura();
+            if(screen==='tarot') resetTarotAura();
+            if(screen==='palm') resetPalmAura();
+            if(screen==='angel') resetAngelAura();
+        }
+
+        // ===== TOAST =====
+        function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+        // ===== PEARL =====
+        function pulsePearl(){const p=document.querySelector('.pearl-orb');p.style.animation='none';setTimeout(()=>{p.style.animation='pulseSoft 0.5s ease-in-out 3';setTimeout(()=>{p.style.animation='pulseSoft 4s ease-in-out infinite';},1500);},10);showToast('Aura güçleniyor…');}
+
+        // ===== ZODIAC PILL =====
+        const zodiacData = {
+            '♈':{name:'Koç',dates:'21 Mar–19 Nis'},
+            '♉':{name:'Boğa',dates:'20 Nis–20 May'},
+            '♊':{name:'İkizler',dates:'21 May–20 Haz'},
+            '♋':{name:'Yengeç',dates:'21 Haz–22 Tem'},
+            '♌':{name:'Aslan',dates:'23 Tem–22 Ağu'},
+            '♍':{name:'Başak',dates:'23 Ağu–22 Eyl'},
+            '♎':{name:'Terazi',dates:'23 Eyl–22 Eki'},
+            '♏':{name:'Akrep',dates:'23 Eki–21 Kas'},
+            '♐':{name:'Yay',dates:'22 Kas–21 Ara'},
+            '♑':{name:'Oğlak',dates:'22 Ara–19 Oca'},
+            '♒':{name:'Kova',dates:'20 Oca–18 Şub'},
+            '♓':{name:'Balık',dates:'19 Şub–20 Mar'},
+        };
+        const zodiacMsgs = {
+            '♈':['Cesaretin seni beklenmedik kapılara götürür.','Yeni başlangıç enerjisi güçlü.'],
+            '♉':['Sabır bugün en büyük gücün.','Güzellik ve bereket yaklaşıyor.'],
+            '♊':['Zihnindeki fikirleri kelimelerle şekillendir.','Merak seni doğru yere götürür.'],
+            '♋':['Sevdiklerine açılan bir kapı bu gün.','Duygularını bastırma, rehberin onlar.'],
+            '♌':['Işığın en parlak bugün.','Gönlünden gelenler doğru yöne taşır.'],
+            '♍':['Detaylara özen bugün meyve verir.','Hizmet ettiğinde kendin de büyürsün.'],
+            '♎':['Denge her şeyin anahtarı bugün.','Güzellik ve uyum seni çevreliyor.'],
+            '♏':['Derinlere dalmaktan korkma, orada gerçek var.','Gizli bir şey bugün yüzeye çıkıyor.'],
+            '♐':['Ufkunu genişlet, dünya seninle konuşuyor.','Bir öğretiden ilham almaya hazır ol.'],
+            '♑':['Disiplinin bugün en büyük armağanın.','Emek asla boşa gitmez.'],
+            '♒':['Farklılığın bugün seni öne çıkarır.','Yenilikçi bir fikir kapında bekliyor.'],
+            '♓':['Sezgine güven, ruh bilir akıl yanılır.','Merhamet bugün sana geri dönecek.'],
+        };
+        let selZodiac = localStorage.getItem('nexlify_aura_zodiac')||null;
+        let zodiacPickerOpen = false;
+
+        function buildZodiacGrid(){
+            const g=document.getElementById('zodiacGrid');
+            if(!g)return;
+            Object.entries(zodiacData).forEach(([sym,z])=>{
+                const wrap=document.createElement('div');
+                wrap.className='flex flex-col items-center gap-1 cursor-pointer';
+                const bubble=document.createElement('div');
+                bubble.className='horo-z-item'+(selZodiac===sym?' sel':'');
+                bubble.style.cssText='width:36px;height:36px;';
+                bubble.innerHTML=`<span class="hz-sym" style="font-size:16px;">${sym}</span>`;
+                bubble.onclick=()=>selectZodiacAura(sym,bubble);
+                const lbl=document.createElement('div');
+                lbl.className='font-soft text-center';
+                lbl.style.cssText='font-size:8px;color:rgba(255,255,255,0.35);letter-spacing:0.3px;';
+                lbl.textContent=z.name.substring(0,3);
+                wrap.appendChild(bubble);
+                wrap.appendChild(lbl);
+                g.appendChild(wrap);
+            });
+        }
+        function toggleZodiacPicker(){
+            zodiacPickerOpen=!zodiacPickerOpen;
+            document.getElementById('zodiacPicker').classList.toggle('hidden',!zodiacPickerOpen);
+        }
+        function selectZodiacAura(sym,bubbleEl){
+            selZodiac=sym;
+            localStorage.setItem('nexlify_aura_zodiac',sym);
+            document.querySelectorAll('#zodiacGrid .horo-z-item').forEach(e=>e.classList.remove('sel'));
+            bubbleEl.classList.add('sel');
+            updateZodiacPill();
+            setTimeout(()=>{document.getElementById('zodiacPicker').classList.add('hidden');zodiacPickerOpen=false;},250);
+            showToast(zodiacData[sym].name+' seçildi '+sym);
+        }
+        function updateZodiacPill(){
+            if(selZodiac&&zodiacData[selZodiac]){
+                const z=zodiacData[selZodiac];
+                const msgs=zodiacMsgs[selZodiac]||[''];
+                const msg=msgs[(new Date().getDate())%msgs.length];
+                document.getElementById('pillLabel').textContent=selZodiac+' '+z.name+' · Günün Mesajı';
+                document.getElementById('pillText').textContent=msg;
+                document.getElementById('zodiacPill').style.borderColor='rgba(255,102,255,0.3)';
+            }
+        }
+        buildZodiacGrid();
+        updateZodiacPill();
+
+        // ===== HOROSCOPE =====
+        let horoMode='daily';
+        function openHoroscope(mode){
+            horoMode=mode||'daily';
+            const labels={daily:{t:'Günlük Burç',s:'Bugün yıldızlar sizin için ne diyor?'},weekly:{t:'Haftalık Burç',s:'Bu hafta gezegenler nasıl hizalanıyor?'},monthly:{t:'Aylık Burç',s:'Bu ay sizi neler bekliyor?'}};
+            const l=labels[horoMode];
+            document.getElementById('horoTitle').textContent=l.t;
+            document.getElementById('horoSub').textContent=l.s;
+            navigateTo('horoscope');
+        }
+        function buildHoroGrid(){
+            const g=document.getElementById('horoZodiacGrid');
+            if(!g)return;
+            Object.entries(zodiacData).forEach(([sym,z])=>{
+                const wrap=document.createElement('div');
+                wrap.className='flex flex-col items-center gap-1.5 cursor-pointer';
+                const bubble=document.createElement('div');
+                bubble.className='horo-z-item'+(sym==='♏'?' sel':'');
+                bubble.style.cssText='width:52px;height:52px;';
+                bubble.innerHTML=`<span style="font-size:22px;line-height:1;">${sym}</span>`;
+                const lbl=document.createElement('div');
+                lbl.className='font-soft text-center';
+                lbl.style.cssText='font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:0.2px;';
+                lbl.textContent=z.name;
+                bubble.onclick=()=>{
+                    document.querySelectorAll('#horoZodiacGrid .horo-z-item').forEach(e=>e.classList.remove('sel'));
+                    bubble.classList.add('sel');
+                    document.getElementById('horoSign').textContent=sym;
+                    document.getElementById('horoName').textContent=z.name;
+                    document.getElementById('horoDates').textContent=z.dates;
+                    const msgs=zodiacMsgs[sym]||[''];
+                    const m={daily:msgs[0],weekly:`${z.name} için bu hafta Venüs etkisi öne çıkıyor. İlişkilerde yeni bir sayfa, iş hayatında önemli bir adım mümkün.`,monthly:`${z.name} için bu ay dönüşüm zamanı. Merkür kariyer alanında sürpriz kapılar açıyor.`};
+                    document.getElementById('horoText').textContent=m[horoMode]||msgs[0];
+                };
+                wrap.appendChild(bubble);
+                wrap.appendChild(lbl);
+                g.appendChild(wrap);
+            });
+        }
+        buildHoroGrid();
+
+        // ===== TAROT =====
+        const tarotCards=[
+            'Cambaz','Yüksek Rahibe','İmparatoriçe','İmparator','Başrahip','Aşıklar',
+            'Savaş Arabası','Güç','Münzevi','Talih Çarkı','Adalet','Asılan Adam',
+            'Ölüm','Denge','Şeytan','Kule','Yıldız','Ay','Güneş','Yargı','Dünya','Aptal'
+        ];
+        const tarotSlots=[null,null,null];
+        function buildTarotDeck(){
+            const deck=document.getElementById('tarotDeck');
+            if(!deck||deck.children.length>0)return;
+            tarotCards.forEach((name,i)=>{
+                const el=document.createElement('div');
+                el.className='tarot-card-aura';
+                el.style.setProperty('--ci',i);
+                el.draggable=true;
+                el.dataset.n=name; el.dataset.i=i;
+                el.addEventListener('click',()=>{
+                    if(el.classList.contains('selected'))return;
+                    for(let s=0;s<3;s++){if(!tarotSlots[s]){dropToSlot({n:name},s,false,el);break;}}
+                });
+                el.addEventListener('dragstart',e=>{
+                    e.dataTransfer.setData('idx',i);
+                    e.dataTransfer.setData('name',name);
+                    const rect=el.getBoundingClientRect();
+                    e.dataTransfer.setData('rev',e.clientY>rect.top+rect.height*0.65?'1':'0');
+                    setTimeout(()=>el.classList.add('dragging'),0);
+                });
+                el.addEventListener('dragend',()=>el.classList.remove('dragging'));
+                deck.appendChild(el);
+            });
+        }
+        function tarotDropAura(e,si){
+            e.preventDefault();
+            const sl=document.getElementById('ts'+si);
+            sl.classList.remove('drag-over');
+            if(tarotSlots[si])return;
+            const idx=e.dataTransfer.getData('idx');
+            const name=e.dataTransfer.getData('name');
+            const rev=e.dataTransfer.getData('rev')==='1';
+            const deckCard=document.querySelector('.tarot-card-aura[data-i="'+idx+'"]');
+            if(deckCard&&deckCard.classList.contains('selected'))return;
+            if(deckCard)deckCard.classList.add('selected');
+            dropToSlot({n:name},si,rev,null);
+        }
+        function dropToSlot(card,si,rev,el){
+            if(el){if(el.classList.contains('selected'))return;el.classList.add('selected');}
+            tarotSlots[si]={...card,rev};
+            const sl=document.getElementById('ts'+si);
+            sl.classList.add('filled');
+            sl.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;padding:8px;${rev?'transform:rotate(180deg);':''}"><div style="font-size:10px;color:rgba(255,102,255,0.5);letter-spacing:3px;margin-bottom:4px;">✦</div><div class="slot-name">${card.n}</div></div><span class="slot-lbl font-soft" style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;color:rgba(255,102,255,0.5);text-transform:uppercase;white-space:nowrap;">${['GEÇMİŞ','ŞİMDİ','GELECEK'][si]}</span>${rev?'<span class="ts-reversed">TERS</span>':''}`;
+            if(tarotSlots.every(s=>s!==null)){const btn=document.getElementById('tarotBtn');if(btn)btn.disabled=false;}
+        }
+        function resetTarotAura(){
+            for(let i=0;i<3;i++){
+                tarotSlots[i]=null;
+                const sl=document.getElementById('ts'+i);
+                if(sl){sl.classList.remove('filled','drag-over');sl.innerHTML=`<span class="slot-empty font-soft text-xs text-white/30">boş</span><span class="slot-lbl font-soft" style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;color:rgba(255,102,255,0.5);text-transform:uppercase;white-space:nowrap;">${['GEÇMİŞ','ŞİMDİ','GELECEK'][i]}</span>`;}
+            }
+            const btn=document.getElementById('tarotBtn');if(btn)btn.disabled=true;
+            document.querySelectorAll('.tarot-card-aura').forEach(c=>c.classList.remove('selected','dragging'));
+        }
+        window.tarotDropAura=tarotDropAura;
+        buildTarotDeck();
+
+        // ===== PALM =====
+        function palmChooseAura(type){
+            document.getElementById('palmCam').style.borderColor=type==='cam'?'rgba(0,180,255,0.5)':'';
+            document.getElementById('palmFile').style.borderColor=type==='file'?'rgba(0,180,255,0.5)':'';
+            document.getElementById('palmPreview').classList.remove('hidden');
+            const btn=document.getElementById('palmBtn');if(btn)btn.disabled=false;
+            showToast(type==='cam'?'Kamera hazırlandı 📷':'Dosya seçildi 🖼️');
+        }
+        function resetPalmAura(){
+            document.getElementById('palmCam').style.borderColor='';
+            document.getElementById('palmFile').style.borderColor='';
+            document.getElementById('palmPreview').classList.add('hidden');
+            const btn=document.getElementById('palmBtn');if(btn)btn.disabled=true;
+        }
+        window.palmChooseAura=palmChooseAura;
+
+        // ===== WATER CANVAS =====
+        (()=>{
+            const cv=document.getElementById('waterCanvasAura');
+            if(!cv)return;
+            const ctx=cv.getContext('2d');
+            const W=210,R=105;
+            let ripples=[],lastT=0;
+            cv._wAct=false;cv._wN=0;
+            function drawBowl(){
+                ctx.clearRect(0,0,W,W);
+                const g=ctx.createRadialGradient(R,R,10,R,R,R);
+                g.addColorStop(0,'rgba(0,100,180,0.4)');g.addColorStop(0.6,'rgba(0,50,120,0.55)');g.addColorStop(1,'rgba(0,10,50,0.85)');
+                ctx.beginPath();ctx.arc(R,R,R,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+                ctx.beginPath();ctx.arc(R,R,R-1,0,Math.PI*2);ctx.strokeStyle='rgba(0,180,255,0.2)';ctx.lineWidth=1.5;ctx.stroke();
+            }
+            function spawnRipple(x,y){ripples.push({x,y,r:2,maxR:30+Math.random()*15,alpha:0.7,spd:0.9+Math.random()*0.5});}
+            function animate(){
+                requestAnimationFrame(animate);
+                drawBowl();
+                ripples=ripples.filter(rp=>rp.alpha>0.02);
+                ripples.forEach(rp=>{
+                    ctx.beginPath();ctx.arc(rp.x,rp.y,rp.r,0,Math.PI*2);
+                    ctx.strokeStyle=`rgba(0,210,255,${rp.alpha})`;ctx.lineWidth=1.2;ctx.stroke();
+                    rp.r+=rp.spd;rp.alpha*=0.87;
+                });
+            }
+            animate();
+            function getPos(e){const rect=cv.getBoundingClientRect();const sx=W/rect.width,sy=W/rect.height;if(e.touches)return{x:(e.touches[0].clientX-rect.left)*sx,y:(e.touches[0].clientY-rect.top)*sy};return{x:(e.clientX-rect.left)*sx,y:(e.clientY-rect.top)*sy};}
+            function inCircle(x,y){return Math.hypot(x-R,y-R)<R-4;}
+            function handle(e){
+                e.preventDefault();const p=getPos(e);if(!inCircle(p.x,p.y))return;
+                const now=Date.now();if(now-lastT<80)return;lastT=now;
+                spawnRipple(p.x,p.y);cv._wN++;
+                if(cv._wN===3){const h=document.getElementById('waterHintAura');if(h)h.style.opacity='0';}
+                if(cv._wN>15&&!cv._wAct){cv._wAct=true;const btn=document.getElementById('waterBtn');if(btn)btn.disabled=false;showToast('Su yüzeyinize niyetiniz yansıdı ✦');}
+            }
+            cv.addEventListener('mousemove',handle);cv.addEventListener('click',handle);
+            cv.addEventListener('touchmove',handle,{passive:false});cv.addEventListener('touchstart',handle,{passive:false});
+        })();
+        function resetWaterAura(){
+            const cv=document.getElementById('waterCanvasAura');if(!cv)return;
+            cv._wAct=false;cv._wN=0;
+            const h=document.getElementById('waterHintAura');if(h)h.style.opacity='1';
+            const btn=document.getElementById('waterBtn');if(btn)btn.disabled=true;
+        }
+
+        // ===== CRYSTAL CANVAS =====
+        (()=>{
+            const cv=document.getElementById('crystalCanvasAura');
+            if(!cv)return;
+            const ctx=cv.getContext('2d');
+            const W=190,R=95;
+            let particles=[],dragging=false;
+            cv._cAct=false;cv._cN=0;
+            function drawSphere(){
+                ctx.clearRect(0,0,W,W);
+                const g=ctx.createRadialGradient(R*0.6,R*0.55,5,R,R,R);
+                g.addColorStop(0,'rgba(255,255,255,0.55)');g.addColorStop(0.25,'rgba(255,102,255,0.35)');g.addColorStop(0.6,'rgba(100,0,200,0.4)');g.addColorStop(1,'rgba(10,5,20,0.85)');
+                ctx.beginPath();ctx.arc(R,R,R,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+                ctx.beginPath();ctx.arc(R,R,R,0,Math.PI*2);ctx.strokeStyle='rgba(255,102,255,0.2)';ctx.lineWidth=1;ctx.stroke();
+                particles=particles.filter(p=>p.life>0);
+                particles.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(${p.col},${p.life/p.maxLife})`;ctx.fill();p.x+=p.vx;p.y+=p.vy;p.life--;p.r*=0.97;});
+            }
+            function spawn(x,y){for(let i=0;i<6;i++){const a=Math.random()*Math.PI*2,s=0.5+Math.random()*1.5;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,r:1.5+Math.random()*3,life:40+Math.random()*25,maxLife:65,col:Math.random()<0.5?'255,102,255':'180,140,255'});}}
+            function animate(){requestAnimationFrame(animate);drawSphere();}
+            animate();
+            function getPos(e){const rect=cv.getBoundingClientRect();const sx=W/rect.width,sy=W/rect.height;if(e.touches)return{x:(e.touches[0].clientX-rect.left)*sx,y:(e.touches[0].clientY-rect.top)*sy};return{x:(e.clientX-rect.left)*sx,y:(e.clientY-rect.top)*sy};}
+            function start(e){e.preventDefault();dragging=true;}
+            function move(e){e.preventDefault();if(!dragging)return;const p=getPos(e);spawn(p.x,p.y);cv._cN++;if(cv._cN===1){const h=document.getElementById('crystalHintAura');if(h)h.style.opacity='0';}if(cv._cN>40&&!cv._cAct){cv._cAct=true;const btn=document.getElementById('crystalBtn');if(btn)btn.disabled=false;showToast('Kristal uyandı… Derinleşiyor ✦');}}
+            function end(){dragging=false;}
+            cv.addEventListener('mousedown',start);cv.addEventListener('mousemove',move);cv.addEventListener('mouseup',end);cv.addEventListener('mouseleave',end);
+            cv.addEventListener('touchstart',start,{passive:false});cv.addEventListener('touchmove',move,{passive:false});cv.addEventListener('touchend',end);
+        })();
+        function resetCrystalAura(){
+            const cv=document.getElementById('crystalCanvasAura');if(!cv)return;
+            cv._cAct=false;cv._cN=0;
+            const h=document.getElementById('crystalHintAura');if(h)h.style.opacity='1';
+            const btn=document.getElementById('crystalBtn');if(btn)btn.disabled=true;
+        }
+
+        // ===== ANGEL =====
+        function selAngelAura(el){document.querySelectorAll('.angel-card-aura').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');checkAngelAura();}
+        function checkAngelAura(){const q=document.getElementById('angelQ');const sel=document.querySelector('.angel-card-aura.sel');const btn=document.getElementById('angelBtn');if(btn)btn.disabled=!(q&&q.value.trim().length>3&&sel);}
+        function resetAngelAura(){const q=document.getElementById('angelQ');if(q)q.value='';document.querySelectorAll('.angel-card-aura').forEach(c=>c.classList.remove('sel'));const btn=document.getElementById('angelBtn');if(btn)btn.disabled=true;}
+        window.selAngelAura=selAngelAura;window.checkAngelAura=checkAngelAura;
+
+        // ===== DREAM JOURNAL =====
+        const dreamJournalEntries=[];
+        function saveDream(){
+            const txt=document.getElementById('dreamText')?.value?.trim();
+            if(!txt||txt.length<5)return;
+            const d=new Date();
+            dreamJournalEntries.unshift({text:txt,date:d.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})});
+            renderDreamJournal();
+        }
+        function renderDreamJournal(){
+            const list=document.getElementById('dreamJournalListAura');
+            const empty=document.getElementById('dreamJournalEmptyAura');
+            if(!list)return;
+            if(empty)empty.style.display=dreamJournalEntries.length?'none':'block';
+            // Remove previous entries (not empty msg)
+            Array.from(list.children).forEach(c=>{if(c.id!=='dreamJournalEmptyAura')c.remove();});
+            dreamJournalEntries.forEach(e=>{
+                const div=document.createElement('div');
+                div.className='organic-glass rounded-2xl p-4';
+                div.style.cssText='background:radial-gradient(ellipse at 0% 50%,rgba(0,180,255,0.1),transparent 70%);';
+                div.innerHTML=`<div class="font-soft text-white/30 text-[9px] tracking-widest uppercase mb-1">${e.date}</div><div class="font-serif italic text-white/65 text-sm leading-relaxed">"${e.text.substring(0,100)}${e.text.length>100?'…':''}"</div>`;
+                list.appendChild(div);
+            });
+        }
+
+        // ===== PROFILE =====
+        function pfChipAura(el,group){el.closest('.profile-field').querySelectorAll('.pf-chip').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+        function saveProfileAura(){showToast('Profil kaydedildi ✦');}
+        window.pfChipAura=pfChipAura;window.saveProfileAura=saveProfileAura;
+
+        // ===== DREAM TAGS =====
+        function selectDreamTag(el){document.querySelectorAll('.dream-tag').forEach(t=>t.classList.remove('active'));el.classList.add('active');}
+        window.selectDreamTag=selectDreamTag;
+
+        // ===== COFFEE UPLOAD =====
+        let coffeeUploads=0;
+        function coffeeUpload(el,btnId){
+            el.style.borderColor='rgba(255,102,255,0.4)';
+            el.style.background='rgba(255,102,255,0.07)';
+            const check=el.querySelector('[class*="coffee-check"]');
+            if(check&&check.textContent==='+'){check.textContent='✓';check.style.color='rgba(255,102,255,0.7)';coffeeUploads++;}
+            showToast('Fotoğraf alındı ✓');
+            if(coffeeUploads>=1){const btn=document.getElementById(btnId);if(btn)btn.disabled=false;}
+        }
+        window.coffeeUpload=coffeeUpload;
+        function simulateUpload(el){el.style.transform='scale(0.97)';showToast('Işık yakalanıyor…');setTimeout(()=>{el.style.transform='scale(1)';showToast('Görüntü alındı ✓');},1500);}
+        window.simulateUpload=simulateUpload;
+    </script>
+</body>
+</html>

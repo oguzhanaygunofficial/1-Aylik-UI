@@ -1,0 +1,112 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+FAL TÜRLERİ (Fortune Types)
+├── Kahve Falı - Fotoğraf yükleme (fincan + tabak), 4 adımlık ritüel
+├── Tarot Falı - 22 kart destesi, drag-drop seçim, ters kart desteği
+├── El Falı - Kamera/Galeri seçimi, AI analiz simülasyonu
+├── Su Falı - Canvas etkileşimli dalga animasyonu (20+ stroke aktivasyon)
+├── Melek Falı - 4 melek kartı, soru girişi + sezgisel seçim
+├── Kristal Falı - Canvas parçacık sistemi (50+ hareket aktivasyon)
+└── Rüya Yorumu - Metin girişi, 4 kategori etiketi (Aşk/Kariyer/Para/Genel)
+BURÇ SİSTEMİ (Horoscope Module)
+├── Günlük/Haftalık/Aylık yorum modları
+├── 12 burç zodyak grid
+├── Aspect değerlendirmesi (Aşk/Kariyer/Sağlık/Para barları)
+├── Zodiac picker dropdown (Ana sayfa entegrasyonu)
+└── LocalStorage burç kaydı
+KULLANICI HESABI (User Account)
+├── Profil yönetimi (8 alan: kişisel/yıldızname bilgileri)
+├── Fal geçmişi (favori/star sistemi)
+├── Rüya günlüğü (otomatik kayıt)
+├── Token/Sikke sistemi (başlangıç: 150)
+└── LocalStorage persistency
+MAĞAZA (Shop System)
+├── 4 paket (50/150/350/1000 sikke)
+├── Bonus tier sistemi (%25/%40/%65)
+├── Bottom sheet satın alma modalı
+└── Anlık bakiye güncelleme
+SİSTEM ÖZELLİKLERİ (System Features)
+├── 5 saniyelik reklam/loading ekranı (progress bar)
+├── Reklamı atla seçeneği (5 sikke)
+├── Toast bildirim sistemi
+├── Drawer navigasyon (sol menü)
+├── Screen routing (15+ ekran)
+└── Canvas interaktif elementler (2 adet)
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+LAYOUT SİSTEMİ (Layout System)
+├── iphone - Ana container (393x852px, iPhone frame)
+├── screen - Ekran yönetimi (absolute positioning)
+├── drawer - Sol navigasyon menüsü (270px genişlik)
+├── topbar - Üst bar (menu + title + token chip)
+└── chamber-content - Fal odası içerik alanı
+NAVİGASYON (Navigation)
+├── menu-btn - Hamburger menü butonu
+├── drawer-item - Menü öğeleri (active state destekli)
+├── drawer-overlay - Karartma katmanı
+├── back-x - Geri dönüş butonu
+└── token-chip - Bakiye göstergesi
+BUTONLAR (Buttons)
+├── c-btn - Ana buton (6 varyant: purple/cyan/gold/ghost/white/magenta)
+├── c-btn:disabled - Disabled state
+├── c-btn:active - Scale transform (0.97)
+└── c-tag - Kategori etiketleri (toggle destekli)
+KARTLAR (Cards)
+├── c-panel - Cam efektli panel (backdrop-blur)
+├── c-tarot-card - Tarot kartları (hover/selected states)
+├── c-angel-card - Melek kartları (gradient background)
+├── c-slot - Tarot drop zone (dashed border)
+└── s-pkg - Mağaza paket kartları
+FORM ELEMANLARI (Form Elements)
+├── c-upload - Dosya yükleme alanı (dashed border)
+├── c-textarea - Çok satırlı metin girişi
+├── pf-input - Profil input alanları
+└── pf-chip - Seçim çipleri (radio behavior)
+TİPOGRAFİ (Typography)
+├── Syncopate - Başlık/display font (sans-serif)
+├── Cormorant - Vücut metni (serif, italic)
+├── DM Sans - UI etiketleri (sans-serif)
+└── 3 seviye metin opacity (text/text2/text3)
+EFEKTLER (Effects)
+├── portal-glow - Nefes alan radial gradient
+├── chamber-halo - Odak ışığı (blur)
+├── c-particle - Canvas parçacıklar
+├── c-star - Yıldız animasyonu (twinkle)
+└── ad-orb - Yükleme animasyonu (pulse)
+ÖZEL BİLEŞENLER (Custom Components)
+├── c-orb - Kristal küre widget
+├── c-steps - Numaralı adım listesi
+├── c-zodiac-grid - Burç seçim gridi
+├── c-aspect-bar - İlerleme çubukları
+└── sigil - Dekoratif ayraç
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+TEMEL RENKLER (Base Colors)
+--ink              : #08070F  (Ana arka plan - en koyu)
+--ink2             : #0E0B1A  (Drawer arka planı)
+--ink3             : #14101F  (Yükseltilmiş yüzey)
+--surface          : rgba(255,255,255,0.04)  (Cam efekti)
+--border           : rgba(255,255,255,0.07)  (Ince kenarlık)
+--text             : #F0EBE3  (Birincil metin)
+--text2            : rgba(240,235,227,0.55)  (İkincil metin)
+--text3            : rgba(240,235,227,0.25)  (Üçüncül metin/vurgu)
+
+VURGULAMA RENKLERİ (Accent Colors)
+--gold             : #C8A227  (Birincil vurgu - altın)
+--gold-s           : rgba(200,162,39,0.15)  (Altın arka plan)
+--cyan             : #00C0FF  (İkincil vurgu - mavi)
+--blue             : #3366FF  (Link/interaktif)
+--purple           : #7733FF  (Spiritüel vurgu)
+--magenta          : #CC00FF  (Kristal/Mistik)
+--pink             : #FF33FF  (Ekstra vurgu)
+
+ODA RENKLERİ (Chamber Tints)
+--ch-coffee        : #1C0E06  (Kahve falı - ısıtıcı ton)
+--ch-tarot         : #0C0519  (Tarot - mor/mistik)
+--ch-palm          : #030C18  (El falı - mavi ton)
+--ch-water         : #02101A  (Su falı - turkuaz)
+--ch-angel         : #141208  (Melek - altın ton)
+--ch-crystal       : #0A0415  (Kristal - mor derinlik)
+--ch-dream         : #060818  (Rüya - mor/lacivert)
+--ch-horo          : #070514  (Burç - koyu mor)
+================================================================================
+SONUÇ: Nexlify, spiritüel/fal uygulamaları için tasarlanmış, karanlık tema (dark mode) bazlı, cam efektli (glassmorphism) UI sistemine sahip, 15+ ekran ve 7 farklı fal türünü destekleyen, Canvas etkileşimleri ve LocalStorage entegrasyonu ile zenginleştirilmiş bir mobil-first web uygulamasıdır.

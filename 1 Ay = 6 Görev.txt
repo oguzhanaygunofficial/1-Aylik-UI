@@ -1,0 +1,16 @@
+[ÖNEM ARZ ETMEYEN]
+
+1- VIP Paket Görselleştirmesi: VIP sisteminin ruhunu yansıtan tasarımların oluşturulmasına devam edilebilir.
+2- Dinamik Çerçeve ve Rozet Sistemi: Profil çerçeveleri, unvanlar ve başarı rozetlerinin tasarımlarına devam edilebilir.
+
+
+[ÖNEM ARZ EDEN]
+
+1- Canlı Yayın ve Keşfet Tabı: Uygulamanın ana trafiğini yönetecek olan "Live" sekmesinin; yayıncı kartları, kategori filtreleri ve popülerlik sıralamasıyla birlikte modern bir arayüze kavuşturulması. Sadece UI tasarım fikri.
+2- Sesli ve Görüntülü Sohbet Odaları: Mevcut temaların ötesine geçerek, kullanıcıyı içine çeken, oyunlaştırılmış ve farklı konseptlere (Party, Battle, Chill) uygun özgün oda temalarının sıfırdan tasarlanması. Sadece UI tasarım fikri.
+3- Yapay Zeka Destekli Fal Modülü: Kullanıcı etkileşimini artıracak modern ve uygulama temasına hakim bir arayüze sahip yapay zeka entegreli fal deneyimi tasarımı. Sadece UI tasarım fikri.
+4- Adım Sayar (Gamification): Sağlık verilerini sosyal ödüllerle birleştiren, motivasyon odaklı arayüz tasarımı. adım karşılığı token kazandıran türden. Sadece UI tasarım fikri.
+5- Discovery (Match) Ekranı: Tinder benzeri sağa-sola kaydırma mekaniğiyle çalışan, kullanıcı keşif ve eşleşme modülünün sıfırdan kurgulanması. Sadece UI tasarım fikri.
+6- Ruh eşini bul. Eşleşme olunca sadece 2 dakika görüşme olacak. soulchill temasında olacak ama bizim temamızda yani özgün. Sadece UI tasarım fikri.
+
+6x3=18 tasarım ekranı gerekiyor

@@ -1,0 +1,133 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+================================================================================
+
+01. ADIM TAKİP & KAZANIM
+    ├── Gerçek zamanlı adım sayacı (SVG progress ring)
+    ├── Günlük hedef takibi (10K default, 84.3% progress)
+    ├── Çift para birimi (AdımCoin + NEX Token)
+    ├── 2X Boost mekanizması (süre bazlı çarpan)
+    └── Token dönüştürme (Convert butonu)
+
+02. GÖREV & BAŞARIM SİSTEMİ
+    ├── Günlük görevler modalı (bottom sheet)
+    ├── Görev durumları (completed/in-progress/locked)
+    ├── Progress tracking (visual bars + sayısal)
+    └── Anlık ödül kazanımı (+50/+100/+200 NEX)
+
+03. İSTATİSTİK & ANALİTİK
+    ├── Haftalık bar chart (7 günlük performans)
+    ├── Opacity-based veri görselleştirme (adım oranına göre)
+    ├── Trend göstergesi (↑ +23%)
+    └── Başarım kartları (horizontal scroll)
+
+04. SOSYAL & REKABET
+    ├── Global sıralama (Global rank: #42)
+    ├── Liderlik tablosu (top 3 + user highlight)
+    ├── Seviye sistemi (LVL 12 + XP bar 75%)
+    └── İlk %1 percentile gösterimi
+
+05. MAĞAZA & EKONOMİ
+    ├── Premium üyelik tier'ı (Sürekli 2X)
+    ├── Güçlendirici satın alma (2X, Oto Yürüyüş, Mega Paket)
+    ├── Hediye kutusu mekanizması (rastgele ödül)
+    └── Bakiye gösterimi (2,458 NEX)
+
+06. KULLANICI PROFİLİ
+    ├── Avatar ring (gradient border)
+    ├── XP progress tracking (7,500/10,000)
+    ├── İstatistik özeti (1.2M adım, 12 seviye, 45K kazanılan)
+    └── Ayarlar (Bildirim, Karanlık Mod, Gizlilik)
+
+================================================================================
+
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+================================================================================
+
+01. LAYOUT SYSTEM
+    ├── iOS Frame (390x844px, border-radius:50px)
+    ├── Aurora Background (CSS blur blobs, 20s animation)
+    ├── Dynamic Island (126x37px, z-index:1000)
+    └── Screen-based routing (4 views, absolute positioning)
+
+02. GLASSMORPHISM SYSTEM
+    ├── Backdrop-filter:blur(40px) cards
+    ├── Border gradients (rgba(255,255,255,0.05-0.1))
+    ├── Inner shadows (inset 0 1px 1px rgba(255,255,255,0.1))
+    └── Drop shadows (0 20px 50px rgba(0,0,0,0.5))
+
+03. NAVIGATION COMPONENTS
+    ├── Bottom nav (fixed, 70px height, 4 items)
+    ├── Active state (color:#FF33FF, no background)
+    └── Screen transitions (opacity + pointer-events)
+
+04. DATA VISUALIZATION
+    ├── SVG Circular Progress (stroke-dasharray:339)
+    ├── CSS Bar Charts (flex-based, opacity mapping)
+    ├── XP Progress Bar (linear-gradient fill)
+    └── Gradient text (background-clip:text)
+
+05. INTERACTIVE ELEMENTS
+    ├── Modal bottom sheet (transform:translateY, 75% max-height)
+    ├── Toggle switches (CSS-only, rounded-full)
+    ├── Quest status indicators (3-state: completed/in-progress/locked)
+    └── Button states (active:scale(0.95))
+
+06. TYPOGRAPHY
+    ├── Inter (400-800 weights, UI elements)
+    ├── Orbitron (Display font, numbers)
+    └── Font Awesome 6.4 (Icon system)
+
+================================================================================
+
+C. RENK PALETİ LİSTESİ (Design System Colors)
+================================================================================
+
+AURORA CORE
+--------------------------------------
+Pink              : #FF33FF  (Primary accent, nav active, borders)
+Magenta           : #CC00FF  (Gradient start, XP bars, buttons)
+Blue              : #0066FF  (Gradient end, secondary accent)
+
+DARK THEME
+--------------------------------------
+Background        : #050010  (Deep purple-black)
+Card BG           : rgba(255,255,255,0.03)  (Glass base)
+Card Border       : rgba(255,255,255,0.05-0.1)  (Subtle outlines)
+
+SEMANTIC COLORS
+--------------------------------------
+Streak            : rgba(251,191,36,0.7)  (Amber border, fire icon)
+Distance          : rgba(139,92,246,0.7)  (Violet border, route icon)
+Calories          : rgba(59,130,246,0.7)  (Blue border, bolt icon)
+Success           : #22c55e  (Completed quests, green)
+Live Red          : rgba(220,0,60,0.88)  (Not used but reserved)
+
+TEXT HIERARCHY
+--------------------------------------
+White             : #FFFFFF  (Primary text)
+Pink-200          : rgba(255,255,255,0.6)  (Secondary/muted text)
+Opacity 50%       : rgba(255,255,255,0.5)  (Tertiary text)
+Opacity 30%       : rgba(255,255,255,0.3)  (Disabled/subtle)
+
+GRADIENTS
+--------------------------------------
+Aurora Gradient   : linear-gradient(135deg, #CC00FF 0%, #FF33FF 100%)
+Aurora Full       : linear-gradient(135deg, #CC00FF 0%, #FF33FF 50%, #0066FF 100%)
+Button Gradient   : linear-gradient(135deg, #CC00FF 0%, #FF33FF 100%)
+Text Gradient     : linear-gradient(135deg, #FFFFFF 0%, #FF33FF 100%)
+
+LEADERBOARD
+--------------------------------------
+Gold              : #FFD700  (1. sıra, crown icon)
+Silver            : #C0C0C0  (2. sıra, medal icon)
+Bronze            : #CD7F32  (3. sıra, medal icon)
+
+================================================================================
+
+SONUÇ: Aurora Flow, Tailwind CSS utility-first yaklaşımıyla 
+inşa edilmiş, glassmorphism estetiği ve aurora animasyonlarıyla 
+zenginleştirilmiş modern bir fitness uygulamasıdır. SVG-based 
+progress ring, opacity-mapped bar charts ve bottom sheet modal 
+sistemi ile veri yoğun mobil arayüz gereksinimlerini karşılar; 
+gradient-driven visual hierarchy ve micro-interactions ile 
+kullanıcı motivasyonunu sürdürür.

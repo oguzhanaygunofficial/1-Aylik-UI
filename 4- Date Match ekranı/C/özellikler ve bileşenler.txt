@@ -1,0 +1,210 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+================================================================================
+
+01. PROFİL KEŞFETME SİSTEMİ (Explore)
+    ├── Tam ekran fotoğraf kartları (Reels tarzı)
+    ├── Dikey kaydırma ile fotoğraf gezintisi
+    ├── Yatay kaydırma ile Beğen/Geç aksiyonları
+    ├── Uyum yüzdesi gösterimi (%94 Uyum vb.)
+    ├── Konum ve mesafe bilgisi (2km uzaklık)
+    ├── Çevrimiçi durum göstergesi (yeşil nokta)
+    └── İlgi alanı etiketleri (Müzik, Seyahat, Fotoğraf)
+
+02. EŞLEŞME YÖNETİMİ (Matches)
+    ├── Yeni eşleşmeler (Polaroid tarzı yatay scroll)
+    ├── Sohbet listesi (konuşma geçmişi)
+    ├── Okunmamış mesaj bildirimleri (badge + typing animasyonu)
+    ├── Çevrimiçi durum göstergeleri
+    └── Hızlı sohbet başlatma
+
+03. SOHBET SİSTEMİ (Chat)
+    ├── Gerçek zamanlı mesajlaşma (bubble UI)
+    ├── Mesaj limit sistemi (3 mesaj kuralı)
+    ├── Bekleme modu (karşı taraf yanıt verene kadar)
+    ├── Hediye mesaj entegrasyonu (token bazlı)
+    ├── AI açılış önerileri (match modal)
+    └── Okundu/okunmadı göstergeleri
+
+04. TOPLULUK HUB'I (Hub)
+    ├── İlgi alanına göre gruplar (Müzik, Spor, Sanat)
+    ├── Etkinlik takvimi (Konser, Festival, Sergi)
+    ├── Üye sayısı ve çevrimiçi göstergeleri
+    ├── Öne çıkan topluluklar ("Popüler", "Yeni", "Trend" badge'leri)
+    └── Grid layout sistemleri (1+2, 2x2, full-width)
+
+05. TOKEN EKONOMİSİ
+    ├── Token bakiye gösterimi (150 Token)
+    ├── Hediye gönderme (Gül:10, Elmas:20, Yıldız:30, Ateş:40, Taç:50, Roket:60)
+    ├── Süper Beğeni (5 Token)
+    ├── Filtre kilidi açma (Boy:2, Kilo:2, Eğitim:3, İlişki Amacı:2)
+    ├── Geri Al (Undo) özelliği (1 Token)
+    └── Token satın alma geçmişi
+
+06. FİLTRELEME SİSTEMİ
+    ├── Ücretsiz filtreler: Mesafe (1-100km), Yaş aralığı (18-70)
+    ├── Token kilitli filtreler: Boy, Kilo, Eğitim, İlişki Amacı
+    ├── Slider kontrolleri (gradient fill)
+    ├── Gerçek zamanlı değer gösterimi
+    └── Kilidi açma prompt'ları
+
+07. PROFİL YÖNETİMİ
+    ├── Profil detay sayfası (biyografi, fotoğraflar, kişisel bilgiler)
+    ├── İstatistikler (Görüntülenme, Eşleşme, Yanıt Oranı)
+    ├── Profil düzenleme
+    ├── Premium/Boost satın alma
+    └── Ayarlar menüsü
+
+08. EŞLEŞME ANİMASYONU
+    ├── Tam ekran overlay (radial gradient arka plan)
+    ├── Çift fotoğraf gösterimi (rotate efektli)
+    ├── Kalp atış animasyonu (heartbeat keyframe)
+    ├── Uyum skoru gösterimi
+    ├── AI önerili açılış mesajları
+    └── Hızlı sohbet başlatma / kaydırmaya devam et
+
+09. ONBOARDING / TUTORIAL
+    ├── Swipe gesture eğitimi (Yukarı/Aşağı/Sağ/Sol)
+    ├── Süper Beğeni açıklaması
+    ├── Visual hint'ler (emoji + oklar)
+    └── "Anladım, Başlayalım" CTA
+
+10. BİLDİRİM VE GERİ BİLDİRİM
+    ├── Action toast'ları (Beğenildi, Süper Beğeni gönderildi)
+    ├── Eşleşme bildirimi (modal)
+    ├── Mesaj limit uyarıları
+    └── Token harcama onayları
+
+================================================================================
+
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+================================================================================
+
+01. NAVİGASYON BİLEŞENLERİ
+    ├── Bottom Navigation Bar (4-tab: Keşfet, Eşleşme, Hub, Profil)
+    ├── Active state indicator (gradient bar + glow efekti)
+    ├── Badge sistemi (kırmızı nokta bildirim)
+    ├── Dynamic Island (iPhone stili notch)
+    └── Status Bar (saat, sinyal, batarya)
+
+02. KART BİLEŞENLERİ
+    ├── Explore Photo Card (tam ekran, background-image)
+    ├── Polaroid Card (foto + isim + meta bilgi)
+    ├── Hub Community Card (gradient overlay + badge)
+    ├── Profile Stat Card (gradient border + glow)
+    └── Match Photo Frame (rotated border efekti)
+
+03. BUTON VE AKSIYON BİLEŞENLERİ
+    ├── Circular Action Buttons (Geç, Beğen, Süper, Hediye)
+    ├── Gradient Primary Button (CTA'lar için)
+    ├── Ghost Button (secondary actions)
+    ├── Icon Button (header actions)
+    └── Close/Back Button (arrow icon)
+
+04. FORM ve INPUT BİLEŞENLERİ
+    ├── Chat Input Bar (rounded, blur background)
+    ├── Slider Input (custom thumb, gradient track)
+    ├── Modal Sheet Input (gift/superlike mesaj)
+    └── Filter Input (disabled state styling)
+
+05. MODAL VE SHEET BİLEŞENLERİ
+    ├── Full-screen Modal (eşleşme, tutorial)
+    ├── Bottom Sheet (token işlemleri, filter)
+    ├── Profile Detail Sheet (slide-up)
+    ├── Token Prompt Modal (centered)
+    └── Filter Sheet (scrollable content)
+
+06. GÖSTERGE BİLEŞENLERİ
+    ├── Photo Dot Indicators (diğer bar, active glow)
+    ├── Compatibilty Bar (gradient fill percentage)
+    ├── Typing Animation (3-dot bounce)
+    ├── Online Status Dot (pulse animation)
+    └── Loading/Shimmer (ambient drift background)
+
+07. TİPOGRAFİ BİLEŞENLERİ
+    ├── Playfair Display (başlıklar, isimler - serif)
+    ├── DM Sans (body text, UI elements - sans-serif)
+    ├── Gradient Text (background-clip: text)
+    └── Text Shadow (profil isimleri için)
+
+08. GÖRSEL EFEKTLER
+    ├── Backdrop Filter (blur + saturate)
+    ├── Gradient Overlays (linear + radial)
+    ├── Box Shadow (glow efektleri)
+    ├── Transform (rotate, scale, translate)
+    └── Transition/Animation (cubic-bezier easing)
+
+09. LAYOUT SİSTEMLERİ
+    ├── Flexbox (nav, header, action columns)
+    ├── CSS Grid (hub cards, profile stats)
+    ├── Absolute Positioning (overlays, floating buttons)
+    └── Sticky/Fixed (header, bottom nav)
+
+10. İKONOGRAFİ
+    ├── SVG Icons (stroke-based, scalable)
+    ├── Emoji Integration (gift icons, category labels)
+    └── Custom Iconography (app-specific semboller)
+
+================================================================================
+
+C. RENK PALETİ LİSTESİ (Design System Colors)
+================================================================================
+
+ARKA PLAN RENKLERİ
+--------------------------------------
+--bg              : #0e0a14  (Ana arka plan - derin mor-siyah)
+--deep-bg         : #100c18  (Body arka plan)
+--glass           : rgba(255,255,255,0.05)  (Cam efekti)
+--glass-border    : rgba(255,255,255,0.10)  (Cam kenarlık)
+
+VURGULU RENKLER (Accent Colors)
+--------------------------------------
+--red             : #FF2D55  (Ana vurgu - beğeni, eylem)
+--red-soft        : #FF4D6D  (Yumuşak kırmızı - hover states)
+--magenta         : #FF2189  (İkincil vurgu - aktif nav)
+--magenta-bright  : #FF5FAD  (Parlak magenta - glow)
+--cyan            : #00C8FF  (Bilgi - uyum barı başlangıç)
+--cyan-soft       : #00B4FF  (Yumuşak mavi)
+
+MOR/MAVİ GRADIENT RENKLER
+--------------------------------------
+--purple          : #BF5AF2  (Süper beğeni, AI önerileri)
+--purple-soft     : #A855F7  (Yumuşak mor)
+--indigo          : #6366F1  (Indigo - etiketler)
+--blue            : #3B82F6  (Mavi - seyahet etiketi)
+--deep-purple     : #7C3AED  (Derin mor - arka plan gradient)
+
+DURUM RENKLERİ
+--------------------------------------
+--pink            : #FF80AB  (Pembe - profil etiketleri)
+--green-online    : #10b981  (Çevrimiçi - yeşil nokta)
+--green-like      : #10E8A0  (Beğenildi - yeşil vurgu)
+--red-nope        : #FF3B5C  (Geç - kırmızı vurgu)
+
+TOKEN/ÖDEME RENKLERİ
+--------------------------------------
+--token-gold      : #f59e0b  (Token - altın sarısı)
+--token-amber     : #fbbf24  (Token vurgu - amber)
+--token-orange    : #d97706  (Token koyu - turuncu)
+
+YAZI RENKLERİ
+--------------------------------------
+--text-primary    : #ffffff  (Beyaz - ana metin)
+--text-secondary  : rgba(255,255,255,0.75)  (İkincil metin)
+--text-muted      : rgba(255,255,255,0.40)  (Pasif metin)
+--text-subtle     : rgba(255,255,255,0.30)  (Hint metin)
+
+ETİKET RENKLERİ (Kategori Bazlı)
+--------------------------------------
+--tag-music       : #D08FFF  (Müzik - mor ton)
+--tag-travel      : #7BBFFF  (Seyahat - mavi ton)
+--tag-photo       : #FBCA6A  (Fotoğraf - sarı ton)
+--tag-sport       : #5DDCB0  (Spor - yeşil ton)
+--tag-food        : #FF8A8A  (Yemek - kırmızı ton)
+--tag-art         : #FF8EC8  (Sanat - pembe ton)
+--tag-game        : #A5B4FC  (Oyun - indigo ton)
+
+================================================================================
+SONUÇ: Nexlify, modern dating app standartlarına uygun, token bazlı 
+ekonomiyle desteklenmiş, Reels benzeri keşfetme deneyimi sunan, zengin 
+gradient ve glassmorphism efektleriyle premium hissettiren, 5 ana ekranlı 
+(Keşfet/Eşleşme/Hub/Profil/Sohbet) kapsamlı bir mobil web uygulamasıdır.

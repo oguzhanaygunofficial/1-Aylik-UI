@@ -1,0 +1,148 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+KAHVE FALI MODÜLÜ
+├── Multi-Angle Upload: 2 fincan (farklı açı) + 1 tabak fotoğrafı desteği
+├── Visual Progress: DOT indicator sistemi ile yükleme durum takibi
+├── Native Capture: capture="environment" ile doğrudan kamera erişimi
+└── Ritual Flow: Fotoğraf onay adımları, başlat butonu validasyonu
+TAROT FALI MODÜLÜ
+├── 3 Kart Yayılımı: Geçmiş (Past), Şimdi (Present), Gelecek (Future) slotları
+├── Hibrit Seçim: Touch drag-drop (ghost element) + tap-to-select kombinasyonu
+├── Horizontal Deck: CSS scroll-snap ile momentum scroll, 25 kart havuzu
+└── Slot Validation: Dolu slot kontrolü, seçim counter (0/3)
+EL FALI MODÜLÜ
+├── Palm Scanner: Simüle edilmiş tarayıcı çizgisi (scan-line animation)
+├── Single Upload: Avuç içi fotoğrafı (environment capture)
+├── Visual Feedback: 3 saniyelik tarama animasyonu (progressive blur)
+└── Çizgi Analizi: Kalp, kader ve beyin çizgisi yorum algoritması simülasyonu
+SU FALI MODÜLÜ
+├── Interactive Bowl: SVG/CSS gradient ile su kasesi renderı
+├── Drop Animation: Touch-triggered damla düşüşü (water-drop keyframes)
+├── Ripple Effect: Su dalga genişlemesi (splashExpand animation)
+└── Symbol Reveal: Yüzeyde beliren sembollerin fade-in gösterimi
+MELEK FALI MODÜLÜ
+├── Card Selection: 3 kart arasından single-select mekanizması
+├── Feather Animation: CSS keyframes ile tüy düşüşü (featherFall)
+├── Angelic Theme: White/gold color scheme, halo efektleri
+└── Message Reveal: Kart çevirme animasyonu (cardFlip)
+KRİSTAL FALI MODÜLÜ
+├── Crystal Orb: Radial gradient ile 3D küre efekti (crystalGlow)
+├── Particle System: Touch-triggered 8 yönlü parçacık saçılımı
+├── Flash Effect: Beyaz patlama (flash keyframes) ile reveal anı
+└── Gyro Simulation: CSS transform ile hafif rotasyon efekti
+RÜYA YORUMU MODÜLÜ
+├── Natural Input: Çok satırlı metin girişi (textarea)
+├── Category Filter: Aşk, Kariyer, Para, Genel badge filtresi
+├── Contextual Cost: Kategoriye göre token maliyeti değişimi
+└── AI Simulation: Loading state, natural language processing animasyonu
+GÜNLÜK BURÇ MODÜLÜ
+├── Zodiac Grid: 4x3 responsive grid, 12 burç desteği
+├── Aspect Bars: Aşk, Kariyer, Sağlık, Para için linear progress bar
+├── Lucky Numbers: Animasyonlu şanslı sayı daireleri (glowPulse)
+└── Dynamic Content: Seçili burca göre conditional text render
+TOKEN (SİKKE) EKONOMİSİ
+├── Balance Display: Global header badge, real-time update
+├── Package System: 4 tier (50/150/350/800) satın alma seçenekleri
+├── Cost Structure: Fal bazlı dinamik maliyetler (20-45 token arası)
+└── Persistence: LocalStorage ile bakiye ve geçmiş senkronizasyonu
+REKLAM ENTegrasyonU (FREEMIUM)
+├── Daily Reset: Her gün 00:00'da ücretsiz hak yenilenmesi
+├── Countdown Timer: 5 saniyelik progress bar ile zorunlu bekleme
+├── Skip Option: 5 token karşılığı reklam atlama mekanizması
+└── Loading States: Fal tipine özel loading mesajları ve animasyonlar
+GEÇMİŞ YÖNETİMİ
+├── Local Storage: nexlifyMystic key ile state persistency
+├── History List: Tarih sıralamalı fal geçmişi, fav icon desteği
+├── Detail View: Kaydedilmiş falların full-text görüntülenmesi
+└── Share Function: WhatsApp entegrasyonu ile metin paylaşımı
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+LAYOUT ARCHITECTURE
+├── Device Frame: iPhone 14 Pro simülasyonu (393x852px, border-radius: 55px)
+├── Dynamic Island: Absolute positioned pill (120x35px, static)
+├── Safe Area: 54px status bar, 70px bottom nav padding
+└── Viewport: user-scalable=no, overflow-hidden ana konteyner
+NAVIGATION SYSTEM
+├── Vanilla Router: router.navigate() SPA mimarisi, screen-based routing
+├── Bottom Tab Bar: 3-item navigation (Home, History, Shop)
+├── Global Back Button: Context-aware floating button (absolute positioned)
+└── Active States: Nav item highlight, icon scale transform
+GLASSMORPHISM COMPONENTS
+├── Base Panel: backdrop-filter: blur(20px), rgba(255,255,255,0.05) bg
+├── Gradient Border: mask-composite: exclude ile border gradient efekti
+├── Parchment Variant: Gold-tinted glass (rgba(201,162,39,0.12))
+└── Strong Variant: 30px blur, higher opacity (0.08)
+CARD COMPONENTS
+├── Mystic Card: Hover translateY(-8px), gold glow shadow
+├── Tarot Card: perspective 3D, flip animation (rotateY)
+├── Angel Card: White glassmorphism, selected state border
+└── Zodiac Item: Square aspect-ratio, hover scale(1.05)
+ANIMATION SYSTEM
+├── Float: translateY loop (6s ease-in-out infinite)
+├── Pulse Glow: Box-shadow alternation (gold/cyan)
+├── Scan Line: Absolute positioned laser sweep (2s ease-in-out)
+├── Ripple: Scale transform on click (0.6s ease-out)
+└── Smoke Rise: Opacity + translateY combination (3s ease-out)
+INPUT COMPONENTS
+├── File Upload: Hidden input, custom drop zone styling
+├── Drag Overlay: Visual feedback (border-color change)
+├── Text Input: Custom textarea, placeholder styling
+└── Category Badge: Pill-shaped buttons, color-coded states
+FEEDBACK MECHANISMS
+├── Toast System: Absolute positioned, slide-up animation
+├── Modal Overlay: Backdrop blur, centered content, click-outside close
+├── Progress Ring: SVG circle, stroke-dashoffset manipulation
+└── Loading Orb: Conic gradient spinner (1s linear infinite)
+SCROLL BEHAVIORS
+├── Horizontal Deck: overflow-x: scroll, scroll-snap-type: x proximity
+├── Momentum Scroll: -webkit-overflow-scrolling: touch
+└── Scroll Hide: ::-webkit-scrollbar { display: none }
+STATE INDICATORS
+├── Token Badge: Coin icon + monospace amount display
+├── Aspect Bars: Percentage-based width, gradient fills
+├── DOT Indicators: 2-state circles (border vs filled gold)
+└── Daily Quote: Static content with ornamental divider
+TYPOGRAPHY SYSTEM
+├── Display: 'Cinzel Decorative' (serif, decorative headers)
+├── UI: 'Space Grotesk' (sans-serif, buttons, labels)
+├── Body: 'Cormorant Garamond' (serif, readings, italic)
+└── System: 'Inter' (fallback, inputs)
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+BACKGROUND COLORS
+Mystic Navy       : #0A0A1F  (Primary background, deep void)
+Mystic Navy Light : #121230  (Secondary surface, cards)
+Pure Black        : #000000  (Body background, device frame)
+
+ACCENT NEON COLORS
+Mystic Purple     : #C026D3  (Primary action, mystical glow)
+Mystic Magenta    : #FF00AA  (Secondary accent, love/relationship)
+Mystic Cyan       : #00F0FF  (Tertiary accent, water/scanner themes)
+
+METALLIC GOLD SPECTRUM
+Gold Primary      : #C9A227  (Main gold, buttons, highlights)
+Gold Light        : #E8C547  (Hover states, bright accents)
+Gold Dim          : #8A6D18  (Borders, disabled states)
+Gold Alpha Heavy  : rgba(201,162,39,0.4)  (Glow effects)
+Gold Alpha Light  : rgba(201,162,39,0.08) (Parchment bg)
+
+COFFEE TONES
+Coffee Dark       : #8B4513  (Coffee reading theme primary)
+Coffee Light      : #A0522D  (Secondary coffee accent)
+
+GLASSMORPHISM ALPHAS
+Glass BG          : rgba(255,255,255,0.05)  (Standard panels)
+Glass BG Strong   : rgba(255,255,255,0.08)  (Elevated panels)
+Glass Border      : rgba(255,255,255,0.10)  (Subtle dividers)
+Glass Border Gold : rgba(201,162,39,0.25)   (Parchment borders)
+
+TEXT COLORS
+Cream             : #F5F5DC  (Primary text, high contrast)
+Gray Primary      : #4A4A4A  (Secondary text, labels)
+Gray Secondary    : #6A6A6A  (Tertiary text, dates)
+Gold Text         : #A09070  (Muted gold, captions)
+
+SEMANTIC BADGE COLORS
+Free (Free)       : rgba(0,220,255,0.13) bg, #55deff text, #00dcff border
+Token (Paid)      : rgba(201,162,39,0.13) bg, #d4a93a text, #c9a227 border
+Premium           : rgba(200,50,230,0.13) bg, #d060e8 text, #c832e6 border
+================================================================================ SONUÇ: Nexlify Mystic, mobil-first yaklaşımla tasarlanmış, glassmorphism ve mystical UI elementleriyle zenginleştirilmiş, vanilla JavaScript tabanlı interaktif bir fal ve astroloji web uygulamasıdır; LocalStorage persistency, CSS keyframe animasyonları ve hibrit touch/drag etkileşimleriyle native-app deneyimi sunar.

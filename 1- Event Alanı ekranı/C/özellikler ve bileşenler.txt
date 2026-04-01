@@ -1,0 +1,131 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+CANLI YAYINLAR (Live Streaming)
+├── Çoklu kategori filtreleme (21 kategori)
+├── Hero card + grid layout (portrait/landscape)
+├── Canlı gösterge (pulse animasyonlu)
+├── İzleyici sayısı ve etkileşim metrikleri
+├── PK Savaşı modu (VS overlay)
+├── VIP odaları (token girişi)
+└── Yakındakiler (konum bazlı)
+SES ODALARI (Audio Rooms)
+├── 18 kategori desteği (Müzik, Sohbet, Oyun, vs.)
+├── 3 slot konuşmacı grid'i (Clubhouse tarzı)
+├── Söz sırası kuyruğu (queue system)
+├── Ses dalgası animasyonu (speaking indicator)
+├── Mikrofon sayısı seçimi (2-12)
+├── VIP oda seçenekleri
+└── Kategori bazlı renk kodlaması
+OYUN MODÜLÜ
+├── 3 alt-sekme: Oyunlar / Odalar / Sıralama
+├── Steam Library tarzı liste görünümü
+├── Horizontal scroll şeritleri
+├── "Tümünü Gör" genişletilmiş grid
+├── Oyun odası oluşturma (12 oyun)
+├── Slot bazlı oyuncu gösterimi
+└── Sıralama sistemi (XP, Token, Streak)
+ODA YÖNETİMİ
+├── 3 oda tipi: Canlı / Ses / Oyun
+├── VIP seviye seçimi (Entry/Mid/Pro)
+├── Token giriş ücreti ayarlama
+├── Kategori dropdown seçimi
+├── Davetli listesi (invite chips)
+└── Anlık oda önizleme
+MODÜL MENÜSÜ
+├── 7 aktif modül kartı
+├── 2 yakında geliyor placeholder
+├── Bento grid layout
+├── Glow efektli kartlar
+└── Full-screen overlay
+KULLANICI ETKİLEŞİMİ
+├── Tab geçişleri (slide animasyon)
+├── Kategori filtreleme (snake indicator)
+├── Bottom sheet açılışları
+├── Hamburger menü animasyonu
+├── Pull-to-refresh hazırlığı
+└── Scroll-based lazy loading
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+NAVİGASYON BİLEŞENLERİ
+├── Tab Switcher (3 ana sekme)
+├── Category Filter (horizontal scroll)
+├── Sub-navigation (game tabs)
+├── Breadcrumb (back button)
+└── Status Bar (iOS native)
+KART BİLEŞENLERİ
+├── Stream Card (Twitch browse anatomy)
+├── Room Card (Clubhouse anatomy)
+├── Game Card (Steam library style)
+├── Game Room Card (Discord + HAGO hybrid)
+└── Module Card (Bento grid)
+OVERLAY BİLEŞENLERİ
+├── Create Room Launcher (bottom sheet)
+├── Module Panel (full-screen)
+├── Queue Sheet (speaker queue)
+├── XP Info Sheet (ranking details)
+├── Games All Overlay (expanded grid)
+└── Backdrop blur (glassmorphism)
+FORM BİLEŞENLERİ
+├── Text Input (floating label)
+├── Custom Dropdown (searchable)
+├── Toggle Switch (iOS style)
+├── Selection Chips (single/multi)
+├── Radio Button Group
+└── Number Input (token amount)
+GÖSTERGE BİLEŞENLERİ
+├── Live Badge (pulse animation)
+├── Viewer Count (glass pill)
+├── Flame Badge (trending)
+├── Category Tag (color coded)
+├── Level Badge (progress ring)
+└── XP Progress Bar (gradient fill)
+ANİMASYON BİLEŞENLERİ
+├── Tab indicator (snake transition)
+├── Card hover/active states
+├── Bottom sheet slide
+├── Micro-interactions (button press)
+├── Skeleton loading (placeholder)
+└── Wave bars (speaking indicator)
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+CORE NEON PALETTE
+Neon Magenta        : #FF00AA  (Primary accent, CTAs)
+Neon Cyan           : #00F0FF  (Secondary accent, glows)
+Neon Gold           : #FFD700  (VIP, premium, tokens)
+Vibella Purple      : #8B5CF6  (Brand primary)
+Vibella Cyan        : #45D3D0  (Brand secondary)
+
+DESIGN C - WARM AURORA
+Amber               : #f59e0b  (Primary warm accent)
+Rose                : #f43f5e  (Live streams, danger)
+Indigo              : #6366f1  (Games, info)
+Sky                 : #0ea5e9  (Links, highlights)
+Warm Background     : #111018  (Dark base)
+Surface Glass       : rgba(255,255,255,0.055)  (Cards)
+Border Subtle       : rgba(255,255,255,0.09)   (Dividers)
+
+AUDIO CATEGORY COLORS (18)
+Müzik               : #ec4899  (Pink)
+Sohbet              : #0ea5e9  (Sky)
+Oyun                : #f97316  (Orange)
+Spor                : #22c55e  (Green)
+Gündem              : #6366f1  (Indigo)
+Komedi              : #eab308  (Yellow)
+Film & Dizi         : #ef4444  (Red)
+Anime               : #fb923c  (Light Orange)
+Teknoloji           : #06b6d4  (Cyan)
+Finans              : #10b981  (Emerald)
+Eğitim              : #a855f7  (Purple)
+Sağlık              : #14b8a6  (Teal)
+Seyahat             : #f59e0b  (Amber)
+Yemek               : #ea580c  (Dark Orange)
+Sanat               : #c026d3  (Fuchsia)
+Burç & Fal          : #7c3aed  (Violet)
+Gece Sohbeti        : #3730a3  (Dark Indigo)
+Doğa & Hayvan       : #16a34a  (Green)
+
+SEMANTIC COLORS
+Success             : #22c55e  (Green)
+Warning             : #f59e0b  (Amber)
+Error               : #ef4444  (Red)
+Info                : #0ea5e9  (Sky)
+================================================================================ SONUÇ: Eğlence Platformu, 3 ana modül (Canlı/Ses/Oyun) üzerine kurulu, glassmorphism ve neon akzentli modern bir sosyal medya arayüzüdür. Twitch, Clubhouse ve Steam UI pattern'lerini birleştiren hybrid bir design sistemine sahiptir. 18+ kategori, 50+ kart varyasyonu ve 7 aktif modül ile geniş özellik kapsamına sahiptir.

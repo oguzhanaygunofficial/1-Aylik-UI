@@ -1,0 +1,133 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+================================================================================
+
+01. CANLI YAYIN KEŞFİ
+    ├── Asimetrik hero layout (60/40 split: big card + small stack)
+    ├── Horizontal scroll card kategorileri (Popüler, Yeni, Senin İçin)
+    ├── Masonry grid görünümü (Takip tab)
+    └── Featured slider (snap-scroll ile öne çıkan yayınlar)
+
+02. SOSYAL GRAF & ARKADAŞLIK
+    ├── Son görülenler (avatar bubble row)
+    ├── Canlı arkadaşlar (horizontal detail cards)
+    ├── Arkadaşların takip ettikleri (mini 3-col grid)
+    └── Yayın katılım istekleri (restrict toggle)
+
+03. YAYIN YÖNETİMİ
+    ├── Go Live overlay (kamera preview + başlık girişi)
+    ├── Kamera flip (front/back simulation)
+    ├── Kısıtlı katılım modu (checkbox toggle)
+    └── Canlı yayın izleme (watch overlay + chat)
+
+04. ETKİLEŞİM SİSTEMLERİ
+    ├── Token gönderme (floating animation)
+    ├── Like/beğeni (toggle state)
+    ├── Chat sistemi (bubble UI)
+    └── Paylaşım entegrasyonu
+
+05. NAVİGASYON & OVERLAY
+    ├── Tab-based routing (Herkes/Arkadaşlar/Takip)
+    ├── Bottom navigation (5-item dock)
+    ├── All Streams overlay (list view)
+    └── Friends overlay (contextual listing)
+
+06. ZAMANLAMA & PLANLAMA
+    ├── Yakında yayın açacak (schedule list)
+    ├── Zaman damgaları (relative time)
+    └── Countdown indicators
+
+================================================================================
+
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+================================================================================
+
+01. LAYOUT SYSTEM
+    ├── iPhone frame simulation (402x874px, border-radius:55px)
+    ├── Dynamic Island (126x37px, z-index:9999)
+    ├── Glassmorphism panels (backdrop-filter:blur)
+    └── Noise texture overlay (SVG filter)
+
+02. NAVIGATION COMPONENTS
+    ├── Tab bar (animated indicator, cubic-bezier transitions)
+    ├── Bottom nav (5-column grid, active glow states)
+    ├── Back buttons (circular, blur backdrop)
+    └── Overlay management (z-index layering: 700-850)
+
+03. CARD VARIETIES
+    ├── Hot-big (60% width, gradient dim, live badge)
+    ├── Hot-small (stacked 40%, compact glass panel)
+    ├── H-card (horizontal scroll, 140px fixed width)
+    ├── M-card (masonry: tall/mid/short variants)
+    ├── Mini-card (3-col grid, aspect-ratio:3/4)
+    └── Fr-card (friend detail, thumb + info split)
+
+04. AVATAR & KİMLİK
+    ├── Gradient ring avatars (spin animation for live)
+    ├── Live indicator pip (red dot, border offset)
+    ├── Podium avatars (gold/silver/bronze borders)
+    └── Thumbnail overlays (dim + border glow)
+
+05. INTERACTIVE STATES
+    ├── Toggle switches (CSS-only, no JS dependency)
+    ├── Like animation (heart fill transition)
+    ├── Token float (CSS keyframes, random trajectory)
+    └── Camera flip (rotateY transition + opacity crossfade)
+
+06. TYPOGRAPHY
+    ├── Bebas Neue (Headers, brand text)
+    ├── DM Sans (UI elements, 400-800 weights)
+    └── Font Awesome 6.4 (Icon system)
+
+================================================================================
+
+C. RENK PALETİ LİSTESİ (Design System Colors)
+================================================================================
+
+PRIMARY PURPLES
+--------------------------------------
+Purple            : #6633FF  (Ana marka rengi, nav active states)
+Purple 2          : #9933FF  (Gradient mid-point, card glows)
+Magenta           : #CC00FF  (Token/para birimi, CTA vurgu)
+Pink              : #FF33FF  (Gradient end, hover states)
+
+ACCENT COLORS
+--------------------------------------
+Cyan              : #00C0FF  (Secondary accent, canlı badge değil)
+
+SEMANTIC COLORS
+--------------------------------------
+Live Red          : rgba(220,0,60,0.88)  (Canlı badge arka planı)
+Live Dot          : #FFFFFF  (Blink animasyonu)
+Gold              : #FFD700  (1. sıra)
+Silver            : #C0C0C0  (2. sıra)
+Bronze            : #CD7F32  (3. sıra)
+
+DARK THEME
+--------------------------------------
+Background        : #07070D  (Ana arka plan)
+Background 2      : #0D0D18  (Kart yüzeyleri)
+Card              : rgba(255,255,255,0.038)  (Glass base)
+Card 2            : rgba(255,255,255,0.065)  (Elevated cards)
+Border            : rgba(255,255,255,0.07)   (Subtle dividers)
+Border Glow       : rgba(204,0,255,0.3)      (Neon outlines)
+
+TEXT HIERARCHY
+--------------------------------------
+Text Primary      : #FFFFFF  (Başlıklar, isimler)
+Text Secondary    : rgba(255,255,255,0.55)  (Konular, meta)
+Text Tertiary     : rgba(255,255,255,0.30)  (Zaman, pasif)
+
+GRADIENTS
+--------------------------------------
+Main Gradient     : linear-gradient(135deg, #6633FF 0%, #CC00FF 60%, #FF33FF 100%)
+Reverse Gradient  : linear-gradient(135deg, #FF33FF 0%, #CC00FF 60%, #6633FF 100%)
+Glow Gradient     : linear-gradient(135deg, rgba(102,51,255,0.8), rgba(204,0,255,0.8))
+
+================================================================================
+
+SONUÇ: Nexlify Canlı Yayın, glassmorphism estetiğiyle sarmalanmış, 
+sosyal keşif odaklı bir live-streaming mobil prototipidir. Asimetrik 
+layout'lar, masonry grid'ler ve çok katmanlı overlay sistemi ile 
+modern sosyal medya UX pattern'lerini uygular; gradient-driven 
+visual hierarchy ve micro-interactions (token float, camera flip) 
+ile kullanıcı etkileşimini maksimize eder.

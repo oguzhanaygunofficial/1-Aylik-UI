@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibella — Canlı</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --teal:#45D3D0;--purple:#8E82E6;--pink:#F07BB0;
+  --grad:linear-gradient(135deg,#45D3D0 0%,#8E82E6 55%,#F07BB0 100%);
+  --bg:#09090f;--card:rgba(255,255,255,.04);--border:rgba(255,255,255,.07);
+}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+
+/* iPhone */
+.iphone-frame{width:402px;height:874px;background:#000;border-radius:55px;padding:12px;box-shadow:0 0 0 2px #3a3a3a,0 0 0 4px #1a1a1a,0 25px 80px rgba(0,0,0,.6),0 50px 120px rgba(0,0,0,.4),inset 0 0 30px rgba(255,255,255,.03);position:relative;flex-shrink:0;}
+.iphone-frame::before{content:'';position:absolute;inset:0;border-radius:55px;padding:2px;background:linear-gradient(135deg,rgba(255,255,255,.4) 0%,rgba(255,255,255,.05) 50%,rgba(255,255,255,.3) 100%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
+.side-btn{position:absolute;background:linear-gradient(180deg,#4a4a4a,#2a2a2a);border-radius:2px;}
+.volume-up{width:3px;height:35px;left:-3px;top:120px;}.volume-down{width:3px;height:35px;left:-3px;top:165px;}.action-btn{width:3px;height:50px;left:-3px;top:220px;}.power-btn{width:3px;height:60px;right:-3px;top:150px;}
+.screen{width:100%;height:100%;background:var(--bg);border-radius:47px;overflow:hidden;position:relative;}
+
+/* Dynamic Island */
+.dynamic-island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:126px;height:37px;background:#0a0a0a;border-radius:20px;z-index:9999;display:flex;align-items:center;justify-content:center;gap:10px;border:1px solid rgba(255,255,255,.12);box-shadow:0 0 0 1.5px rgba(255,255,255,.06),0 4px 16px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.08);}
+.island-cam{width:10px;height:10px;background:radial-gradient(circle at 35% 35%,#1c2a3a,#050505);border-radius:50%;box-shadow:inset 0 0 3px rgba(255,255,255,.25);}
+.island-time{color:#fff;font-size:15px;font-weight:600;}
+
+/* App */
+.app{width:100%;height:100%;background:var(--bg);border-radius:47px;overflow:hidden;position:relative;display:flex;flex-direction:column;padding-top:60px;}
+.app::before{content:'';position:absolute;top:0;left:0;right:0;height:220px;background:radial-gradient(ellipse at 50% -10%,rgba(142,130,230,.09) 0%,transparent 70%);pointer-events:none;z-index:0;}
+
+/* Header */
+.header{padding:10px 16px 11px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;z-index:10;}
+.header-title{font-size:27px;font-weight:900;font-family:'Montserrat',sans-serif;letter-spacing:-.5px;background:linear-gradient(135deg,#00f5ff 0%,#7b2cbf 50%,#ff006e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 8px rgba(0,245,255,.25)) drop-shadow(0 0 14px rgba(255,0,110,.2));}
+.header-right{display:flex;align-items:center;gap:10px;}
+.search-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.search-btn i{font-size:15px;color:rgba(255,255,255,.55);}
+
+/* Go Live Btn */
+.golive-header-btn{height:40px;padding:0 16px;border-radius:20px;cursor:pointer;position:relative;overflow:hidden;background:rgba(255,255,255,.06);display:flex;align-items:center;gap:7px;font-size:13px;font-weight:800;color:#fff;letter-spacing:.2px;transition:transform .15s;border:none;}
+.golive-header-btn::before{content:'';position:absolute;inset:0;background:var(--grad);opacity:.22;transition:opacity .2s;}
+.golive-header-btn::after{content:'';position:absolute;inset:0;border-radius:20px;padding:1.5px;background:var(--grad);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
+.golive-header-btn:active{transform:scale(.95);}
+.golive-header-btn:active::before{opacity:.38;}
+.golive-header-btn .btn-icon{font-size:12px;position:relative;z-index:1;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 6px rgba(69,211,208,.5));}
+.golive-header-btn span{position:relative;z-index:1;}
+
+/* Tab bar */
+.tab-bar{display:flex;padding:0 16px;flex-shrink:0;position:relative;border-bottom:1px solid rgba(255,255,255,.06);}
+.tab-btn{flex:1;padding:9px 0 11px;font-size:12px;font-weight:700;color:rgba(255,255,255,.35);background:none;border:none;cursor:pointer;margin-bottom:-1px;transition:color .25s;letter-spacing:.2px;position:relative;}
+.tab-btn.active{color:#fff;}
+/* Animated underline indicator */
+.tab-indicator{position:absolute;bottom:-1px;height:2px;background:var(--teal);border-radius:2px 2px 0 0;transition:left .3s cubic-bezier(.4,0,.2,1),width .3s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+
+/* Tab content */
+.tab-content-wrapper{position:relative;overflow:hidden;flex:1;}
+.tab-pane{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;opacity:0;pointer-events:none;transform:translateX(100%);/* initial off-screen */will-change:transform,opacity;}
+.tab-pane::-webkit-scrollbar{display:none;}
+.tab-pane.active{opacity:1;pointer-events:all;transform:translateX(0);}
+
+/* Featured */
+.featured{margin:12px 14px 0;border-radius:22px;overflow:hidden;position:relative;height:208px;cursor:pointer;}
+.featured img{width:100%;height:100%;object-fit:cover;display:block;}
+.f-dim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.06) 0%,rgba(0,0,0,.72) 100%);}
+.f-top{position:absolute;top:11px;left:11px;right:11px;display:flex;align-items:center;justify-content:flex-end;}
+.f-views{display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.45);backdrop-filter:blur(6px);padding:4px 9px;border-radius:8px;font-size:10px;font-weight:700;color:#fff;}
+.f-bottom{position:absolute;bottom:12px;left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;}
+.f-user{display:flex;align-items:center;gap:9px;}
+.f-av{width:36px;height:36px;border-radius:50%;overflow:hidden;border:2px solid var(--teal);flex-shrink:0;}
+.f-av img{width:100%;height:100%;object-fit:cover;}
+.f-name{font-size:14px;font-weight:800;color:#fff;}
+.f-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:1px;}
+.join-btn{height:34px;padding:0 16px;border-radius:12px;border:none;cursor:pointer;background:var(--grad);font-size:12px;font-weight:800;color:#fff;box-shadow:0 4px 14px rgba(142,130,230,.4);transition:transform .15s;}
+.join-btn:active{transform:scale(.93);}
+
+/* Sections */
+.sec-row{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;}
+.sec-title{font-size:14px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;}
+.sec-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0;}
+.sec-all{font-size:12px;font-weight:600;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer;}
+
+/* Grid 2-col */
+.live-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px;}
+.live-card{border-radius:18px;overflow:hidden;position:relative;aspect-ratio:9/14;cursor:pointer;background:#14141c;transition:transform .15s;}
+.live-card:active{transform:scale(.96);}
+.live-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.c-dim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.04) 0%,rgba(0,0,0,.72) 100%);}
+.c-top{position:absolute;top:8px;right:8px;}
+.c-views{display:flex;align-items:center;gap:3px;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);padding:3px 7px;border-radius:6px;font-size:9px;font-weight:700;color:#fff;}
+.c-bottom{position:absolute;bottom:8px;left:8px;right:8px;}
+.c-user{display:flex;align-items:center;gap:6px;}
+.c-av{width:26px;height:26px;border-radius:50%;overflow:hidden;border:1.5px solid rgba(255,255,255,.45);flex-shrink:0;}
+.c-av img{width:100%;height:100%;object-fit:cover;}
+.c-name{font-size:11px;font-weight:700;color:#fff;}
+.c-title{font-size:9.5px;color:rgba(255,255,255,.75);margin-top:2px;font-weight:500;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+/* Horizontal scroll row (yeni başlayanlar) */
+.h-scroll-row{display:flex;gap:10px;padding:0 14px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;overflow-y:visible;}
+.h-scroll-row::-webkit-scrollbar{display:none;}
+.h-card{flex-shrink:0;width:110px;border-radius:18px;overflow:hidden;position:relative;cursor:pointer;background:#14141c;transition:transform .15s;}
+.h-card:active{transform:scale(.95);}
+.h-card-img{width:110px;height:155px;object-fit:cover;display:block;}
+.h-card .c-dim{background:linear-gradient(to bottom,rgba(0,0,0,.02) 0%,rgba(0,0,0,.82) 100%);}
+.h-card .c-top{top:7px;right:7px;}
+.h-card .c-bottom{bottom:7px;left:7px;right:7px;}
+.h-card .c-name{font-size:10px;}
+.h-card .c-title{font-size:8px;-webkit-line-clamp:2;}
+
+/* For You pill on h-cards */
+.foryou-pill{display:none;}/* unused */
+
+/* Auto-load sentinel */
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin-icon{animation:spin 0.9s linear infinite;display:inline-block;font-size:14px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* Extra cards fade in */
+.extra-cards{opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease;margin-top:0;}
+.extra-cards.visible{opacity:1;transform:translateY(0);}
+.loader-row{display:flex;align-items:center;justify-content:center;padding:20px 0 8px;gap:10px;}
+.loader-row .spin-icon{font-size:18px;}
+.loader-text{font-size:12px;color:rgba(255,255,255,.4);font-weight:500;}
+
+/* Friends row */
+.friends-row{display:flex;gap:10px;padding:0 14px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.friends-row::-webkit-scrollbar{display:none;}
+.friend-card{flex-shrink:0;width:96px;height:148px;border-radius:16px;overflow:hidden;position:relative;cursor:pointer;background:#14141c;transition:transform .15s;}
+.friend-card:active{transform:scale(.95);}
+.friend-card img{width:100%;height:100%;object-fit:cover;}
+.fr-dim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.04),rgba(0,0,0,.7));}
+.fr-bottom{position:absolute;bottom:7px;left:7px;right:7px;}
+.fr-av{width:22px;height:22px;border-radius:50%;overflow:hidden;margin-bottom:4px;border:1.5px solid rgba(255,255,255,.4);}
+.fr-av img{width:100%;height:100%;object-fit:cover;}
+.fr-name{font-size:10px;font-weight:700;color:#fff;}
+.fr-views{font-size:9px;color:rgba(255,255,255,.45);}
+
+/* Bottom Nav */
+.bottom-nav{position:absolute;bottom:-4px;left:0;right:0;background:rgba(9,9,15,.98);padding:8px 12px 30px;height:85px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;place-items:center;border-top:1px solid rgba(255,255,255,.07);border-radius:0 0 39px 39px;z-index:1000;backdrop-filter:blur(20px);}
+.nav-btn{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;transition:all .2s;position:relative;}
+.nav-btn i{font-size:20px;color:#6b7280;transition:all .2s;}
+.nav-btn.active{background:rgba(139,92,246,.18);box-shadow:0 0 22px rgba(139,92,246,.4);}
+.nav-btn.active i{color:#a855f7;filter:drop-shadow(0 0 8px rgba(168,85,247,.8));}
+.cam-btn i{background:linear-gradient(135deg,#00f5ff 0%,#7b2cbf 50%,#ff006e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 8px rgba(0,245,255,.4)) drop-shadow(0 0 12px rgba(255,0,110,.3));font-size:24px;}
+.cam-btn.active{background:transparent;box-shadow:none;}
+.cam-btn.active i{filter:drop-shadow(0 0 15px rgba(0,245,255,.7)) drop-shadow(0 0 25px rgba(255,0,110,.6));}
+
+/* ═══ ALL STREAMS OVERLAY ═══ */
+.all-overlay{position:absolute;inset:0;z-index:700;background:var(--bg);border-radius:47px;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .25s ease;display:flex;flex-direction:column;}
+.all-overlay.open{opacity:1;pointer-events:all;}
+.all-header{display:flex;align-items:center;gap:12px;padding:66px 16px 14px;flex-shrink:0;border-bottom:1px solid var(--border);}
+.all-back{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.7);flex-shrink:0;}
+.all-back i{font-size:14px;}
+.all-title{font-size:18px;font-weight:800;color:#fff;}
+.all-count{font-size:12px;color:rgba(255,255,255,.4);margin-left:auto;}
+.all-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 100px;}
+.all-scroll::-webkit-scrollbar{display:none;}
+.all-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;}
+.all-item:last-child{border-bottom:none;}
+.all-thumb{width:64px;height:80px;border-radius:12px;overflow:hidden;flex-shrink:0;position:relative;}
+.all-thumb img{width:100%;height:100%;object-fit:cover;}
+.all-thumb-dim{position:absolute;inset:0;background:rgba(0,0,0,.25);}
+.all-info{flex:1;min-width:0;}
+.all-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
+.all-post-title{font-size:12px;color:rgba(255,255,255,.82);font-weight:400;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;}
+.all-views{font-size:11px;color:rgba(255,255,255,.35);display:flex;align-items:center;gap:4px;}
+.all-av{width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;border:1.5px solid rgba(255,255,255,.2);}
+.all-av img{width:100%;height:100%;object-fit:cover;}
+
+/* ═══ WATCH OVERLAY ═══ */
+.watch-overlay{position:absolute;inset:0;z-index:800;background:#000;border-radius:47px;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .28s ease;}
+.watch-overlay.open{opacity:1;pointer-events:all;}
+.w-bg{position:absolute;inset:0;}
+.w-bg img{width:100%;height:100%;object-fit:cover;display:block;}
+.w-bg-dim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.15) 0%,rgba(0,0,0,.45) 55%,rgba(0,0,0,.9) 100%);}
+.w-top{position:absolute;top:56px;left:0;right:0;padding:0 14px;display:flex;align-items:center;justify-content:space-between;}
+.w-icon{width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;}
+.w-icon i{font-size:14px;}
+.w-live-pill{display:flex;align-items:center;gap:5px;background:rgba(220,0,60,.9);padding:5px 13px;border-radius:10px;}
+.w-live-pill .ldot{width:6px;height:6px;border-radius:50%;background:#fff;}
+.w-live-pill span{font-size:11px;font-weight:900;color:#fff;letter-spacing:.8px;}
+.w-top-r{display:flex;align-items:center;gap:8px;}
+.w-viewers{display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.4);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);padding:5px 10px;border-radius:10px;font-size:11px;font-weight:600;color:#fff;}
+.w-streamer{position:absolute;top:106px;left:14px;display:flex;align-items:center;gap:10px;}
+.w-sav{width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid var(--teal);}
+.w-sav img{width:100%;height:100%;object-fit:cover;}
+.w-sname{font-size:15px;font-weight:800;color:#fff;}
+.w-stag{font-size:11px;color:rgba(255,255,255,.45);margin-top:1px;}
+.w-follow{height:30px;padding:0 14px;border-radius:10px;border:none;cursor:pointer;background:var(--grad);font-size:11px;font-weight:700;color:#fff;margin-left:6px;box-shadow:0 3px 12px rgba(142,130,230,.35);}
+.w-chat{position:absolute;bottom:96px;left:0;right:58px;padding:0 14px;display:flex;flex-direction:column;gap:8px;}
+.w-msg{display:flex;align-items:flex-end;gap:7px;}
+.w-mav{width:24px;height:24px;border-radius:50%;overflow:hidden;flex-shrink:0;}
+.w-mav img{width:100%;height:100%;object-fit:cover;}
+.w-bubble{background:rgba(0,0,0,.42);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.07);border-radius:12px 12px 12px 3px;padding:7px 10px;max-width:210px;}
+.w-muser{font-size:10px;font-weight:700;color:var(--teal);margin-bottom:2px;}
+.w-mtext{font-size:11px;color:rgba(255,255,255,.82);line-height:1.35;}
+.w-actions{position:absolute;bottom:84px;right:12px;display:flex;flex-direction:column;gap:14px;align-items:center;}
+.w-act{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.w-abtn{width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.38);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;transition:transform .15s;}
+.w-abtn:active{transform:scale(.88);}
+.w-abtn i{font-size:18px;}
+.w-abtn.liked i{color:#ff4d6d;}
+.w-abtn.tokenbtn i{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.w-acount{font-size:9px;font-weight:700;color:rgba(255,255,255,.65);}
+.w-input-row{position:absolute;bottom:22px;left:14px;right:14px;display:flex;gap:8px;align-items:center;}
+.w-input{flex:1;height:40px;border-radius:20px;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.11);padding:0 16px;font-size:13px;color:#fff;font-family:'Inter',sans-serif;}
+.w-input::placeholder{color:rgba(255,255,255,.28);}
+.w-input:focus{outline:none;border-color:rgba(142,130,230,.5);}
+.w-send{width:40px;height:40px;border-radius:50%;border:none;cursor:pointer;background:var(--grad);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(142,130,230,.4);}
+.w-send i{font-size:14px;color:#fff;}
+.token-float{position:absolute;font-size:22px;pointer-events:none;animation:floatUp 1.8s ease-out forwards;}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1);}80%{opacity:.7;transform:translateY(-130px) scale(1.3);}100%{opacity:0;transform:translateY(-170px) scale(.7);}}
+
+/* ═══ GO LIVE OVERLAY ═══ */
+.golive-overlay{position:absolute;inset:0;z-index:850;border-radius:47px;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .28s ease;background:#000;}
+.golive-overlay.open{opacity:1;pointer-events:all;}
+.gl-cam{position:absolute;inset:0;}
+.gl-cam img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s;}
+.gl-cam-dim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.28) 0%,rgba(0,0,0,.08) 32%,rgba(0,0,0,.08) 52%,rgba(0,0,0,.78) 74%,rgba(0,0,0,.96) 100%);}
+.gl-top{position:absolute;top:56px;left:0;right:0;padding:0 16px;display:flex;align-items:center;justify-content:space-between;}
+.gl-close{width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.85);}
+.gl-close i{font-size:16px;}
+.gl-live-label{font-size:14px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:.5px;}
+.gl-flip{width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.85);transition:transform .35s;}
+.gl-flip i{font-size:16px;}
+.gl-panel{position:absolute;bottom:0;left:0;right:0;padding:20px 18px 30px;display:flex;flex-direction:column;gap:12px;}
+.gl-field{display:flex;align-items:center;gap:11px;background:rgba(18,18,26,.88);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;backdrop-filter:blur(16px);}
+.gl-field i{font-size:15px;color:rgba(255,255,255,.35);flex-shrink:0;}
+.gl-field input{flex:1;background:none;border:none;outline:none;font-size:15px;font-weight:400;color:rgba(255,255,255,.75);font-family:'Inter',sans-serif;}
+.gl-field input::placeholder{color:rgba(255,255,255,.28);}
+.gl-restrict{display:flex;align-items:center;gap:11px;background:rgba(18,18,26,.88);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:14px 16px;backdrop-filter:blur(16px);cursor:pointer;}
+.gl-cb{width:22px;height:22px;border-radius:7px;border:1.5px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.gl-cb.on{background:var(--grad);border-color:transparent;}
+.gl-cb i{font-size:10px;color:#fff;display:none;}
+.gl-cb.on i{display:block;}
+.gl-restrict-label{flex:1;font-size:14px;font-weight:500;color:rgba(255,255,255,.7);}
+.gl-lock{font-size:17px;color:rgba(255,255,255,.28);}
+.gl-start{height:56px;border-radius:18px;border:none;cursor:pointer;background:var(--grad);display:flex;align-items:center;justify-content:center;gap:10px;font-size:16px;font-weight:900;color:#fff;letter-spacing:.6px;box-shadow:0 6px 26px rgba(142,130,230,.5);transition:transform .15s,box-shadow .15s;font-family:'Montserrat',sans-serif;}
+.gl-start:active{transform:scale(.97);box-shadow:0 3px 12px rgba(142,130,230,.35);}
+.gl-start i{font-size:15px;}
+</style>
+</head>
+<body>
+<div class="iphone-frame">
+  <div class="side-btn volume-up"></div><div class="side-btn volume-down"></div>
+  <div class="side-btn action-btn"></div><div class="side-btn power-btn"></div>
+  <div class="screen">
+    <div class="dynamic-island"><div class="island-cam"></div><span class="island-time" id="islandTime">9:41</span></div>
+
+    <div class="app">
+      <!-- Header -->
+      <div class="header">
+        <div class="header-title">Canlı</div>
+        <div class="header-right">
+          <div class="search-btn"><i class="fas fa-magnifying-glass"></i></div>
+          <button class="golive-header-btn" onclick="openGoLive()">
+            <i class="fas fa-video btn-icon"></i><span>Yayın Aç</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tab-bar" id="tabBar">
+        <button class="tab-btn active" onclick="switchTab(this,'herkes')">Herkes</button>
+        <button class="tab-btn" onclick="switchTab(this,'arkadaslar')">Arkadaşlar</button>
+        <button class="tab-btn" onclick="switchTab(this,'takip')">Takip</button>
+        <div class="tab-indicator" id="tabIndicator"></div>
+      </div>
+
+      <!-- Content -->
+      <div class="tab-content-wrapper">
+
+        <!-- TAB: HERKES -->
+        <div id="tab-herkes" class="tab-pane active">
+          <div class="featured" onclick="openWatch('Elif Yılmaz','https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=800&q=80','https://i.pravatar.cc/150?img=47','Gece muhabbeti 🌙','24.3B')">
+            <img src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=800&q=80" alt="">
+            <div class="f-dim"></div>
+            <div class="f-top"><div class="f-views"><i class="fas fa-eye" style="font-size:9px"></i>&nbsp;24.3B</div></div>
+            <div class="f-bottom">
+              <div class="f-user"><div class="f-av"><img src="https://i.pravatar.cc/150?img=47" alt=""></div><div><div class="f-name">Elif Yılmaz</div><div class="f-sub">Gece muhabbeti dün yaşadıklarımı anlatacağım 🌙</div></div></div>
+              <button class="join-btn">Katıl</button>
+            </div>
+          </div>
+
+          <!-- Popüler Yayınlar -->
+          <div class="sec-row">
+            <div class="sec-title"><div class="sec-dot"></div>Popüler Yayınlar</div>
+            <div class="sec-all" onclick="openAllStreams()">Tümünü gör</div>
+          </div>
+          <div class="live-grid">
+            <div class="live-card" onclick="openWatch('CansuAteş','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=5','Müzik & sohbet 🎵','8.1B')">
+              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;8.1B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=5" alt=""></div><div><div class="c-name">CansuAteş</div><div class="c-title">Yeni şarkımı ilk kez canlıda söylüyorum 🎵</div></div></div></div>
+            </div>
+            <div class="live-card" onclick="openWatch('TarikFPS','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80','https://i.pravatar.cc/150?img=11','Valorant ranked 🎮','5.4B')">
+              <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;5.4B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=11" alt=""></div><div><div class="c-name">TarikFPS</div><div class="c-title">Radyant'a çıkana kadar bitmeyeceğim 🎮</div></div></div></div>
+            </div>
+            <div class="live-card" onclick="openWatch('AyşeMoon','https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&q=80','https://i.pravatar.cc/150?img=12','Dans gecesi 💃','3.8B')">
+              <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;3.8B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=12" alt=""></div><div><div class="c-name">AyşeMoon</div><div class="c-title">Dans yarışması hazırlık ateşi 💃</div></div></div></div>
+            </div>
+            <div class="live-card" onclick="openWatch('ZeynepK','https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80','https://i.pravatar.cc/150?img=29','Kitap kulübü 📚','2.2B')">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;2.2B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=29" alt=""></div><div><div class="c-name">ZeynepK</div><div class="c-title">Bu ayın kitabını tartışıyoruz 📚</div></div></div></div>
+            </div>
+          </div>
+
+          <!-- Yeni Başlayanlar (yatay scroll) -->
+          <div class="sec-row">
+            <div class="sec-title"><div class="sec-dot"></div>Yeni Başlayanlar</div>
+          </div>
+          <div class="h-scroll-row">
+            <div class="h-card" onclick="openWatch('OzanRock','https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80','https://i.pravatar.cc/150?img=57','Gitar yayını 🎸','342')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;342</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=57" alt=""></div><div><div class="c-name">OzanRock</div><div class="c-title">İlk yayınım, çalmayı öğreniyorum 🎸</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('NadiaArt','https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&q=80','https://i.pravatar.cc/150?img=19','Çizim seansı 🎨','218')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;218</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=19" alt=""></div><div><div class="c-name">NadiaArt</div><div class="c-title">Dijital portre çiziyorum canlıda 🎨</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('BurakX','https://images.unsplash.com/photo-1552820728-8b83bb6b2b0a?w=400&q=80','https://i.pravatar.cc/150?img=68','Müzik','156')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1552820728-8b83bb6b2b0a?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;156</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=68" alt=""></div><div><div class="c-name">BurakX</div><div class="c-title">Beatbox seansı, siz istek yazın 🎤</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('LeaM','https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80','https://i.pravatar.cc/150?img=25','Sohbet 💬','98')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;98</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=25" alt=""></div><div><div class="c-name">LeaM</div><div class="c-title">Herkesle tanışmak istiyorum 💬</div></div></div></div>
+            </div>
+          </div>
+
+          <!-- Senin İçin başlığı + otomatik yüklenen grid -->
+          <div class="sec-row" style="padding-top:18px;">
+            <div class="sec-title"><div class="sec-dot"></div>Senin İçin</div>
+          </div>
+
+          <!-- Loader 1 — scroll ile tetiklenir -->
+          <div class="loader-row" id="loader1" style="display:none;">
+            <i class="fas fa-circle-notch spin-icon"></i>
+            <span class="loader-text">Yayınlar yükleniyor...</span>
+          </div>
+
+          <!-- Extra batch 1 -->
+          <div class="extra-cards" id="extraBatch1" style="display:none;">
+            <div class="live-grid">
+              <div class="live-card" onclick="openWatch('SesliAyşe','https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=400&q=80','https://i.pravatar.cc/150?img=44','Sabah sohbeti ☕','1.9B')">
+                <img src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=400&q=80" alt="">
+                <div class="c-dim"></div>
+                <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;1.9B</div></div>
+                <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=44" alt=""></div><div><div class="c-name">SesliAyşe</div><div class="c-title">Sabah rutini ve gündem sohbeti ☕</div></div></div></div>
+              </div>
+              <div class="live-card" onclick="openWatch('DiziKraliçe','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=36','Film sohbeti 🎬','1.1B')">
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80" alt="">
+                <div class="c-dim"></div>
+                <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;1.1B</div></div>
+                <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=36" alt=""></div><div><div class="c-name">DiziKraliçe</div><div class="c-title">Yeni çıkan diziyi izliyorum canlıda 🎬</div></div></div></div>
+              </div>
+              <div class="live-card" onclick="openWatch('KralEmre','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80','https://i.pravatar.cc/150?img=33','Valorant','780')">
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80" alt="">
+                <div class="c-dim"></div>
+                <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;780</div></div>
+                <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=33" alt=""></div><div><div class="c-name">KralEmre</div><div class="c-title">Gece maçı takım arkadaşı arıyorum 🎮</div></div></div></div>
+              </div>
+              <div class="live-card" onclick="openWatch('MilaFit','https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80','https://i.pravatar.cc/150?img=35','Spor 💪','640')">
+                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80" alt="">
+                <div class="c-dim"></div>
+                <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;640</div></div>
+                <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=35" alt=""></div><div><div class="c-name">MilaFit</div><div class="c-title">30 dakika HIIT, birlikte yapıyoruz 💪</div></div></div></div>
+              </div>
+            </div>
+
+            <!-- Loader 2 — batch1 görününce izlenir -->
+            <div class="loader-row" id="loader2" style="display:none;">
+              <i class="fas fa-circle-notch spin-icon"></i>
+              <span class="loader-text">Yayınlar yükleniyor...</span>
+            </div>
+
+            <!-- Extra batch 2 -->
+            <div class="extra-cards" id="extraBatch2" style="display:none;">
+              <div class="live-grid" style="margin-top:14px;">
+                <div class="live-card" onclick="openWatch('CemYemek','https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80','https://i.pravatar.cc/150?img=60','Yemek 🍳','520')">
+                  <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80" alt="">
+                  <div class="c-dim"></div>
+                  <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;520</div></div>
+                  <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=60" alt=""></div><div><div class="c-name">CemYemek</div><div class="c-title">Anne tarifi mercimek çorbası yapıyorum 🍲</div></div></div></div>
+                </div>
+                <div class="live-card" onclick="openWatch('TravelerAli','https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400&q=80','https://i.pravatar.cc/150?img=50','Gezi ✈️','410')">
+                  <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=400&q=80" alt="">
+                  <div class="c-dim"></div>
+                  <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;410</div></div>
+                  <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=50" alt=""></div><div><div class="c-name">TravelerAli</div><div class="c-title">Kapadokya balonu uçuşu CANLI ✈️</div></div></div></div>
+                </div>
+                <div class="live-card" onclick="openWatch('NightDJ','https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=400&q=80','https://i.pravatar.cc/150?img=45','Müzik 🎧','388')">
+                  <img src="https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=400&q=80" alt="">
+                  <div class="c-dim"></div>
+                  <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;388</div></div>
+                  <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=45" alt=""></div><div><div class="c-name">NightDJ</div><div class="c-title">Gece lounge set, istek alıyorum 🎧</div></div></div></div>
+                </div>
+                <div class="live-card" onclick="openWatch('CodeBro','https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&q=80','https://i.pravatar.cc/150?img=15','Kod 💻','275')">
+                  <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&q=80" alt="">
+                  <div class="c-dim"></div>
+                  <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;275</div></div>
+                  <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=15" alt=""></div><div><div class="c-name">CodeBro</div><div class="c-title">Full-stack proje yapıyorum, sorularınızı alıyorum 💻</div></div></div></div>
+                </div>
+              </div>
+            </div>
+            <!-- sentinel2 for batch2 -->
+            <div id="sentinel2" style="height:1px;"></div>
+          </div>
+
+          <!-- sentinel1 — görününce batch1 yüklenir -->
+          <div id="sentinel1" style="height:1px;margin-top:4px;"></div>
+          <div style="height:100px"></div>
+        </div>
+
+        <!-- TAB: ARKADAŞLAR -->
+        <div id="tab-arkadaslar" class="tab-pane">
+          <div class="sec-row" style="padding-top:14px">
+            <div class="sec-title"><div class="sec-dot"></div>Şu An Yayında</div>
+            <div class="sec-all" onclick="openFriendsAll()">Hepsi</div>
+          </div>
+          <div class="friends-row">
+            <div class="friend-card" onclick="openWatch('Mert T.','https://images.unsplash.com/photo-1493711662062-fa541f7f3d24?w=300&q=80','https://i.pravatar.cc/150?img=33','Oyun','1.1B')"><img src="https://images.unsplash.com/photo-1493711662062-fa541f7f3d24?w=300&q=80" alt=""><div class="fr-dim"></div><div class="fr-bottom"><div class="fr-av"><img src="https://i.pravatar.cc/150?img=33" alt=""></div><div class="fr-name">Mert T.</div><div class="fr-views">1.1B izleyici</div></div></div>
+            <div class="friend-card" onclick="openWatch('Selin Y.','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=300&q=80','https://i.pravatar.cc/150?img=44','Sohbet','847')"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=300&q=80" alt=""><div class="fr-dim"></div><div class="fr-bottom"><div class="fr-av"><img src="https://i.pravatar.cc/150?img=44" alt=""></div><div class="fr-name">Selin Y.</div><div class="fr-views">847 izleyici</div></div></div>
+            <div class="friend-card" onclick="openWatch('Burak D.','https://images.unsplash.com/photo-1552820728-8b83bb6b2b0a?w=300&q=80','https://i.pravatar.cc/150?img=68','Müzik','492')"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6b2b0a?w=300&q=80" alt=""><div class="fr-dim"></div><div class="fr-bottom"><div class="fr-av"><img src="https://i.pravatar.cc/150?img=68" alt=""></div><div class="fr-name">Burak D.</div><div class="fr-views">492 izleyici</div></div></div>
+            <div class="friend-card" onclick="openWatch('Hana L.','https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&q=80','https://i.pravatar.cc/150?img=19','Sanat','228')"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=300&q=80" alt=""><div class="fr-dim"></div><div class="fr-bottom"><div class="fr-av"><img src="https://i.pravatar.cc/150?img=19" alt=""></div><div class="fr-name">Hana L.</div><div class="fr-views">228 izleyici</div></div></div>
+          </div>
+
+          <div class="sec-row">
+            <div class="sec-title"><div class="sec-dot"></div>Son Görünenler</div>
+            <div class="sec-all" onclick="openPastFriendsAll()">Hepsi</div>
+          </div>
+          <div style="padding:0 14px;">
+            <div class="all-item" onclick="openWatch('Zeynep K.','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=22','Müzik 🎵','3.2B')">
+              <div class="all-thumb"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div>
+              <div class="all-av"><img src="https://i.pravatar.cc/150?img=22" alt=""></div>
+              <div class="all-info"><div class="all-name">Zeynep K.</div><div class="all-post-title">Müzik & dans notları paylaştım 🎵</div><div class="all-views" style="color:rgba(255,255,255,.35)"><i class="far fa-clock" style="font-size:9px"></i> 2 gün önce</div></div>
+            </div>
+            <div class="all-item" onclick="openWatch('Ali V.','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80','https://i.pravatar.cc/150?img=21','Oyun 🎮','1.8B')">
+              <div class="all-thumb"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div>
+              <div class="all-av"><img src="https://i.pravatar.cc/150?img=21" alt=""></div>
+              <div class="all-info"><div class="all-name">Ali V.</div><div class="all-post-title">Valorant turnuvası finalini kaybettik ama...</div><div class="all-views" style="color:rgba(255,255,255,.35)"><i class="far fa-clock" style="font-size:9px"></i> 4 gün önce</div></div>
+            </div>
+            <div class="all-item" onclick="openWatch('Nora M.','https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=400&q=80','https://i.pravatar.cc/150?img=14','Sohbet 💬','920')">
+              <div class="all-thumb"><img src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div>
+              <div class="all-av"><img src="https://i.pravatar.cc/150?img=14" alt=""></div>
+              <div class="all-info"><div class="all-name">Nora M.</div><div class="all-post-title">Gece sohbetinde gerçekleri konuştuk 💬</div><div class="all-views" style="color:rgba(255,255,255,.35)"><i class="far fa-clock" style="font-size:9px"></i> 6 gün önce</div></div>
+            </div>
+          </div>
+
+          <!-- Arkadaşlarının Takip Ettikleri -->
+          <div class="sec-row">
+            <div class="sec-title"><div class="sec-dot"></div>Arkadaşlarının Takip Ettikleri</div>
+          </div>
+          <div class="h-scroll-row" style="padding-bottom:8px;">
+            <div class="h-card" onclick="openWatch('SesliAyşe','https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=400&q=80','https://i.pravatar.cc/150?img=44','Sabah sohbeti ☕','6.7B')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;6.7B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=44" alt=""></div><div><div class="c-name">SesliAyşe</div><div class="c-title">Sabah rutini herkese açık bugün ☕</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('DiziKraliçe','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=36','Film sohbeti 🎬','2.3B')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;2.3B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=36" alt=""></div><div><div class="c-name">DiziKraliçe</div><div class="c-title">Sezon finali izliyoruz spoiler var!</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('KralEmre','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80','https://i.pravatar.cc/150?img=33','Valorant','1.8B')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;1.8B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=33" alt=""></div><div><div class="c-name">KralEmre</div><div class="c-title">Gece ranked maçında seyretmeye değer</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('MilaFit','https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&q=80','https://i.pravatar.cc/150?img=35','Spor 💪','940')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;940</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=35" alt=""></div><div><div class="c-name">MilaFit</div><div class="c-title">30 dakika HIIT, birlikte yapıyoruz 💪</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('TarikFPS','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80','https://i.pravatar.cc/150?img=11','Valorant ranked 🎮','5.4B')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;5.4B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=11" alt=""></div><div><div class="c-name">TarikFPS</div><div class="c-title">Radyant'a çıkana kadar bitmeyeceğim 🎮</div></div></div></div>
+            </div>
+          </div>
+
+          <div style="height:100px"></div>
+        </div>
+
+        <!-- TAB: TAKİP -->
+        <div id="tab-takip" class="tab-pane">
+          <div class="sec-row" style="padding-top:14px">
+            <div class="sec-title"><div class="sec-dot"></div>Takip Ettiklerin</div>
+          </div>
+          <div class="h-scroll-row" style="padding-bottom:4px;">
+            <div class="h-card" onclick="openWatch('SesliAyşe','https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=400&q=80','https://i.pravatar.cc/150?img=44','Sabah sohbeti ☕','6.7B')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;6.7B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=44" alt=""></div><div><div class="c-name">SesliAyşe</div><div class="c-title">Sabah rutini herkese açık bugün ☕</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('KralEmre','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80','https://i.pravatar.cc/150?img=33','Valorant','2.4B')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;2.4B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=33" alt=""></div><div><div class="c-name">KralEmre</div><div class="c-title">Gece ranked maçında seyretmeye değer</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('DiziKraliçe','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=36','Film sohbeti 🎬','1.1B')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;1.1B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=36" alt=""></div><div><div class="c-name">DiziKraliçe</div><div class="c-title">Sezon finali izliyoruz spoiler var!</div></div></div></div>
+            </div>
+            <div class="h-card" onclick="openWatch('CansuAteş','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=5','Müzik & sohbet 🎵','8.1B')">
+              <img class="h-card-img" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=300&q=80" alt="">
+              <div class="c-dim"></div>
+              <div class="c-top"><div class="c-views"><i class="fas fa-eye" style="font-size:8px"></i>&nbsp;8.1B</div></div>
+              <div class="c-bottom"><div class="c-user"><div class="c-av"><img src="https://i.pravatar.cc/150?img=5" alt=""></div><div><div class="c-name">CansuAteş</div><div class="c-title">Yeni şarkımı ilk kez canlıda söylüyorum 🎵</div></div></div></div>
+            </div>
+          </div>
+
+          <div style="padding:0 14px;margin-top:4px;">
+            <div class="all-item" onclick="openWatch('KralEmre','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80','https://i.pravatar.cc/150?img=33','Valorant','2.4B')">
+              <div class="all-thumb"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div>
+              <div class="all-av"><img src="https://i.pravatar.cc/150?img=33" alt=""></div>
+              <div class="all-info"><div class="all-name">KralEmre</div><div class="all-post-title">Gece ranked maçında seyretmeye değer</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 2.4B izleyici · Şu an canlı</div></div>
+            </div>
+            <div class="all-item" onclick="openWatch('DiziKraliçe','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=36','Film sohbeti 🎬','1.1B')">
+              <div class="all-thumb"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div>
+              <div class="all-av"><img src="https://i.pravatar.cc/150?img=36" alt=""></div>
+              <div class="all-info"><div class="all-name">DiziKraliçe</div><div class="all-post-title">Sezon finali izliyoruz spoiler var!</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 1.1B izleyici · Şu an canlı</div></div>
+            </div>
+          </div>
+
+          <div class="sec-row">
+            <div class="sec-title"><div class="sec-dot"></div>Son Etkinlikler</div>
+          </div>
+          <div style="padding:0 14px;">
+            <div class="all-item">
+              <div class="all-thumb" style="background:#1a1a26;display:flex;align-items:center;justify-content:center;"><i class="fas fa-moon" style="color:rgba(255,255,255,.2);font-size:18px"></i></div>
+              <div class="all-av"><img src="https://i.pravatar.cc/150?img=57" alt=""></div>
+              <div class="all-info"><div class="all-name">OzanRock</div><div class="all-post-title" style="color:rgba(255,255,255,.4)">Yeni şarkı üzerinde çalışıyorum yakında 🎸</div><div class="all-views" style="color:rgba(255,255,255,.25)"><i class="far fa-clock" style="font-size:9px"></i> 3 gün önce</div></div>
+            </div>
+            <div class="all-item">
+              <div class="all-thumb" style="background:#1a1a26;display:flex;align-items:center;justify-content:center;"><i class="fas fa-moon" style="color:rgba(255,255,255,.2);font-size:18px"></i></div>
+              <div class="all-av"><img src="https://i.pravatar.cc/150?img=12" alt=""></div>
+              <div class="all-info"><div class="all-name">AyşeMoon</div><div class="all-post-title" style="color:rgba(255,255,255,.4)">Turnuva bitti, biraz mola</div><div class="all-views" style="color:rgba(255,255,255,.25)"><i class="far fa-clock" style="font-size:9px"></i> 5 gün önce</div></div>
+            </div>
+          </div>
+          <div style="height:100px"></div>
+        </div>
+
+      </div><!-- /tab-content-wrapper -->
+
+      <!-- Bottom Nav -->
+      <div class="bottom-nav" id="bottomNav">
+        <button class="nav-btn" onclick="setNav(this)"><i class="fa-solid fa-house"></i></button>
+        <button class="nav-btn" onclick="setNav(this)"><i class="fa-regular fa-circle-play"></i></button>
+        <button class="nav-btn cam-btn active" onclick="setNav(this)"><i class="fa-solid fa-video"></i></button>
+        <button class="nav-btn" onclick="setNav(this)"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <button class="nav-btn" onclick="setNav(this)"><i class="fa-regular fa-user"></i></button>
+      </div>
+    </div>
+
+    <!-- ═══ ALL STREAMS OVERLAY ═══ -->
+    <div class="all-overlay" id="allOverlay">
+      <div class="all-header">
+        <button class="all-back" onclick="closeAllStreams()"><i class="fas fa-chevron-left"></i></button>
+        <div class="all-title">Tüm Yayınlar</div>
+        <div class="all-count">84 yayın</div>
+      </div>
+      <div class="all-scroll">
+        <div class="all-item" onclick="openWatch('Elif Yılmaz','https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=800&q=80','https://i.pravatar.cc/150?img=47','Gece muhabbeti 🌙','24.3B')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=47" alt=""></div><div class="all-info"><div class="all-name">Elif Yılmaz</div><div class="all-post-title">Gece muhabbeti dün yaşadıklarımı anlatacağım 🌙</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 24.3B izleyici</div></div></div>
+        <div class="all-item" onclick="openWatch('CansuAteş','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=5','Müzik & sohbet 🎵','8.1B')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=5" alt=""></div><div class="all-info"><div class="all-name">CansuAteş</div><div class="all-post-title">Yeni şarkımı ilk kez canlıda söylüyorum 🎵</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 8.1B izleyici</div></div></div>
+        <div class="all-item" onclick="openWatch('TarikFPS','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80','https://i.pravatar.cc/150?img=11','Valorant ranked 🎮','5.4B')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=11" alt=""></div><div class="all-info"><div class="all-name">TarikFPS</div><div class="all-post-title">Radyant'a çıkana kadar bitmeyeceğim 🎮</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 5.4B izleyici</div></div></div>
+        <div class="all-item" onclick="openWatch('AyşeMoon','https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&q=80','https://i.pravatar.cc/150?img=12','Dans gecesi 💃','3.8B')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=12" alt=""></div><div class="all-info"><div class="all-name">AyşeMoon</div><div class="all-post-title">Dans yarışması hazırlık ateşi 💃</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 3.8B izleyici</div></div></div>
+        <div class="all-item" onclick="openWatch('ZeynepK','https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80','https://i.pravatar.cc/150?img=29','Kitap kulübü 📚','2.2B')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=29" alt=""></div><div class="all-info"><div class="all-name">ZeynepK</div><div class="all-post-title">Bu ayın kitabını tartışıyoruz 📚</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 2.2B izleyici</div></div></div>
+        <div class="all-item" onclick="openWatch('SesliAyşe','https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=400&q=80','https://i.pravatar.cc/150?img=44','Sabah sohbeti ☕','1.9B')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1516726817505-f5ed825624d8?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=44" alt=""></div><div class="all-info"><div class="all-name">SesliAyşe</div><div class="all-post-title">Sabah rutini ve gündem sohbeti ☕</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 1.9B izleyici</div></div></div>
+        <div class="all-item" onclick="openWatch('DiziKraliçe','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=36','Film sohbeti 🎬','1.1B')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=36" alt=""></div><div class="all-info"><div class="all-name">DiziKraliçe</div><div class="all-post-title">Sezon finali izliyoruz spoiler var!</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 1.1B izleyici</div></div></div>
+        <div class="all-item" onclick="openWatch('KralEmre','https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&q=80','https://i.pravatar.cc/150?img=33','Valorant','780')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=33" alt=""></div><div class="all-info"><div class="all-name">KralEmre</div><div class="all-post-title">Gece ranked maçında seyretmeye değer</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 780 izleyici</div></div></div>
+        <div class="all-item" onclick="openWatch('OzanRock','https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80','https://i.pravatar.cc/150?img=57','Gitar yayını 🎸','342')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=57" alt=""></div><div class="all-info"><div class="all-name">OzanRock</div><div class="all-post-title">İlk yayınım, çalmayı öğreniyorum 🎸</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 342 izleyici</div></div></div>
+        <div class="all-item" onclick="openWatch('NadiaArt','https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&q=80','https://i.pravatar.cc/150?img=19','Çizim seansı 🎨','218')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=19" alt=""></div><div class="all-info"><div class="all-name">NadiaArt</div><div class="all-post-title">Dijital portre çiziyorum canlıda 🎨</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 218 izleyici</div></div></div>
+      </div>
+    </div>
+
+    <!-- ═══ FRIENDS ALL OVERLAY ═══ -->
+    <div class="all-overlay" id="friendsAllOverlay">
+      <div class="all-header">
+        <button class="all-back" onclick="closeFriendsAll()"><i class="fas fa-chevron-left"></i></button>
+        <div class="all-title">Arkadaşlar Yayında</div>
+        <div class="all-count">4 kişi</div>
+      </div>
+      <div class="all-scroll">
+        <div class="all-item" onclick="openWatch('Mert T.','https://images.unsplash.com/photo-1493711662062-fa541f7f3d24?w=400&q=80','https://i.pravatar.cc/150?img=33','Oyun','1.1B')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1493711662062-fa541f7f3d24?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=33" alt=""></div><div class="all-info"><div class="all-name">Mert T.</div><div class="all-post-title">Oyun yayını açtım, gelin takılalım 🎮</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 1.1B izleyici · Arkadaşın</div></div></div>
+        <div class="all-item" onclick="openWatch('Selin Y.','https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80','https://i.pravatar.cc/150?img=44','Sohbet','847')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=44" alt=""></div><div class="all-info"><div class="all-name">Selin Y.</div><div class="all-post-title">Bugün neler olduğunu anlatıyorum 💬</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 847 izleyici · Arkadaşın</div></div></div>
+        <div class="all-item" onclick="openWatch('Burak D.','https://images.unsplash.com/photo-1552820728-8b83bb6b2b0a?w=400&q=80','https://i.pravatar.cc/150?img=68','Müzik','492')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1552820728-8b83bb6b2b0a?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=68" alt=""></div><div class="all-info"><div class="all-name">Burak D.</div><div class="all-post-title">Stüdyo seansı canlı dinleyin 🎵</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 492 izleyici · Arkadaşın</div></div></div>
+        <div class="all-item" onclick="openWatch('Hana L.','https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&q=80','https://i.pravatar.cc/150?img=19','Sanat','228')"><div class="all-thumb"><img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=200&q=80" alt=""><div class="all-thumb-dim"></div></div><div class="all-av"><img src="https://i.pravatar.cc/150?img=19" alt=""></div><div class="all-info"><div class="all-name">Hana L.</div><div class="all-post-title">Portre çizimi, izlemesi keyifli 🎨</div><div class="all-views"><i class="fas fa-eye" style="font-size:9px"></i> 228 izleyici · Arkadaşın</div></div></div>
+      </div>
+    </div>
+
+    <!-- ═══ WATCH OVERLAY ═══ -->
+    <div class="watch-overlay" id="watchOverlay">
+      <div class="w-bg"><img id="wBgImg" src="" alt=""><div class="w-bg-dim"></div></div>
+      <div class="w-top">
+        <button class="w-icon" onclick="closeWatch()"><i class="fas fa-chevron-left"></i></button>
+        <div class="w-live-pill"><div class="ldot"></div><span>CANLI</span></div>
+        <div class="w-top-r"><div class="w-viewers"><i class="fas fa-eye" style="font-size:9px"></i>&nbsp;<span id="wViewers"></span></div><button class="w-icon"><i class="fas fa-share-nodes"></i></button></div>
+      </div>
+      <div class="w-streamer">
+        <div class="w-sav"><img id="wAv" src="" alt=""></div>
+        <div><div class="w-sname" id="wName"></div><div class="w-stag" id="wTopic"></div></div>
+        <button class="w-follow">Takip Et</button>
+      </div>
+      <div class="w-chat">
+        <div class="w-msg"><div class="w-mav"><img src="https://i.pravatar.cc/150?img=22" alt=""></div><div class="w-bubble"><div class="w-muser">Zeynep K.</div><div class="w-mtext">harika yayın 🔥</div></div></div>
+        <div class="w-msg"><div class="w-mav"><img src="https://i.pravatar.cc/150?img=55" alt=""></div><div class="w-bubble"><div class="w-muser">Mert T.</div><div class="w-mtext">çok keyifliydi 💜</div></div></div>
+        <div class="w-msg"><div class="w-mav"><img src="https://i.pravatar.cc/150?img=36" alt=""></div><div class="w-bubble"><div class="w-muser">Selin Y.</div><div class="w-mtext">🪙🪙 token gönderdim!</div></div></div>
+      </div>
+      <div class="w-actions">
+        <div class="w-act"><button class="w-abtn" onclick="toggleLike(this)"><i class="far fa-heart"></i></button><div class="w-acount">14.2B</div></div>
+        <div class="w-act"><button class="w-abtn tokenbtn" onclick="sendToken(event)"><i class="fas fa-coins"></i></button><div class="w-acount">Token</div></div>
+        <div class="w-act"><button class="w-abtn"><i class="fas fa-share-nodes"></i></button><div class="w-acount">Paylaş</div></div>
+        <div class="w-act"><button class="w-abtn"><i class="fas fa-ellipsis-v"></i></button></div>
+      </div>
+      <div class="w-input-row">
+        <input class="w-input" placeholder="Yorum yaz…" type="text">
+        <button class="w-send"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+
+    <!-- ═══ GO LIVE OVERLAY ═══ -->
+    <div class="golive-overlay" id="goLiveOverlay">
+      <div class="gl-cam"><img id="glCamImg" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=900&fit=crop&crop=face" alt=""><div class="gl-cam-dim"></div></div>
+      <div class="gl-top">
+        <button class="gl-close" onclick="closeGoLive()"><i class="fas fa-times"></i></button>
+        <div class="gl-live-label">Yayın Ayarları</div>
+        <button class="gl-flip" onclick="flipCamera()"><i class="fas fa-camera-rotate"></i></button>
+      </div>
+      <div class="gl-panel">
+        <div class="gl-field"><i class="fas fa-pen"></i><input type="text" placeholder="Yayın başlığı gir..."></div>
+        <div class="gl-restrict" onclick="toggleRestrict()">
+          <div class="gl-cb" id="glCb"><i class="fas fa-check"></i></div>
+          <span class="gl-restrict-label">Katılım isteklerini kısıtla.</span>
+          <i class="fas fa-lock gl-lock"></i>
+        </div>
+        <button class="gl-start" onclick="closeGoLive()"><i class="fas fa-video"></i> YAYINI BAŞLAT</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// Clock
+function tick(){const n=new Date();document.getElementById('islandTime').textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');}
+tick();setInterval(tick,15000);
+
+// Nav
+function setNav(b){document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');}
+
+// ─── Tab indicator (sliding underline) ───
+function updateIndicator(activeBtn) {
+  const bar = document.getElementById('tabBar');
+  const ind = document.getElementById('tabIndicator');
+  const barRect = bar.getBoundingClientRect();
+  const btnRect = activeBtn.getBoundingClientRect();
+  ind.style.left = (btnRect.left - barRect.left) + 'px';
+  ind.style.width = btnRect.width + 'px';
+}
+
+// Init indicator position
+window.addEventListener('DOMContentLoaded', () => {
+  const activeBtn = document.querySelector('.tab-btn.active');
+  if (activeBtn) updateIndicator(activeBtn);
+});
+// Also run after fonts load
+setTimeout(() => {
+  const activeBtn = document.querySelector('.tab-btn.active');
+  if (activeBtn) updateIndicator(activeBtn);
+}, 100);
+
+// ─── Tab switching with slide animation ───
+const tabPanes = {
+  herkes: document.getElementById('tab-herkes'),
+  arkadaslar: document.getElementById('tab-arkadaslar'),
+  takip: document.getElementById('tab-takip')
+};
+const tabOrder = ['herkes','arkadaslar','takip'];
+let currentTab = 'herkes';
+let isAnimating = false;
+
+function switchTab(btn, name) {
+  if (name === currentTab || isAnimating) return;
+  isAnimating = true;
+
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateIndicator(btn);
+
+  const fromIdx = tabOrder.indexOf(currentTab);
+  const toIdx = tabOrder.indexOf(name);
+  const dir = toIdx > fromIdx ? 1 : -1;
+
+  const outPane = tabPanes[currentTab];
+  const inPane = tabPanes[name];
+
+  // Set incoming off-screen instantly (no transition)
+  inPane.style.transition = 'none';
+  inPane.style.transform = `translateX(${dir * 100}%)`;
+  inPane.style.opacity = '0.6';
+  inPane.style.pointerEvents = 'none';
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const dur = '.30s';
+      const ease = 'cubic-bezier(.4,0,.2,1)';
+
+      outPane.style.transition = `transform ${dur} ${ease}, opacity ${dur} ${ease}`;
+      outPane.style.transform = `translateX(${-dir * 100}%)`;
+      outPane.style.opacity = '0';
+      outPane.style.pointerEvents = 'none';
+
+      inPane.style.transition = `transform ${dur} ${ease}, opacity ${dur} ${ease}`;
+      inPane.style.transform = 'translateX(0)';
+      inPane.style.opacity = '1';
+      inPane.style.pointerEvents = 'all';
+    });
+  });
+
+  setTimeout(() => {
+    outPane.classList.remove('active');
+    outPane.style.transition = '';
+    outPane.style.transform = 'translateX(100%)';
+    outPane.style.opacity = '0';
+    outPane.style.pointerEvents = 'none';
+
+    inPane.classList.add('active');
+    inPane.style.transition = '';
+    inPane.style.transform = '';
+    inPane.style.opacity = '';
+    inPane.style.pointerEvents = '';
+
+    // Reset scroll
+    inPane.scrollTop = 0;
+    isAnimating = false;
+  }, 320);
+
+  currentTab = name;
+}
+
+// ─── Auto-load on scroll (IntersectionObserver) ───
+const batchShown = {1: false, 2: false};
+
+function showLoader(loaderId) {
+  document.getElementById(loaderId).style.display = 'flex';
+}
+function showBatch(loaderId, batchId, nextSentinelId) {
+  const loader = document.getElementById(loaderId);
+  const batch = document.getElementById(batchId);
+  setTimeout(() => {
+    loader.style.display = 'none';
+    batch.style.display = 'block';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      batch.classList.add('visible');
+      // Watch next sentinel if exists
+      if (nextSentinelId) setupObserver(nextSentinelId, 2);
+    }));
+  }, 2000);
+}
+
+function setupObserver(sentinelId, batch) {
+  const sentinel = document.getElementById(sentinelId);
+  if (!sentinel) return;
+  const pane = document.getElementById('tab-herkes');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !batchShown[batch]) {
+        batchShown[batch] = true;
+        obs.disconnect();
+        showLoader('loader' + batch);
+        showBatch('loader' + batch, 'extraBatch' + batch, batch === 1 ? 'sentinel2' : null);
+      }
+    });
+  }, { root: pane, rootMargin: '0px 0px 120px 0px', threshold: 0 });
+  obs.observe(sentinel);
+}
+
+// Init: watch sentinel1 for batch1
+setupObserver('sentinel1', 1);
+
+// ─── Overlays ───
+function openAllStreams(){document.getElementById('allOverlay').classList.add('open');}
+function closeAllStreams(){document.getElementById('allOverlay').classList.remove('open');}
+function openFriendsAll(){document.getElementById('friendsAllOverlay').classList.add('open');}
+function closeFriendsAll(){document.getElementById('friendsAllOverlay').classList.remove('open');}
+function openPastFriendsAll(){document.getElementById('friendsAllOverlay').classList.add('open');}
+
+function openWatch(name,bg,av,topic,viewers){
+  document.getElementById('wBgImg').src=bg;document.getElementById('wAv').src=av;
+  document.getElementById('wName').textContent=name;document.getElementById('wTopic').textContent=topic;
+  document.getElementById('wViewers').textContent=viewers;
+  document.getElementById('watchOverlay').classList.add('open');
+}
+function closeWatch(){document.getElementById('watchOverlay').classList.remove('open');}
+function toggleLike(btn){btn.classList.toggle('liked');btn.querySelector('i').className=btn.classList.contains('liked')?'fas fa-heart':'far fa-heart';}
+function sendToken(){
+  const ov=document.getElementById('watchOverlay');
+  ['🪙','💎','✨','🌟','💫','🔥'].sort(()=>Math.random()-.5).slice(0,4).forEach((e,i)=>{
+    setTimeout(()=>{const el=document.createElement('div');el.className='token-float';el.textContent=e;el.style.cssText=`left:${200+(Math.random()-.5)*80}px;bottom:130px;z-index:999;position:absolute;`;ov.appendChild(el);setTimeout(()=>el.remove(),1900);},i*180);
+  });
+}
+
+// Go Live
+const camPhotos={front:'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=500&h=900&fit=crop&crop=face',back:'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=500&h=900&fit=crop'};
+let currentCam='front';
+function flipCamera(){
+  const img=document.getElementById('glCamImg'),btn=document.querySelector('.gl-flip');
+  btn.style.transition='transform .35s';btn.style.transform='rotateY(180deg)';
+  setTimeout(()=>{btn.style.transform='';},380);
+  img.style.opacity='0';img.style.transition='opacity .22s';
+  setTimeout(()=>{currentCam=currentCam==='front'?'back':'front';img.src=camPhotos[currentCam];img.style.opacity='1';},220);
+}
+function openGoLive(){document.getElementById('goLiveOverlay').classList.add('open');document.getElementById('bottomNav').style.display='none';}
+function closeGoLive(){document.getElementById('goLiveOverlay').classList.remove('open');document.getElementById('bottomNav').style.display='';}
+function toggleRestrict(){document.getElementById('glCb').classList.toggle('on');}
+</script>
+</body>
+</html>

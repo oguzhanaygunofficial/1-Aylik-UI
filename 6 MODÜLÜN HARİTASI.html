@@ -1,0 +1,2801 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexlify | Teknik Rapor Portalı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #07070D; --sidebar-bg: #0D0D18; --card-bg: rgba(255, 255, 255, 0.04);
+            --accent-purple: #8E82E6; --accent-cyan: #00C0FF; --accent-pink: #F07BB0; --accent-magenta: #FF00AA;
+            --text-main: #FFFFFF; --text-dim: rgba(255, 255, 255, 0.6); --border: rgba(255, 255, 255, 0.1);
+            --design-a: #C026D3; --design-b: #00B4FF; --design-c: #FF33FF;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 280px; background: var(--sidebar-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 40px; text-align: center; }
+        .nav-label { font-size: 11px; text-transform: uppercase; color: var(--text-dim); letter-spacing: 1px; margin-bottom: 15px; display: block; }
+        .nav-item { padding: 12px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; margin-bottom: 5px; display: flex; align-items: center; gap: 12px; color: var(--text-dim); }
+        .nav-item:hover, .nav-item.active { background: var(--card-bg); color: var(--text-main); }
+        .nav-item i { width: 20px; font-size: 18px; text-align: center; }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .header-tabs { padding: 20px 40px 0; background: var(--bg); border-bottom: 1px solid var(--border); display: flex; gap: 30px; }
+        .tab-btn { padding: 15px 5px; cursor: pointer; color: var(--text-dim); font-weight: 600; position: relative; transition: 0.3s; }
+        .tab-btn:hover { color: var(--text-main); }
+        .tab-btn.active { color: var(--accent-cyan); }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); }
+        .content-body { padding: 30px 40px; overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: var(--accent-purple) transparent; }
+        .content-body::-webkit-scrollbar { width: 8px; }
+        .content-body::-webkit-scrollbar-thumb { background-color: var(--accent-purple); border-radius: 10px; }
+        h1 { font-family: 'Space Grotesk', sans-serif; font-size: 32px; margin-bottom: 20px; }
+        .badge { background: var(--accent-purple); padding: 4px 12px; border-radius: 20px; font-size: 12px; vertical-align: middle; margin-left: 10px; }
+        .grid-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-top: 25px; }
+        .info-card { background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 16px; backdrop-filter: blur(10px); line-height: 1.6; transition: transform 0.3s, box-shadow 0.3s; }
+        .info-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .info-card.full-width { grid-column: 1 / -1; }
+        .info-card h3 { color: var(--accent-cyan); margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        ul { list-style: none; padding-left: 0; }
+        li { margin-bottom: 10px; font-size: 14px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+        li::before { content: "▸"; color: var(--accent-pink); font-weight: bold; margin-top: 2px; }
+        .feature-list li::before { content: "✓"; color: var(--design-a); }
+        .tech-list li::before { content: "⚙"; color: var(--design-b); }
+        .comparison-section { margin: 40px 0; background: rgba(255,255,255,0.02); border-radius: 20px; padding: 30px; border: 1px solid var(--border); }
+        .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 22px; margin-bottom: 25px; color: var(--text-main); display: flex; align-items: center; gap: 12px; }
+        .comparison-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        @media (max-width: 1200px) { .comparison-grid { grid-template-columns: 1fr; } }
+        .comp-card { background: var(--card-bg); border-radius: 16px; padding: 25px; border: 2px solid transparent; transition: all 0.3s; }
+        .comp-card.design-a { border-color: rgba(192, 38, 211, 0.3); }
+        .comp-card.design-b { border-color: rgba(0, 180, 255, 0.3); }
+        .comp-card.design-c { border-color: rgba(255, 51, 255, 0.3); }
+        .comp-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
+        .comp-header { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        .comp-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
+        .design-a .comp-badge { background: rgba(192, 38, 211, 0.2); color: #C026D3; }
+        .design-b .comp-badge { background: rgba(0, 180, 255, 0.2); color: #00B4FF; }
+        .design-c .comp-badge { background: rgba(255, 51, 255, 0.2); color: #FF33FF; }
+        .comp-header h4 { font-size: 18px; margin: 0; }
+        .comp-list { font-size: 13px; }
+        .comp-list li { margin-bottom: 8px; padding-left: 5px; }
+        .comp-list li i { color: var(--accent-cyan); margin-right: 8px; font-size: 12px; }
+        .tech-comparison { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        @media (max-width: 1200px) { .tech-comparison { grid-template-columns: 1fr; } }
+        .tech-col { background: var(--card-bg); border-radius: 12px; padding: 20px; }
+        .tech-col h5 { font-size: 14px; margin-bottom: 15px; padding: 8px 15px; border-radius: 8px; display: inline-block; }
+        .tech-header-a { background: rgba(192, 38, 211, 0.15); color: #C026D3; }
+        .tech-header-b { background: rgba(0, 180, 255, 0.15); color: #00B4FF; }
+        .tech-header-c { background: rgba(255, 51, 255, 0.15); color: #FF33FF; }
+        .tech-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tech-tag { background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 20px; font-size: 11px; color: var(--text-dim); border: 1px solid var(--border); }
+        .color-palette-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        @media (max-width: 1200px) { .color-palette-grid { grid-template-columns: 1fr; } }
+        .palette-card { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
+        .palette-card h5 { margin-bottom: 15px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .palette-a h5 { color: #C026D3; } .palette-b h5 { color: #00B4FF; } .palette-c h5 { color: #FF33FF; }
+        .color-swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+        .color-swatch { width: 60px; height: 60px; border-radius: 12px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: transform 0.2s; }
+        .color-swatch:hover { transform: scale(1.1); z-index: 10; }
+        .color-swatch span { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 9px; white-space: nowrap; background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px; opacity: 0; transition: opacity 0.2s; }
+        .color-swatch:hover span { opacity: 1; }
+        .diff-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        @media (max-width: 1200px) { .diff-summary { grid-template-columns: 1fr; } }
+        .diff-item { background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+        .diff-label { background: linear-gradient(135deg, rgba(192,38,211,0.2), rgba(0,180,255,0.2)); padding: 12px 20px; font-weight: 600; font-size: 13px; border-bottom: 1px solid var(--border); }
+        .diff-content { padding: 20px; }
+        .diff-content ul { font-size: 13px; }
+        .diff-content li { margin-bottom: 8px; color: var(--text-dim); }
+        .diff-content li::before { content: "→"; color: var(--accent-cyan); }
+        .pdf-view-container { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            height: calc(100vh - 80px);
+            min-height: 600px;
+        }
+        .pdf-column { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border); 
+            border-radius: 16px; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+            transition: transform 0.3s; 
+            height: 100%;
+        }
+        .pdf-column:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .pdf-col-header { 
+            background: rgba(0, 0, 0, 0.4); 
+            padding: 18px; 
+            text-align: center; 
+            font-weight: bold; 
+            font-family: 'Space Grotesk', sans-serif; 
+            border-bottom: 1px solid var(--border); 
+            font-size: 14px; 
+            letter-spacing: 1px; 
+            flex-shrink: 0;
+        }
+        .pdf-col-header.a { color: #C026D3; background: linear-gradient(135deg, rgba(192,38,211,0.1), rgba(0,0,0,0.4)); border-bottom: 2px solid rgba(192,38,211,0.3); }
+        .pdf-col-header.b { color: #00B4FF; background: linear-gradient(135deg, rgba(0,180,255,0.1), rgba(0,0,0,0.4)); border-bottom: 2px solid rgba(0,180,255,0.3); }
+        .pdf-col-header.c { color: #FF33FF; background: linear-gradient(135deg, rgba(255,51,255,0.1), rgba(0,0,0,0.4)); border-bottom: 2px solid rgba(255,51,255,0.3); }
+
+        /* 9:16 Aspect Ratio Wrapper */
+        .pdf-aspect-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 240%; /* Kusursuz uzun dikey format */
+            background: #1a1a2e;
+            overflow: hidden;
+        }
+        .pdf-aspect-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .pdf-scroll-area { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 0; 
+            scrollbar-width: thin; 
+            scrollbar-color: var(--accent-purple) transparent; 
+        }
+        .pdf-scroll-area::-webkit-scrollbar { width: 6px; }
+        .pdf-scroll-area::-webkit-scrollbar-thumb { background-color: var(--accent-purple); border-radius: 10px; }
+
+        .pdf-notice { 
+            padding: 15px; 
+            background: rgba(255,255,255,0.05); 
+            margin: 15px; 
+            border-radius: 12px; 
+            border-left: 4px solid var(--accent-cyan); 
+            font-size: 12px; 
+            color: var(--text-dim); 
+        }
+        .pdf-notice strong { color: var(--text-main); display: block; margin-bottom: 5px; font-size: 13px; }
+
+        @media (max-width: 1400px) { 
+            .pdf-view-container { grid-template-columns: 1fr; height: auto; }
+            .pdf-column { max-width: 500px; margin: 0 auto; width: 100%; }
+        }
+        .design-detail-container { animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .design-header { display: flex; align-items: center; justify-content: space-between; padding: 25px 30px; border-radius: 16px; margin-bottom: 30px; border: 1px solid var(--border); }
+        .design-header.design-a { background: linear-gradient(135deg, rgba(192,38,211,0.1), rgba(0,0,0,0.3)); border-color: rgba(192,38,211,0.3); }
+        .design-header.design-b { background: linear-gradient(135deg, rgba(0,180,255,0.1), rgba(0,0,0,0.3)); border-color: rgba(0,180,255,0.3); }
+        .design-header.design-c { background: linear-gradient(135deg, rgba(255,51,255,0.1), rgba(0,0,0,0.3)); border-color: rgba(255,51,255,0.3); }
+        .design-header h2 { margin: 0; font-family: 'Space Grotesk', sans-serif; }
+        .design-badge { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; font-family: 'Space Grotesk', sans-serif; }
+        .design-a .design-badge { background: rgba(192,38,211,0.2); color: #C026D3; border: 2px solid #C026D3; }
+        .design-b .design-badge { background: rgba(0,180,255,0.2); color: #00B4FF; border: 2px solid #00B4FF; }
+        .design-c .design-badge { background: rgba(255,51,255,0.2); color: #FF33FF; border: 2px solid #FF33FF; }
+        .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .color-item { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; border: 1px solid var(--border); }
+        .color-preview { width: 40px; height: 40px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); flex-shrink: 0; }
+        .color-item span { font-size: 12px; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        @media (max-width: 768px) { .sidebar { width: 100%; position: fixed; bottom: 0; z-index: 1000; height: auto; flex-direction: row; padding: 10px; } .main-content { margin-bottom: 70px; } .content-body { padding: 20px; } .grid-info { grid-template-columns: 1fr; } .pdf-view-container { grid-template-columns: 1fr; height: auto; } .header-tabs { overflow-x: auto; gap: 15px; padding: 15px 20px 0; } }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">NEXLIFY TEAM</div>
+        <span class="nav-label">Modüller</span>
+        <div class="nav-item active" onclick="switchModule('adimsayar')"><i class="fa-solid fa-person-walking"></i> Adımsayar</div>
+        <div class="nav-item" onclick="switchModule('sesli')"><i class="fa-solid fa-microphone-lines"></i> Sesli Eşleş</div>
+        <div class="nav-item" onclick="switchModule('kaydir')"><i class="fa-solid fa-fire"></i> Kaydır Eşleş</div>
+        <div class="nav-item" onclick="switchModule('event')"><i class="fa-solid fa-calendar-days"></i> Event Alanı</div>
+        <div class="nav-item" onclick="switchModule('fal')"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Fal</div>
+        <div class="nav-item" onclick="switchModule('canli')"><i class="fa-solid fa-video"></i> Canlı Yayınlar</div>
+    </div>
+    <div class="main-content">
+        <div class="header-tabs">
+            <div class="tab-btn active" onclick="switchTab(0)">Tasarım A</div>
+            <div class="tab-btn" onclick="switchTab(1)">Tasarım B</div>
+            <div class="tab-btn" onclick="switchTab(2)">Tasarım C</div>
+            <div class="tab-btn" onclick="switchTab(3)">Farklar Analizi</div>
+            <div class="tab-btn" onclick="switchTab(4)">PDF / Görseller</div>
+        </div>
+        <div class="content-body" id="dynamic-content"></div>
+    </div>
+    <script>
+
+        const modulesData = {
+  "adimsayar": {
+    "title": "Adımsayar (StepCounter)",
+    "A": {
+      "features": [
+        "Gerçek zamanlı adım sayacı (10,000 adım hedefli)",
+        "AdımCoin → NEX token dönüşüm sistemi (10:1 oran)",
+        "Hedef tamamlama bonusu (+5,000 AdımCoin)",
+        "Otomatik pasif adım artışı (5 saniyede bir)",
+        "2X Boost (1 saat, 99 NEX) - Gold tema",
+        "3X Boost (2 saat, 249 NEX) - Purple tema",
+        "Oto-Adım (24 saat arka plan, 499 NEX) - Cyan tema",
+        "Boost aktif görsel efektleri (animasyonlu halkalar)",
+        "7 günlük seri takvimi (Pzt-Paz) - Artan ödül yapısı (50→150 NEX)",
+        "Seri koruma mekanizması ve günlük ödül claim butonu",
+        "Premium üyelik (299 NEX/ay)",
+        "Özel ayakkabı koleksiyonu (6 çeşit, +5%/+20% verimlilik)",
+        "Mega Paket (sınırlı stoklu bundle)",
+        "6 adet başarım (Maratoncu, Ateş Kesilmiyor, Adım Kralı vb.)",
+        "Başarım ödülleri (300-5,000 NEX) ve ayakkabı açma bağlantısı",
+        "Haftalık performans bar grafiği (7 gün)",
+        "Toplam adım, kalori, mesafe, token özetleri",
+        "Yüzdelik artış göstergeleri (+23%, +15%)",
+        "Haftalık liderlik tablosu (Top 5 + Kullanıcı) - Podium görseli",
+        "Seviye ve rozet gösterimi, ilerleme yüzdesi",
+        "Kullanıcı profili (seviye, rozet, istatistik)",
+        "Toggle switch'ler (Bildirim, Arka Plan, Sağlık)",
+        "Profil düzenleme butonu"
+      ],
+      "tech": [
+        "iOS Frame simülasyonu (390x844px, 50px border-radius)",
+        "Dynamic Island (126x37px, saat gösterimi)",
+        "Bottom Navigation (4 tab: Ana Sayfa, İstatistik, Market, Profil)",
+        "Screen Container (4 ekran, opacity geçişli)",
+        "Safe area padding (top: 48px, bottom: 95px)",
+        "Glassmorphism: .glass/.glass-strong/.glass-cyan/.glass-card/.modal",
+        "@keyframes pulseGlow (neon parıltı)",
+        "@keyframes float (yüzen efekt)",
+        "@keyframes spin-slow (12s dönüş)",
+        "@keyframes shimmer (parlaklık kayması)",
+        "@keyframes particleFloat (tıklama partikülleri)",
+        "@keyframes boostGold/Purple/Cyan (aktif boost halkaları)",
+        "SVG Progress Ring (339.292 circumference, stroke-dashoffset)",
+        "Linear gradient tanımları (gradient, gradient-gold, gradient-cyan)",
+        "Bar Chart (flex layout, height percentage)",
+        "Circular Level Badge (gold gradient)",
+        "Streak Day Indicators (7 günlük daireler)",
+        "Modal Sistemi: Info, Convert, Boost, Reward, Success, Streak",
+        "Toggle Switch (50x28px, slide animasyonlu)",
+        "Carousel Track (shoes kaydırma, 140px item genişliği)",
+        "Typography: Inter (body text), Orbitron (display font)",
+        "SVG Icon Set (24x24, stroke-width: 2)",
+        "Click Particle System (12 partikül, random trajectory)"
+      ],
+      "colors": [
+        "Nex Purple: #C026D3 (Ana vurgu, butonlar, gradient başlangıcı)",
+        "Nex Magenta: #FF00AA (Gradient bitişi, vurgu detayları)",
+        "Nex Cyan: #00F0FF (İkincil vurgu, canlılık, bilgi göstergeleri)",
+        "Cyan Dark: #0099FF (Gradient bitişi, derinlik)",
+        "Nex Gold: #FFD700 (Token, ödül, premium vurgular)",
+        "Nex Orange: #FF6B35 (İndirim, aciliyet, altın gradient bitişi)",
+        "Nex Amber: #FFA500 (Ara ton, ısı)",
+        "Nex Green: #39FF14 (Başarı, artış, onay)",
+        "Success Dark: #22c55e (Yeşil buton arka planları)",
+        "Nex Dark: #0A0A1F (Ana arka plan)",
+        "Nex Darker: #050510 (Derin arka plan, modal altı)",
+        "Card Dark: #1a1a3e (Kart arka planı)",
+        "Card Darker: #0f0f2d (Gradient kart bitişi)",
+        "Glass Base: rgba(255,255,255,0.03) (Temel cam efekti)",
+        "Glass Border: rgba(255,255,255,0.1) (Ince border)",
+        "Glass Purple: rgba(192,38,211,0.1) (Vurgulu cam)",
+        "Glass Cyan: rgba(0,240,255,0.05) (Cyan temalı cam)",
+        "Glass Yellow: rgba(255,215,0,0.1) (Gold temalı cam)",
+        "White: #FFFFFF (Ana metin)",
+        "Gray 400: #9ca3af (İkincil metin)",
+        "Gray 500: #6b7280 (Pasif durum, hint text)",
+        "Gray 700: #374151 (Input arka plan, separator)"
+      ]
+    },
+    "B": {
+      "features": [
+        "Gerçek zamanlı adım sayacı (8,432+ simülasyonlu)",
+        "Günlük hedef belirleme (10K default)",
+        "İlerleme halkası (SVG circular progress) ve Linear progress bar",
+        "Çift para birimi (AdımCoin + NEX Token)",
+        "2X/3X Boost mekanizması (süre bazlı çarpanlar)",
+        "Günlük/haftalık görev ödülleri",
+        "Premium üyelik entegrasyonu",
+        "Haftalık bar chart (7 günlük performans)",
+        "KM/KCAL/DK metrik dönüşümü",
+        "Trend göstergesi (↑ +23%)",
+        "Başarım (Achievement) tracking",
+        "Haftalık liderlik tablosu (Podium + Sıralama)",
+        "Seviye sistemi (LVL 12 + EXP bar)",
+        "Rozet/Badge koleksiyonu",
+        "Arkadaş karşılaştırması",
+        "Marketplace: Güçlendirici satın alma (Boostlar)",
+        "Premium abonelik tier'ı",
+        "Token dönüştürme modalı",
+        "Oto-adım (background tracking) ürünü",
+        "Profil özelleştirme (Avatar ring)",
+        "Bildirim tercihleri (Toggle switches)",
+        "Sağlık entegrasyonu (HealthKit tarzı)",
+        "Arka plan çalışma ayarları"
+      ],
+      "tech": [
+        "Fixed left sidebar (70px offset)",
+        "Floating indicator line (active state)",
+        "Screen-based routing (4 views)",
+        "Dynamic Island simulation (clock + dot)",
+        "SVG Circular Progress Ring (stroke-dasharray)",
+        "CSS Bar Charts (flexbox-based)",
+        "Linear Progress Bars (gradient fills)",
+        "Podium visualization (flex align-items:flex-end)",
+        "Glassmorphism Cards (backdrop-filter:blur)",
+        "Toggle Switches (CSS-only state change)",
+        "Modal System (fixed overlay + scale animation)",
+        "Hover states (transform:scale + glow)",
+        "Typography: Syne (Display/Headings), Syne Mono (Numbers), Epilogue (Body)",
+        "Toast-style boost notifications",
+        "Achievement unlock previews",
+        "Currency update animations",
+        "Loading/progress states"
+      ],
+      "colors": [
+        "Cyan: #00B4FF (Ana vurgu, aktif states)",
+        "Cyan Dark: #0066FF (Gradient başlangıcı, depth)",
+        "Purple: #9933FF (İkincil vurgu, boost elements)",
+        "Purple Dark: #6633FF (Gradient, liderlik teması)",
+        "Magenta: #CC00FF (NEX token, premium vurgu)",
+        "Pink: #FF33FF (Glow efektleri, hover states)",
+        "Background: #05080F (Ana arka plan - deep navy)",
+        "Background 2: #080D18 (Kart yüzeyleri)",
+        "Glass: rgba(0,180,255,0.05) (Glassmorphism base)",
+        "Glass Border: rgba(0,180,255,0.12) (Subtle outlines)",
+        "Text Primary: #EEF4FF (Beyaz-mavi tonlu)",
+        "Text Dim: #4A6480 (Pasif/secondary metin)",
+        "Gold: #FFD700 (1. sıra - podium)",
+        "Silver: #C0C0C0 (2. sıra - podium)",
+        "Bronze: #CD7F32 (3. sıra - podium)"
+      ]
+    },
+    "C": {
+      "features": [
+        "Gerçek zamanlı adım sayacı (SVG progress ring, 84.3% progress)",
+        "Günlük hedef takibi (10K default)",
+        "Çift para birimi (AdımCoin + NEX Token)",
+        "2X Boost mekanizması (süre bazlı çarpan)",
+        "Token dönüştürme (Convert butonu)",
+        "Günlük görevler modalı (bottom sheet)",
+        "Görev durumları (completed/in-progress/locked)",
+        "Progress tracking (visual bars + sayısal)",
+        "Anlık ödül kazanımı (+50/+100/+200 NEX)",
+        "Haftalık bar chart (7 günlük performans)",
+        "Opacity-based veri görselleştirme (adım oranına göre)",
+        "Trend göstergesi (↑ +23%)",
+        "Başarım kartları (horizontal scroll)",
+        "Global sıralama (Global rank: #42)",
+        "Liderlik tablosu (top 3 + user highlight)",
+        "Seviye sistemi (LVL 12 + XP bar 75%)",
+        "İlk %1 percentile gösterimi",
+        "Premium üyelik tier'ı (Sürekli 2X)",
+        "Güçlendirici satın alma (2X, Oto Yürüyüş, Mega Paket)",
+        "Hediye kutusu mekanizması (rastgele ödül)",
+        "Bakiye gösterimi (2,458 NEX)",
+        "Avatar ring (gradient border)",
+        "XP progress tracking (7,500/10,000)",
+        "İstatistik özeti (1.2M adım, 12 seviye, 45K kazanılan)",
+        "Ayarlar (Bildirim, Karanlık Mod, Gizlilik)"
+      ],
+      "tech": [
+        "iOS Frame (390x844px, border-radius:50px)",
+        "Aurora Background (CSS blur blobs, 20s animation)",
+        "Dynamic Island (126x37px, z-index:1000)",
+        "Screen-based routing (4 views, absolute positioning)",
+        "Glassmorphism: Backdrop-filter:blur(40px), Border gradients",
+        "Inner shadows (inset 0 1px 1px rgba(255,255,255,0.1))",
+        "Drop shadows (0 20px 50px rgba(0,0,0,0.5))",
+        "Bottom nav (fixed, 70px height, 4 items)",
+        "Active state (color:#FF33FF, no background)",
+        "Screen transitions (opacity + pointer-events)",
+        "SVG Circular Progress (stroke-dasharray:339)",
+        "CSS Bar Charts (flex-based, opacity mapping)",
+        "XP Progress Bar (linear-gradient fill)",
+        "Gradient text (background-clip:text)",
+        "Modal bottom sheet (transform:translateY, 75% max-height)",
+        "Toggle switches (CSS-only, rounded-full)",
+        "Quest status indicators (3-state: completed/in-progress/locked)",
+        "Button states (active:scale(0.95))",
+        "Typography: Inter (400-800 weights, UI elements), Orbitron (Display font, numbers)",
+        "Font Awesome 6.4 (Icon system)"
+      ],
+      "colors": [
+        "Pink: #FF33FF (Primary accent, nav active, borders)",
+        "Magenta: #CC00FF (Gradient start, XP bars, buttons)",
+        "Blue: #0066FF (Gradient end, secondary accent)",
+        "Background: #050010 (Deep purple-black)",
+        "Card BG: rgba(255,255,255,0.03) (Glass base)",
+        "Card Border: rgba(255,255,255,0.05-0.1) (Subtle outlines)",
+        "Streak: rgba(251,191,36,0.7) (Amber border, fire icon)",
+        "Distance: rgba(139,92,246,0.7) (Violet border, route icon)",
+        "Calories: rgba(59,130,246,0.7) (Blue border, bolt icon)",
+        "Success: #22c55e (Completed quests, green)",
+        "White: #FFFFFF (Primary text)",
+        "Pink-200: rgba(255,255,255,0.6) (Secondary/muted text)",
+        "Opacity 50%: rgba(255,255,255,0.5) (Tertiary text)",
+        "Opacity 30%: rgba(255,255,255,0.3) (Disabled/subtle)",
+        "Aurora Gradient: linear-gradient(135deg, #CC00FF 0%, #FF33FF 100%)",
+        "Aurora Full: linear-gradient(135deg, #CC00FF 0%, #FF33FF 50%, #0066FF 100%)",
+        "Button Gradient: linear-gradient(135deg, #CC00FF 0%, #FF33FF 100%)",
+        "Text Gradient: linear-gradient(135deg, #FFFFFF 0%, #FF33FF 100%)",
+        "Gold: #FFD700 (1. sıra, crown icon)",
+        "Silver: #C0C0C0 (2. sıra, medal icon)",
+        "Bronze: #CD7F32 (3. sıra, medal icon)"
+      ]
+    }
+  },
+  "sesli": {
+    "title": "Sesli Eşleş (SoulMatch)",
+    "A": {
+      "features": [
+        "Anonim Eşleşme (Kimliksiz, gizli mod)",
+        "Hızlı ve Uyumlu (Min %70 uyum garantisi)",
+        "Zıt Çekim (Karşıt karakter eşleştirmesi)",
+        "Biz Aynıyız (%90+ derin uyum modu)",
+        "Şehir Modu (Konum bazlı eşleşme)",
+        "Tam İsabet (Gelişmiş filtreleme sistemi)",
+        "Anlık Sesli Arama (2 dakika varsayılan süre)",
+        "Görüşme Süresi Uzatma (Token bazlı)",
+        "Sesli Tanıtım Kaydı (Profil ses kaydı)",
+        "Mikrofon/Ses Kontrolleri (Mute/Speaker toggle)",
+        "Buz Kırıcı Sorular (Ice Breaker sistemi)",
+        "NexToken (NT) Bakiye Sistemi",
+        "Token Yükleme (Paket bazlı satın alma)",
+        "Eşleşme Maliyetlendirme (Mod bazlı fiyatlandırma)",
+        "Güçlendirici Satın Alma (Boost sistemleri)",
+        "Hediye Gönderme (Emoji tabanlı hediyeler)",
+        "Süper Hız (Eşleşme süresi %80 azaltma)",
+        "Öne Çıkma (Liste üst sıralaması)",
+        "Süre Uzatma (Dakika başı ücretlendirme)",
+        "Süper Beğeni (Sesli mesajlı beğeni)",
+        "Gizli Mod (Görünmezlik özelliği)",
+        "Kişilik Tipi Seçimi (MBTI: ENFP, INFJ, vb.)",
+        "Hobi Etiketleri (Max 3 seçim)",
+        "Sesli Tanıtım Yönetimi",
+        "Profil Rozeti/Çerçeve (Market ürünleri)",
+        "Doğrulama Rozeti (Onaylı hesap işareti)",
+        "Barnum Etkisi Analizi",
+        "Uyum Yüzdesi Hesaplama",
+        "Karakter Analizi Raporu",
+        "Soru-Cevap Sistemi (10 soruluk test)",
+        "Uyum Artırma Mekaniği (Soru yanıtlama)",
+        "Eşleşme Geçmişi (Tüm eşleşmeler)",
+        "Favoriler Listesi (Yıldızlı kişiler)",
+        "Engellenen Kullanıcılar",
+        "Arkadaş Ekleme (Token bazlı)",
+        "Doğrudan Arama (Son eşleşmelerden)",
+        "Kullanıcı Engelleme",
+        "Şikayet Etme Sistemi",
+        "Anonim Mod Güvenliği",
+        "Profil Doğrulama",
+        "Push Bildirimleri",
+        "Eşleşme Bildirimleri",
+        "Token Bonus Bildirimleri",
+        "Arkadaşlık İstekleri",
+        "Dil Seçimi (Türkçe varsayılan)",
+        "Karanlık Mod (Zorunlu dark tema)",
+        "Bildirim Tercihleri",
+        "Hesap Yönetimi (Silme/Çıkış)"
+      ],
+      "tech": [
+        "Bottom Navigation Bar (3-tab yapısı)",
+        "Floating Action Button (Ana eşleşme butonu)",
+        "Screen Router (Sayfa geçiş yönetimi)",
+        "Modal Sistemi (Overlay container)",
+        "Back Button (Geri navigasyon)",
+        "Mode Card (Eşleşme modu seçim kartı)",
+        "Boost Card (Güçlendirici kartı)",
+        "Glass Card (Cam efektli container)",
+        "Gold Card (Premium/gold vurgulu kart)",
+        "Profile Card (Kullanıcı profil kartı)",
+        "btn-press (Basma efektli buton)",
+        "Primary Button (Gradient dolgulu)",
+        "Glass Button (Şeffaf cam efektli)",
+        "Premium Button (Altın sarısı gradient)",
+        "Filter Chip (Filtre seçim butonu)",
+        "Icon Button (Sadece ikonlu)",
+        "Story Ring (Hikaye halkası - gradient border)",
+        "Compatibility Ring (Uyum halkası)",
+        "Gold Ring (Premium halka)",
+        "Avatar (Yuvarlak profil fotoğrafı)",
+        "Progress Ring (Geri sayım halkası)",
+        "Orb (Blur efektli arka plan dairesi)",
+        "pulse-glow (Nabız atışlı parlama)",
+        "float (Yüzen efekt)",
+        "spin-slow (Yavaş dönüş)",
+        "shimmer (Parıltı kayması)",
+        "slide-up/down (Kayma geçişleri)",
+        "scale-in (Büyüme girişi)",
+        "sound-wave (Ses dalgası animasyonu)",
+        "Range Slider (Yaş/uzaklık seçimi)",
+        "Toggle Switch (Aç/kapa anahtarı)",
+        "Select Dropdown (Şehir seçimi)",
+        "Text Input (Arama/şehir filtresi)",
+        "Radio Chip (Cinsiyet/kişilik seçimi)",
+        "Toast Notification (Geçici bildirim)",
+        "Badge (Bildirim sayısı rozeti)",
+        "Modal Content (Tam ekran overlay)",
+        "Inline Alert (Satır içi uyarı)",
+        "Voice Wave (Ses dalgası görselleştirme)",
+        "Sound Bar (Animasyonlu ses çubukları)",
+        "Typing Indicator (Yazıyor animasyonu)",
+        "Timer Display (Geri sayım göstergesi)",
+        "Horizontal Scroll (Yatay kaydırma listesi)",
+        "Vertical List (Dikey liste)",
+        "Grid Layout (Izgara düzeni)",
+        "Stack Layout (Üst üste kart dizilimi)",
+        "Loading State (Yükleme durumu)",
+        "Empty State (Boş liste durumu)",
+        "Error State (Hata durumu)",
+        "Success State (Başarı durumu)"
+      ],
+      "colors": [
+        "Nex Dark: #0A0A1F (Ana arka plan)",
+        "Nex Darker: #050510 (Daha koyu arka plan)",
+        "Glass Card: rgba(255, 255, 255, 0.03) (Cam kart)",
+        "Glass Medium: rgba(255, 255, 255, 0.06) (Orta şeffaflık)",
+        "Glass Strong: rgba(255, 255, 255, 0.10) (Güçlü şeffaflık)",
+        "Neon Purple: #C026D3 (Ana vurgu moru)",
+        "Neon Magenta: #FF00AA (Pembe vurgu)",
+        "Neon Cyan: #00F0FF (Turkuaz vurgu)",
+        "Neon Gold: #FFD700 (Altın sarısı)",
+        "Neon Orange: #FF6B35 (Turuncu vurgu)",
+        "Neon Green: #00FF88 (Yeşil - online/aktif)",
+        "Neon Red: #FF3366 (Kırmızı - hata/engelleme)",
+        "Primary Gradient: #C026D3 → #FF00AA → #00F0FF (Ana gradient)",
+        "Gold Gradient: #FFD700 → #FFA500 → #FF6B35 (Premium gradient)",
+        "Purple Gradient: #C026D3 → #FF00AA (Mor-pink)",
+        "Cyan Gradient: #00F0FF → #3B82F6 (Turkuaz-mavi)",
+        "Green Gradient: #00FF88 → #10B981 (Yeşil tonları)",
+        "Border Default: rgba(255, 255, 255, 0.08) (Varsayılan border)",
+        "Border Strong: rgba(255, 255, 255, 0.15) (Güçlü border)",
+        "Border Gold: rgba(255, 215, 0, 0.30) (Altın border)",
+        "Border Purple: rgba(192, 38, 211, 0.25) (Mor border)",
+        "Border Cyan: rgba(0, 240, 255, 0.25) (Turkuaz border)",
+        "Text Primary: #FFFFFF (Beyaz - ana metin)",
+        "Text Secondary: rgba(255, 255, 255, 0.80) (İkincil metin)",
+        "Text Muted: #9CA3AF (Gri - pasif metin)",
+        "Text Placeholder: #6B7280 (Koyu gri - placeholder)",
+        "Success: #00FF88 (Başarı/online)",
+        "Warning: #FFD700 (Uyarı/bonus)",
+        "Error: #FF3366 (Hata/engelleme)",
+        "Info: #00F0FF (Bilgi/turkuaz)"
+      ]
+    },
+    "B": {
+      "features": [
+        "Profil oluşturma ve düzenleme (avatar, kişilik tipi, hobiler)",
+        "MBTI kişilik testi entegrasyonu (ENFP, INFJ, ENTP, vb.)",
+        "Doğrulanmış kullanıcı rozeti (Premium üyelik sistemi)",
+        "Arkadaş listesi yönetimi (favoriler, engellenenler)",
+        "Ana Nexus Core butonu (tek tıkla eşleşme arama)",
+        "6 farklı eşleşme modu (Anonim, Hızlı, Zıt Çekim, Biz Aynıyız, Şehir, Tam İsabet)",
+        "Sıra bekleme sistemi (gerçek zamanlı konum göstergesi)",
+        "Otomatik bağlanma (5 saniye geri sayım)",
+        "Eşleşme iptali ve yeniden arama",
+        "2 dakikalık sınırlı görüşme süresi",
+        "Buz kırıcı soru sistemi (rastgele sohbet başlatıcılar)",
+        "Süre uzatma güçlendirmesi",
+        "Ses dalgası animasyonu (konuşma göstergesi)",
+        "Anında arama sonlandırma",
+        "Hız Artır (sırada öne geçme)",
+        "Öne Çıkar (profil görünürlüğü artırma)",
+        "Süre Uzat (görüşme süresi ekleme)",
+        "Süper Beğeni (eşleşme olasılığı artırma)",
+        "Gizli Mod (görünmezlik)",
+        "Yaş aralığı slider (18-60)",
+        "Cinsiyet seçimi (Tümü/Kadın/Erkek)",
+        "Min. uyumluluk yüzdesi (%50-%99)",
+        "MBTI kişilik tipi filtreleme",
+        "İlgi alanı etiketleri (Müzik, Oyun, Kitap, Spor, Sanat, Yemek, Seyahat)",
+        "Konum bazlı filtreleme (Ülke, Şehir, İlçe)",
+        "Son eşleşmeler hikaye formatında görüntüleme",
+        "Arkadaş ekleme (NT token karşılığı)",
+        "Tekrar arama (Reconnect)",
+        "Bildirim sistemi (arkadaşlık istekleri, bonuslar, doğrulama)",
+        "Karakter analizi ve uyum raporu",
+        "Günlük bonus (100 NT)",
+        "Ücretsiz eşleşme hakları (3 hak)",
+        "Token bakiyesi gösterimi",
+        "Satın alma entegrasyonu hazırlığı"
+      ],
+      "tech": [
+        "iPhone 14 Pro frame simülasyonu (390x844px)",
+        "Dynamic Island notch simülasyonu",
+        "Status Bar (saat, 5G, batarya, sinyal)",
+        "Home Indicator (gesture bar)",
+        "Tailwind CSS v3 (CDN üzerinden)",
+        "Custom CSS variables (design tokens)",
+        "Screen-based routing (8 ana ekran)",
+        "Modal overlay sistemi (4 modal)",
+        "Geri butonu (glass efektli yuvarlak)",
+        "Header with action buttons",
+        "Bottom-fixed call controls",
+        "Nexus Core (gradient + glow + pulse)",
+        "Mode Cards (gradient border + icon)",
+        "Booster Cards (subtle gradient + shine)",
+        "Glass buttons (backdrop-filter blur)",
+        "Gradient buttons (linear-gradient CTA)",
+        "Icon buttons (24px SVG ikonlar)",
+        "Radio/Toggle buttons (selection states)",
+        "Live Activity Card (çevrimiçi sayaç)",
+        "Compatibility Card (% uyum göstergesi)",
+        "Queue Position Card (sıra + geri sayım)",
+        "Ice Breaker Card (soru + refresh)",
+        "Profile Analysis Card (MBTI + hobiler)",
+        "Notification List (unread/read states)",
+        "Glass-morphism panels (rgba backgrounds)",
+        "Custom dropdown selects (ülke/şehir/ilçe)",
+        "Dual handle range slider (yaş aralığı)",
+        "Single range slider (uyum yüzdesi)",
+        "Radio button groups (cinsiyet)",
+        "Multi-select toggle chips (MBTI)",
+        "Interest tag buttons (flex-wrap layout)",
+        "Avatar images (rounded-full, object-cover)",
+        "Story rings (gradient border animation)",
+        "Compatibility rings (conic-gradient)",
+        "Gradient orbs (absolute positioned backgrounds)",
+        "SVG icons (24x24 viewBox, stroke-based)",
+        "pulse-ring (2s ease-out infinite)",
+        "breathe (3s ease-in-out scale)",
+        "float-gentle (4s translateY)",
+        "heart-beat (1.2s ease-in-out)",
+        "sound-bar (0.5s alternate height)",
+        "DNA paths (5s stroke-dashoffset)",
+        "timer-progress (1s linear stroke)",
+        "heart-particles (JS spawned, CSS keyframes)",
+        "searching-magnifier (4s path movement)",
+        "Inter (body text, 300-800 weights)",
+        "Space Grotesk (display headings)",
+        "Gradient text (background-clip)"
+      ],
+      "colors": [
+        "nex-dark: #0D0D1A (Ana arka plan koyu mor-mavi)",
+        "nex-darker: #080810 (Daha koyu arka plan derinliği)",
+        "nex-card: rgba(255,255,255,0.04) (Cam efektli kart)",
+        "nex-border: rgba(255,255,255,0.06) (Ince kenarlık)",
+        "warm-purple: #6633FF (Ana mor vurgu)",
+        "warm-magenta: #FF33FF (Magenta vurgu)",
+        "warm-pink: #FF6B9D (Pembe vurgu)",
+        "warm-glow: #CC00FF (Parıltı efekti moru)",
+        "warm-soft: #FF66FF (Yumuşak pembe ton)",
+        "gradient-gold: #FFD700 (NT para birimi - altın)",
+        "gradient-orange: #FFA500 (Turuncu vurgu/altın gradyan)",
+        "cyan-accent: #00C0FF (Şehir modu - mavi-cyan)",
+        "blue-accent: #0066FF (Derin mavi vurgu)",
+        "green-online: #00FF88 (Çevrimiçi durum yeşili)",
+        "red-danger: #FF3366 (Arama sonlandırma kırmızısı)",
+        "Anonim Mod: #CC44FF (Magenta-mor)",
+        "Hızlı Mod: #FF4488 (Pembe-kırmızı)",
+        "Zıt Çekim: #AA22FF (Mor)",
+        "Biz Aynıyız: #FFB800 (Altın sarısı)",
+        "Şehir Modu: #00C0FF (Cyan-mavi)",
+        "Tam İsabet: #CC00FF (Derin mor)",
+        "text-primary: #FFFFFF (Beyaz ana metin)",
+        "text-secondary: #9CA3AF (Gri ikincil metin)",
+        "text-muted: #6B7280 (Soluk yardımcı metin)"
+      ]
+    },
+    "C": {
+      "features": [
+        "Ses Tabanlı Eşleşme (Voice-First Matching)",
+        "5 Farklı Arama Modu (Patron/Anonim/Hızlı/Zıt Çekim/Şehir)",
+        "Gerçek Zamanlı Uyum Hesaplama (%50-95 arası)",
+        "Manyetik Animasyonlu Arama Ekranı (8 Avatar + Emoji Mıknatıs)",
+        "Arkadaş Listesi (Online/Offline Durum)",
+        "Son Eşleşmeler (Arkadaşlık İsteği Gönderme)",
+        "Favoriler (Yıldızlı Kişiler)",
+        "Engellenenler (Engel Kaldırma)",
+        "2 Dakikalık Zamanlı Görüşme (Geriye Sayım)",
+        "Konuşmacı Göstergesi (Sen/Rakip Döngüsü)",
+        "Ses Görselleştirme (15 Bar Ekvalizer)",
+        "Buz Kırıcı Sorular (Ice Breaker)",
+        "Görüşme Sonu Değerlendirme (Uyum/Süre/Hediye)",
+        "Nexlify Token (NT) Bakiye Sistemi",
+        "4 Farklı Token Paketi (500-10.000 NT)",
+        "Boost Satın Alma (Hız/Uyum/Spotlight)",
+        "Mod Paketi Satın Alma (Patron/Zıt Çekim)",
+        "Yaş Aralığı Seçimi (18-60, Çift Slider)",
+        "Cinsiyet Filtresi (Tümü/Kadın/Erkek)",
+        "Şehir ve İlçe Seçimi (4 Şehir, 29 İlçe)",
+        "Min. Uyum Sliderı (%50-95)",
+        "MBTI Tipi Seçimi (8 Tip)",
+        "İlgi Alanı Filtresi (8 Kategori)",
+        "Anonim Başlat Toggle'ı",
+        "Profil Kartı (Fotoğraf/Biyografi/İlgi Alanları)",
+        "İstatistikler (Eşleşme Sayısı/Puan/Token)",
+        "Kişilik Rozetleri (Premium/Doğrulandı)",
+        "Diğer Kullanıcı Profillerini Görüntüleme",
+        "Gerçek Zamanlı Bildirimler",
+        "Beğeni/Eşleşme/Token Bildirimleri",
+        "Okunmamış Bildirim Rozeti"
+      ],
+      "tech": [
+        "Top Tab Navigation (4 Tab + Token Display)",
+        "Alt Navigasyon Yok (Full Screen Experience)",
+        "Geri Butonu (Contextual)",
+        "Sekme Değiştirme Animasyonu (Ink Effect)",
+        "Glassmorphism Card (g0/g1/g2 - 3 Opacity Level)",
+        "Match Card (Grid Layout, Press Effect)",
+        "Profile Card (Ring Border Gradient)",
+        "Store Item Card (Icon + Gradient Background)",
+        "Press Button (Active Scale 0.95)",
+        "Toggle Switch (Anonim Mod)",
+        "Range Slider (Age/Compatibility)",
+        "Number Input (Age Min/Max)",
+        "Chip/Tag Selection (MBTI/Interest/City)",
+        "Avatar Ring (Brand/Gold Gradient)",
+        "Compatibility Progress Bar (Gradient Fill)",
+        "Countdown Ring (SVG Stroke Animation)",
+        "Sound Wave Bars (15 Animated Bars)",
+        "Frequency Bars (fbar - EQ Visualization)",
+        "Breathe (Scale 1-1.06)",
+        "Ripple/Ring Expansion (ripOut)",
+        "Float (Vertical Sine Wave)",
+        "Slide Up (Enter Animation)",
+        "Shimmer (Loading Effect)",
+        "Magnetic Pull (Avatar to Center)",
+        "Bottom Sheet Modal (Token/Notifications/Profile)",
+        "Backdrop Blur (18px)",
+        "Sheet Slide Up Animation",
+        "Click Outside to Close",
+        "Cabinet Grotesk (Primary Sans-Serif)",
+        "Instrument Serif (Accent/Elegant)",
+        "Geist Mono (Numbers/Technical Data)"
+      ],
+      "colors": [
+        "Primary BG: #08050F (Ana koyu arka plan)",
+        "Secondary BG: #0F0A1C (İkincil yüzey)",
+        "Tertiary BG: #160D28 (Üçüncül vurgu)",
+        "Cyan: #00C0FF (Teknoloji/Canlılık)",
+        "Light Blue: #00B4FF (Hava/Dinamizm)",
+        "Blue: #0066FF (Güven/Derinlik)",
+        "Royal Blue: #3366FF (Bağlantı)",
+        "Purple: #6633FF (Marka Ana Rengi)",
+        "Violet: #9933FF (Yaratıcılık)",
+        "Magenta: #CC00FF (Enerji)",
+        "Pink: #FF00CC (Tutku)",
+        "Hot Pink: #FF33FF (Vurgu)",
+        "Light Pink: #FF66FF (Yumuşak Vurgu)",
+        "Gold: #FFD26B (Token/Premium)",
+        "Green: #00FFC2 (Online/Başarı)",
+        "Red: #FF3355 (Engel/İptal)",
+        "Primary Text: #F5F0FF (Ana metin beyazı)",
+        "Secondary Text: rgba(245,240,255,0.5) (İkincil bilgi)",
+        "Tertiary Text: rgba(245,240,255,0.28) (Üçüncül/zemin)",
+        "b0 (Ultra Light): rgba(255,255,255,0.06)",
+        "b1 (Light): rgba(255,255,255,0.10)",
+        "b2 (Medium): rgba(255,255,255,0.16)",
+        "s0 (Ultra Light): rgba(255,255,255,0.025)",
+        "s1 (Light): rgba(255,255,255,0.05)",
+        "s2 (Medium): rgba(255,255,255,0.08)",
+        "s3 (Heavy): rgba(255,255,255,0.13)"
+      ]
+    }
+  },
+  "kaydir": {
+    "title": "Kaydır Eşleş (DateMatch)",
+    "A": {
+      "features": [
+        "Tinder-style kart kaydırma (swipe) mekanizması",
+        "Çift tıklama ile beğenme (double-tap heart)",
+        "Boost modu ile görünürlük artırma",
+        "Akıllı fotoğraf seçimi (en çok beğenilen)",
+        "Geri alma (undo) fonksiyonu",
+        "Fotoğraf/video gezinme (dikey dot navigasyon)",
+        "Uyum skoru gösterimi (compatibility badge)",
+        "Standart beğenme (like)",
+        "Geçme (nope/pass)",
+        "Süper beğenme (super like)",
+        "Hediye gönderme (gift system)",
+        "Süper mesaj (eşleşmeden önce mesaj)",
+        "Sesli mesaj gönderme",
+        "AI destekli sohbet açılışları",
+        "Eşleşme animasyonu ve modal",
+        "Anlık mesajlaşma",
+        "Sesli mesaj entegrasyonu",
+        "Kaybolan mesaj modu (disappearing)",
+        "Hediye kilidi ile 3 mesaj özgürlüğü",
+        "Oyun entegrasyonu (Bu mu Bu mu?)",
+        "Randevu öneri butonu",
+        "Detaylı profil çekmecesi (drawer)",
+        "Fotoğraf grid görünümü",
+        "Hikaye bölümü",
+        "Spotify anthem entegrasyonu",
+        "Sesli not profil entegrasyonu",
+        "Ortak arkadaş gösterimi",
+        "Blind date modu (fotoğraf gizleme)",
+        "İlgi alanları etiketleri",
+        "Token bakiyesi sistemi",
+        "Boost satın alma",
+        "Süper beğeni satın alma",
+        "Hediye paketleri (Bronz/Gümüş/Altın/Elmas)",
+        "Token satın alma butonu",
+        "İlgi alanı bazlı topluluklar",
+        "Kategori kartları (8 farklı tema)",
+        "Üye sayısı gösterimi",
+        "Topluluğa katılma fonksiyonu",
+        "Beğenenleri görme (blur kilitli)",
+        "Öncelikli beğenenler (priority likes)",
+        "Yeni eşleşmeler listesi",
+        "Sabitlenmiş mesajlar",
+        "Çevrimiçi durum göstergesi",
+        "Yazıyor... göstergesi",
+        "Keşif ayarları (mesafe, yaş aralığı)",
+        "Doğrulanmış profil filtresi",
+        "Global mod",
+        "Görünmez mod",
+        "Bildirim ayarları",
+        "Gizlilik ayarları"
+      ],
+      "tech": [
+        "Dock-style bottom navigation (5 tab)",
+        "Merkez FAB (Floating Action Button) - Keşfet",
+        "Badge sistemi (bildirim sayıları)",
+        "Dynamic Island (iOS-style status bar)",
+        "Geri butonu (chat screen)",
+        "Profil kartı (stacked card layout)",
+        "Fotoğraf stack (vertical carousel)",
+        "Fotoğraf dot göstergeleri (dikey)",
+        "Uyum rozeti (circular progress)",
+        "Online durum göstergesi (pulse animasyon)",
+        "Etiket/chip bileşeni",
+        "Çekmece (drawer) header",
+        "Aksiyon butonları (4'lü bar)",
+        "Gradient butonlar",
+        "Glassmorphism butonlar",
+        "Toggle switch bileşeni",
+        "Range slider (mesafe/yaş)",
+        "Undo butonu (floating)",
+        "Eşleşme modalı (full screen)",
+        "Süper mesaj modalı (bottom sheet)",
+        "Hediye modalı (bottom sheet)",
+        "Ayarlar modalı (full screen)",
+        "Pull-to-refresh göstergesi",
+        "Chat input alanı",
+        "Mesaj composer (match modal)",
+        "Textarea (süper mesaj)",
+        "Ses kayıt butonu (hold-to-record)",
+        "Fotoğraf grid (2 sütun)",
+        "Video entegrasyonu (autoplay)",
+        "Albüm kapağı (Spotify anthem)",
+        "Oynatma göstergesi (equalizer animasyon)",
+        "Ses dalgası görselleştirme",
+        "Skeleton/loading state",
+        "Boş durum illüstrasyonları",
+        "Boş liste mesajları",
+        "Sistem mesajları (gift notification)",
+        "Uyarı mesajları (limit warning)",
+        "Card swipe animasyonları",
+        "Stamp overlay animasyonları",
+        "Match modal animasyonları",
+        "Pulse/glow efektler",
+        "Gradient shimmer efektleri",
+        "Parçacık sistemi (match celebration)"
+      ],
+      "colors": [
+        "BG Primary: #0A0A1F (Uygulama arka planı - koyu lacivert)",
+        "Accent Violet: #8B5CF6 (Ana vurgu rengi - mor)",
+        "Accent Magenta: #EC4899 (İkincil vurgu - pembe/magenta)",
+        "Accent Cyan: #22D3EE (Üçüncül vurgu - turkuaz/cyan)",
+        "Accent Gold: #F59E0B (Token/ödül rengi - altın)",
+        "Glass BG: rgba(255,255,255,0.03) (Cam arka plan)",
+        "Glass Border: rgba(255,255,255,0.08) (Cam kenarlık)",
+        "Glass Blur: blur(30px) saturate(180%) (Blur efekti değeri)",
+        "Online Yeşil: #10B981 (Çevrimiçi durum göstergesi)",
+        "Nope Kırmızı: #FF0040 (Geçme/ret eylemi)",
+        "Uyarı Turuncu: #F59E0B / #D97706 (Limit uyarıları)",
+        "Okundu Mavi: #8B5CF6 (Mesaj okundu göstergesi)",
+        "White: #FFFFFF (Ana metin rengi)",
+        "Gray-300: #E5E7EB (İkincil metin)",
+        "Gray-400: #9CA3AF (Pasif metin/placeholder)",
+        "Gray-500: #6B7280 (Etiketler/altyazılar)",
+        "Koyu Yüzey: #1A1A2E (Kart yüzeyleri)",
+        "Bronz: #CD7F32 / #8B4513 (Bronz paket gradyan)",
+        "Gümüş: #C0C0C0 / #808080 (Gümüş paket gradyan)",
+        "Altın: #F59E0B / #D97706 (Altın paket gradyan)",
+        "Elmas: #B9F2FF / #00CED1 (Elmas paket gradyan)"
+      ]
+    },
+    "B": {
+      "features": [
+        "Yatay Swipe Hareketleri (Sola/Sağa)",
+        "Dokunmatik/Mouse Drag Algılama",
+        "Swipe Geri Bildirim Animasyonları",
+        "Fotoğraf Galerisi Navigasyonu (Sol/Sağ Tıklama)",
+        "Geri Alma (Undo) Mekanizması",
+        "Tam Ekran Fotoğraf Görüntüleme",
+        "Çoklu Fotoğraf Desteği (5+ fotoğraf)",
+        "Dikey Scroll ile Detay Paneli",
+        "Biyografi ve Kişisel Bilgiler",
+        "İlgi Alanı Etiketleri (Tags)",
+        "Tanışma Soruları (Q&A Format)",
+        "Beğenme (Like) Sistemi",
+        "Geçme (Pass) Sistemi",
+        "Süper Beğeni (Super Like) - Token Tabanlı",
+        "Eşleşme Anında Full-Screen Overlay",
+        "AI Destekli Mesaj Önerileri",
+        "Eşleşme Sonrası Hızlı Sohbet Başlatma",
+        "Gerçek Zamanlı Mesaj Balonları",
+        "Mesaj Durum Göstergeleri (Gönderildi/Zaman)",
+        "Hediye Mesaj Entegrasyonu",
+        "Mesaj Limiti Kontrolü (3 Mesaj Kuralı)",
+        "Bekleme Modu (Yanıt Bekleniyor)",
+        "Otomatik Yanıt Sistemi (Simülasyon)",
+        "Token Bakiye Görüntüleme",
+        "Süper Beğeni (30 Token)",
+        "Premium Mesaj / Hediye (10-60 Token)",
+        "Süper Mesaj (50 Token)",
+        "Beğeni Kilidi Açma (80 Token)",
+        "Geri Alma (Undo) (19 Token)",
+        "Premium Üyelik (Datelify Plus)",
+        "Özellik Paketleri (6 farklı paket)",
+        "Token Satın Alma (3 paket)",
+        "Boost Sistemi",
+        "Gizli Mod",
+        "Kim Beğendi Gösterimi",
+        "Yaş Aralığı (Ücretsiz)",
+        "Mesafe Filtresi (Ücretsiz)",
+        "Boy Filtresi (Premium)",
+        "Kilo Filtresi (Premium)",
+        "İlişki Tipi Filtresi (Premium)",
+        "İlgi Alanı Bazlı Topluluklar",
+        "Üye Sayısı Görüntüleme",
+        "Çevrimiçi Kullanıcı Sayısı",
+        "Topluluğa Katılma Butonları",
+        "Profil Düzenleme",
+        "İstatistik Görüntüleme (Görüntülenme/Eşleşme)",
+        "Token Bakiye Takibi",
+        "Ayarlar Menüsü",
+        "Çıkış Yapma",
+        "Tutorial Overlay (İlk Giriş)",
+        "Swipe Hareket Eğitimi",
+        "Aksiyon Butonları Tanıtımı",
+        "Detay Paneli Keşif Rehberi"
+      ],
+      "tech": [
+        "screen-* (5 ana ekran container)",
+        "explore-wrap (Keşif ekranı wrapper)",
+        "card-scroll-page (Dikey scroll container)",
+        "swipe-layer (Yatay swipe katmanı)",
+        "photo-section (Tam ekran fotoğraf alanı)",
+        "detail-block (Profil detay bloğu)",
+        "matches-wrap (Eşleşme listesi container)",
+        "hub-scroll-c (Topluluk scroll container)",
+        "profile-scroll-c (Profil scroll container)",
+        "pill-nav (Floating bottom navigation)",
+        "pill-item (Navigasyon butonları - 3 adet)",
+        "pill-dot (Bildirim noktası)",
+        "explore-topbar (Üst navigasyon barı)",
+        "status (iOS status bar simülasyonu)",
+        "dynamic-island (Dynamic Island UI)",
+        "scroll-hint-pill (Scroll indicator)",
+        "split-card (Ana profil kartı)",
+        "filmstrip (Yatay eşleşme şeridi)",
+        "film-card (Küçük profil kartı)",
+        "film-avatar (Yuvarlak avatar container)",
+        "match-photo-frame (Eşleşme fotoğraf çerçevesi)",
+        "msg-ava (Mesaj avatarı)",
+        "chat-ava-r (Chat header avatarı)",
+        "mini-ava (Mesaj balonu mini avatar)",
+        "action-btn (Ana aksiyon butonları - 3 tip: pass/superlike/like)",
+        "float-btn (Yüzen aksiyon butonları)",
+        "icon-btn-labeled (İkon butonları)",
+        "icon-btn-profile (Profil avatar butonu)",
+        "undo-btn (Geri alma butonu)",
+        "send-btn (Mesaj gönderme)",
+        "mcta-primary (Primary CTA)",
+        "mcta-ghost (Ghost CTA)",
+        "token-modal (Token işlemleri modalı)",
+        "filter-modal (Filtre modalı)",
+        "shop-modal (Mağaza modalı)",
+        "likes-modal (Beğeni listesi modalı)",
+        "undo-modal (Geri alma modalı)",
+        "match-ov (Eşleşme overlay)",
+        "tutorial-ov (Tutorial overlay)",
+        "filter-sheet / shop-sheet (Bottom sheet)",
+        "sheet-handle (Sheet handle bar)",
+        "chat-inp (Mesaj input)",
+        "flt-slider (Filtre slider)",
+        "match-inp-c (Eşleşme mesaj input)",
+        "sheet-inp (Modal input)",
+        "gift-grid (Hediye seçim grid)",
+        "gift-item (Hediye kartı)",
+        "flt-apply-btn (Filtre uygula)",
+        "action-toast (Aksiyon bildirim toast)",
+        "swipe-hint-left / swipe-hint-right (Swipe ipuçları)",
+        "msg-badge (Okunmamış mesaj sayısı)",
+        "typing-dots (Yazıyor animasyonu)",
+        "flt-free-badge / flt-lock-badge (Filtre badgeleri)",
+        "msg-limit-bar (Mesaj limit uyarısı)",
+        "app-wordmark (Uygulama logosu)",
+        "split-name (Profil isim başlığı)",
+        "page-title (Sayfa başlıkları)",
+        "detail-bio (Biyografi metni)",
+        "detail-tag (İlgi alanı etiketi)",
+        "msg-preview (Mesaj önizleme)",
+        "bbl (Mesaj balonu)",
+        "ai-sug (AI öneri butonu)",
+        "profile-stats-row (Profil istatistikleri)",
+        "pstat (İstatistik item)",
+        "token-c (Token kartı)",
+        "token-val-c (Token değer)",
+        "match-compat-c (Uyum skoru)",
+        "shop-token-item (Token paketi)",
+        "photo-top-grad / photo-bot-grad (Fotoğraf gradient)",
+        "grain (Doku overlay)",
+        "glass / glass-b (Glassmorphism değişkenleri)",
+        "hub-bg-c (Topluluk arka plan)",
+        "match-frame-gradient (Eşleşme gradient)"
+      ],
+      "colors": [
+        "BG: #08070F (Ana arka plan - Gece siyahı)",
+        "BG2: #0F0C1A (İkincil arka plan - Koyu mor)",
+        "Primary: #7C6FFF (Ana marka rengi - Mor)",
+        "Primary-s: #9D93FF (Açık mor - Soft vurgu)",
+        "Accent: #F06292 (Vurgu rengi - Pembe)",
+        "Accent-s: #F48FB1 (Açık pembe - Soft vurgu)",
+        "Violet: #9B59FF (Menekşe - İkincil vurgu)",
+        "Teal: #3DD9C5 (Turkuaz - Başarı/Online)",
+        "Blue: #7C6FFF (Mavi-mor alias)",
+        "Blue-soft: #9D93FF (Açık mavi-mor alias)",
+        "Text: rgba(255,255,255,0.92) (Ana metin)",
+        "Muted: rgba(255,255,255,0.38) (İkincil metin)",
+        "Subtle: rgba(255,255,255,0.06) (Hafif vurgu)",
+        "Glass: rgba(255,255,255,0.045) (Cam efekti)",
+        "Glass-b: rgba(255,255,255,0.08) (Cam border)",
+        "Purple: #F06292 (Pembe alias)",
+        "Purple-d: #C2185B (Koyu pembe)",
+        "Magenta: #F48FB1 (Açık pembe alias)",
+        "Pink: #FCE4EC (Açık pembe arka plan)",
+        "Rose: #E91E63 (Gül kırmızısı)",
+        "Token Altın: #f59e0b / #fbbf24 (Token rengi)",
+        "Token Koyu: #d97706 (Koyu altın)",
+        "Başarı Yeşili: #10b981 (Online/Onay)",
+        "Hata Kırmızısı: #ff6680 / #ff4560 (Geç/Çıkış)",
+        "Süper Beğeni: #fbbf24 (Altın sarısı)"
+      ]
+    },
+    "C": {
+      "features": [
+        "Tam ekran fotoğraf kartları (Reels tarzı)",
+        "Dikey kaydırma ile fotoğraf gezintisi",
+        "Yatay kaydırma ile Beğen/Geç aksiyonları",
+        "Uyum yüzdesi gösterimi (%94 Uyum vb.)",
+        "Konum ve mesafe bilgisi (2km uzaklık)",
+        "Çevrimiçi durum göstergesi (yeşil nokta)",
+        "İlgi alanı etiketleri (Müzik, Seyahat, Fotoğraf)",
+        "Yeni eşleşmeler (Polaroid tarzı yatay scroll)",
+        "Sohbet listesi (konuşma geçmişi)",
+        "Okunmamış mesaj bildirimleri (badge + typing animasyonu)",
+        "Çevrimiçi durum göstergeleri",
+        "Hızlı sohbet başlatma",
+        "Gerçek zamanlı mesajlaşma (bubble UI)",
+        "Mesaj limit sistemi (3 mesaj kuralı)",
+        "Bekleme modu (karşı taraf yanıt verene kadar)",
+        "Hediye mesaj entegrasyonu (token bazlı)",
+        "AI açılış önerileri (match modal)",
+        "Okundu/okunmadı göstergeleri",
+        "İlgi alanına göre gruplar (Müzik, Spor, Sanat)",
+        "Etkinlik takvimi (Konser, Festival, Sergi)",
+        "Üye sayısı ve çevrimiçi göstergeleri",
+        "Öne çıkan topluluklar (Popüler/Yeni/Trend badge'leri)",
+        "Grid layout sistemleri (1+2, 2x2, full-width)",
+        "Token bakiye gösterimi (150 Token)",
+        "Hediye gönderme (Gül:10, Elmas:20, Yıldız:30, Ateş:40, Taç:50, Roket:60)",
+        "Süper Beğeni (5 Token)",
+        "Filtre kilidi açma (Boy:2, Kilo:2, Eğitim:3, İlişki Amacı:2)",
+        "Geri Al (Undo) özelliği (1 Token)",
+        "Token satın alma geçmişi",
+        "Ücretsiz filtreler: Mesafe (1-100km), Yaş aralığı (18-70)",
+        "Token kilitli filtreler: Boy, Kilo, Eğitim, İlişki Amacı",
+        "Slider kontrolleri (gradient fill)",
+        "Gerçek zamanlı değer gösterimi",
+        "Kilidi açma prompt'ları",
+        "Profil detay sayfası (biyografi, fotoğraflar, kişisel bilgiler)",
+        "İstatistikler (Görüntülenme, Eşleşme, Yanıt Oranı)",
+        "Profil düzenleme",
+        "Premium/Boost satın alma",
+        "Ayarlar menüsü",
+        "Tam ekran overlay (radial gradient arka plan)",
+        "Çift fotoğraf gösterimi (rotate efektli)",
+        "Kalp atış animasyonu (heartbeat keyframe)",
+        "Swipe gesture eğitimi (Yukarı/Aşağı/Sağ/Sol)",
+        "Süper Beğeni açıklaması",
+        "Visual hint'ler (emoji + oklar)",
+        "Anladım, Başlayalım CTA",
+        "Action toast'ları (Beğenildi, Süper Beğeni gönderildi)",
+        "Eşleşme bildirimi (modal)",
+        "Mesaj limit uyarıları",
+        "Token harcama onayları"
+      ],
+      "tech": [
+        "Bottom Navigation Bar (4-tab: Keşfet, Eşleşme, Hub, Profil)",
+        "Active state indicator (gradient bar + glow efekti)",
+        "Badge sistemi (kırmızı nokta bildirim)",
+        "Dynamic Island (iPhone stili notch)",
+        "Status Bar (saat, sinyal, batarya)",
+        "Explore Photo Card (tam ekran, background-image)",
+        "Polaroid Card (foto + isim + meta bilgi)",
+        "Hub Community Card (gradient overlay + badge)",
+        "Profile Stat Card (gradient border + glow)",
+        "Match Photo Frame (rotated border efekti)",
+        "Circular Action Buttons (Geç, Beğen, Süper, Hediye)",
+        "Gradient Primary Button (CTA'lar için)",
+        "Ghost Button (secondary actions)",
+        "Icon Button (header actions)",
+        "Close/Back Button (arrow icon)",
+        "Chat Input Bar (rounded, blur background)",
+        "Slider Input (custom thumb, gradient track)",
+        "Modal Sheet Input (gift/superlike mesaj)",
+        "Filter Input (disabled state styling)",
+        "Full-screen Modal (eşleşme, tutorial)",
+        "Bottom Sheet (token işlemleri, filter)",
+        "Profile Detail Sheet (slide-up)",
+        "Token Prompt Modal (centered)",
+        "Filter Sheet (scrollable content)",
+        "Photo Dot Indicators (diğer bar, active glow)",
+        "Compatibilty Bar (gradient fill percentage)",
+        "Typing Animation (3-dot bounce)",
+        "Online Status Dot (pulse animation)",
+        "Loading/Shimmer (ambient drift background)",
+        "Playfair Display (başlıklar, isimler - serif)",
+        "DM Sans (body text, UI elements - sans-serif)",
+        "Gradient Text (background-clip: text)",
+        "Text Shadow (profil isimleri için)",
+        "Backdrop Filter (blur + saturate)",
+        "Gradient Overlays (linear + radial)",
+        "Box Shadow (glow efektleri)",
+        "Transform (rotate, scale, translate)",
+        "Transition/Animation (cubic-bezier easing)",
+        "Flexbox (nav, header, action columns)",
+        "CSS Grid (hub cards, profile stats)",
+        "Absolute Positioning (overlays, floating buttons)",
+        "Sticky/Fixed (header, bottom nav)",
+        "SVG Icons (stroke-based, scalable)",
+        "Emoji Integration (gift icons, category labels)",
+        "Custom Iconography (app-specific semboller)"
+      ],
+      "colors": [
+        "BG: #0e0a14 (Ana arka plan - derin mor-siyah)",
+        "Deep-bg: #100c18 (Body arka plan)",
+        "Glass: rgba(255,255,255,0.05) (Cam efekti)",
+        "Glass-border: rgba(255,255,255,0.10) (Cam kenarlık)",
+        "Red: #FF2D55 (Ana vurgu - beğeni, eylem)",
+        "Red-soft: #FF4D6D (Yumuşak kırmızı - hover states)",
+        "Magenta: #FF2189 (İkincil vurgu - aktif nav)",
+        "Magenta-bright: #FF5FAD (Parlak magenta - glow)",
+        "Cyan: #00C8FF (Bilgi - uyum barı başlangıç)",
+        "Cyan-soft: #00B4FF (Yumuşak mavi)",
+        "Purple: #BF5AF2 (Süper beğeni, AI önerileri)",
+        "Purple-soft: #A855F7 (Yumuşak mor)",
+        "Indigo: #6366F1 (Indigo - etiketler)",
+        "Blue: #3B82F6 (Mavi - seyahat etiketi)",
+        "Deep-purple: #7C3AED (Derin mor - arka plan gradient)",
+        "Pink: #FF80AB (Pembe - profil etiketleri)",
+        "Green-online: #10b981 (Çevrimiçi - yeşil nokta)",
+        "Green-like: #10E8A0 (Beğenildi - yeşil vurgu)",
+        "Red-nope: #FF3B5C (Geç - kırmızı vurgu)",
+        "Token-gold: #f59e0b (Token - altın sarısı)",
+        "Token-amber: #fbbf24 (Token vurgu - amber)",
+        "Token-orange: #d97706 (Token koyu - turuncu)",
+        "Text-primary: #ffffff (Beyaz - ana metin)",
+        "Text-secondary: rgba(255,255,255,0.75) (İkincil metin)",
+        "Text-muted: rgba(255,255,255,0.40) (Pasif metin)",
+        "Text-subtle: rgba(255,255,255,0.30) (Hint metin)",
+        "Tag-music: #D08FFF (Müzik - mor ton)",
+        "Tag-travel: #7BBFFF (Seyahat - mavi ton)",
+        "Tag-photo: #FBCA6A (Fotoğraf - sarı ton)",
+        "Tag-sport: #5DDCB0 (Spor - yeşil ton)",
+        "Tag-food: #FF8A8A (Yemek - kırmızı ton)",
+        "Tag-art: #FF8EC8 (Sanat - pembe ton)",
+        "Tag-game: #A5B4FC (Oyun - indigo ton)"
+      ]
+    }
+  },
+  "event": {
+    "title": "Event Alanı",
+    "A": {
+      "features": [
+        "Canlı Yayın, Sesli Oda, Oyun sekmeleri arası geçiş (Tab Switcher)",
+        "Yatay kategori filtresi (Popüler, PK, Yakındakiler, vb.)",
+        "Hero Card sistemi (Öne çıkan içerikler için geniş kart)",
+        "Dinamik filtreleme (Tümü/Popüler/VIP/Yeni)",
+        "Medyum (AI Fal)",
+        "DateMatch (Eşleşme)",
+        "VoiceMatch (Sesli Tanışma)",
+        "StepToken (Adım Kazanç)",
+        "AI Asistan",
+        "Ne Giysem (Moda Danışmanı)",
+        "Dr. Healthy (Sağlık Asistanı)",
+        "Yayın kartları (Hero/Grid görünümleri)",
+        "Kategori etiketleri (Oyun, Müzik, Dans, PK, vb.)",
+        "Flame Badge (Popüler gösterge)",
+        "İzleyici sayacı (Viewer Count)",
+        "Yayıncı bilgisi (Avatar + Bayrak)",
+        "Metrikler (Beğeni/Token)",
+        "Oda listesi (Süre, Bağış, Dinleyici sayısı)",
+        "Konuşan kişi göstergesi (Speaking Now)",
+        "Söz kuyruğu (Waiting Queue - +n kişi)",
+        "Kategori bazlı renklendirme (Müzik=Mavi, Sohbet=Cyan, vb.)",
+        "Katıl butonu (Join)",
+        "Alt sekmeler: Oyunlar / Odalar / Sıralama",
+        "Oyun kategorileri (Aksiyon, Masa, Kart, vb.)",
+        "Oyun Odaları listesi (Doluluk, Host, Slot görünümü)",
+        "Oyun Gezgini (Grid navigasyon)",
+        "Oyun Kataloğu (Tüm Oyunlar - 3 sütunlu grid)",
+        "Accordion Launcher (Canlı/Ses/Oyun seçimi)",
+        "Canlı Yayın Ayarları (Başlık, Kategori, Oda Tipi)",
+        "Sesli Oda Ayarları (Mikrofon sayısı 2-12, Konu)",
+        "Oyun Odası Ayarları (Oyun seçimi, Max oyuncu 2-10)",
+        "VIP Paket Seçimi (Giriş/Orta/İleri seviye)",
+        "Token ile Giriş (Min-Max limitli input)",
+        "Arkadaş Davet Etme (Chip seçim)",
+        "Kişisel profil kartı (Seviye, XP bar)",
+        "Podium (İlk 3 - Altın/Gümüş/Bronz)",
+        "Sıralama listesi (Günlük/Haftalık/Aylık)",
+        "Seviye rozetleri (Rookie > Grandmaster > Legend)",
+        "Günlük Seri (Streak) takvimi",
+        "XP Çarpanları (2x, 3x, 5x)",
+        "Token P2W Banner (Hızlı yükselme)",
+        "Global arama (Oyun odaları için)",
+        "Segment filtreleme (Kişi sayısı: 1v1, 2-4, 4+)",
+        "Kategori filtreleme (Chip'ler)",
+        "Sıralama filtreleri (Popüler, Yeni, Yakın)",
+        "Arkadaş strip'i (Oda içinde kimler var)",
+        "DM'den davet etme (Chip listesi)",
+        "Host bilgisi (Bayrak + Cinsiyet renk kodu)",
+        "Katılımcı avatar stack'leri",
+        "Oda tipi seçimi (Herkese Açık / VIP)",
+        "Token maliyet girişi (Validation'lu)",
+        "Paket kilitleri (Level bazlı erişim)",
+        "Kazanç seviyesi belirleme"
+      ],
+      "tech": [
+        "iPhone 16 Pro Frame (402x874px, Dynamic Island)",
+        "Glassmorphism Header (Blur + Gradient border)",
+        "Tab Switcher (Segmented control, Neon active state)",
+        "Hamburger Menu (Modüler panel açma)",
+        "Create Room Button (Plus icon, rotate animation)",
+        "Home Bar & Status Bar (Native iOS simülasyonu)",
+        "Hero Card (16:9, Full width, rounded 28px)",
+        "Grid Card (3:4 aspect ratio)",
+        "Thumbnail container (Image overlay, gradient fade)",
+        "Category Tag (Absolute positioned, emoji + text)",
+        "Flame Badge (🔥 Popüler indicator)",
+        "Viewer Count Badge (Glassmorphism pill, eye icon)",
+        "Streamer Row (Avatar + Flag overlay + Name)",
+        "Metric Pills (Dual: Likes + Tokens, Neumorphism style)",
+        "Gradient border (Kategori rengine göre değişken)",
+        "Üst şerit (Kalıcı gradient line)",
+        "Header (Title + Badges container)",
+        "Host Row (Avatar ring: Erkek=Cyan, Kadın=Pembe)",
+        "Metric Trio (Duration / Donation / Listeners)",
+        "Speaking Indicator (Pulse dot + Avatar)",
+        "Queue Stack (Overlapping avatars, +n button)",
+        "Action Button (Gradient Join button)",
+        "Game Card (Thumbnail + Badge + Player count)",
+        "Game Row (Horizontal scroll, snap scroll)",
+        "Game Grid (3-column, dense layout)",
+        "Room Card (Icon + Title + Host + Slots)",
+        "Slot indicators (Avatar circles / Empty dashed)",
+        "Action variants (Join/Watch buttons)",
+        "2-column grid layout (Asymmetric)",
+        "Gradient backgrounds (Her modül için özel)",
+        "Icon containers (Rounded square, 46px)",
+        "Status badges (AI/HOT/NEW/PRO/EARN)",
+        "Glow effects (Absolute positioned blur)",
+        "Noise texture overlay (SVG filter)",
+        "Arrow affordance (Bottom-right chevron)",
+        "Accordion Launcher (Slide-in from right)",
+        "Trigger Cards (Icon + Label + Chevron)",
+        "Expandable Panels (Max-height animation)",
+        "Custom Dropdowns (Category/Game selection)",
+        "Room Type Selector (Dual card: Public/VIP)",
+        "VIP Package Grid (3'lü seçim, kilitli/aktif)",
+        "Number Pills (2/4/6/8/12 selection)",
+        "Invite Chips (Avatar + Name, toggle select)",
+        "Sticky Submit (Gradient button, cost badge)",
+        "Text inputs (Rounded 12px, focus glow)",
+        "Search bar (Icon left, clear button right)",
+        "Segmented controls (Pill style, active gradient)",
+        "Custom selects (Dropdown with color dots)",
+        "Validation states (Disabled submit, hint text)",
+        "Profile Header (Avatar + Level badge overlay)",
+        "XP Progress Bar (Gradient: Magenta->Cyan)",
+        "Podium Layout (Flex, 2nd-1st-3rd order)",
+        "Crown icons (Absolute positioned)",
+        "Rank badges (Gold/Silver/Bronze colors)",
+        "Streak Calendar (7-day grid, checkmarks)",
+        "Multiplier Cards (Horizontal scroll, locked/unlocked)",
+        "Tier badges (Rookie, Master, Legend, Grandmaster)",
+        "Module Overlay (Full screen, blur backdrop)",
+        "Create Room Overlay (Right-aligned launcher)",
+        "Game Browser Overlay (Modal with grid)",
+        "Queue Sheet (Bottom sheet, drag handle)",
+        "XP Info Sheet (Bottom sheet, scrollable content)",
+        "Hover/Tap scales (0.96-0.98 transform)",
+        "Pulse animations (Live indicators)",
+        "Gradient shifts (Border glow animations)",
+        "Icon rotations (Plus -> X, Hamburger -> Close)",
+        "Skeleton/Loading (Shimmer effects implied)"
+      ],
+      "colors": [
+        "Neon Magenta: #FF00AA (Primary accent, Live streaming, PK)",
+        "Neon Cyan: #00F0FF (Secondary, Audio rooms, Tech)",
+        "Neon Gold: #FFD700 (Token economy, VIP, Wealth)",
+        "Vibella Purple: #8B5CF6 (Main brand, Modüller)",
+        "Vibella Cyan: #45D3D0 (Tertiary, Success states)",
+        "Sohbet (Chat): #0EA5E9 (Sky blue)",
+        "Müzik (Music): #EC4899 (Pink)",
+        "Oyun (Game): #F97316 (Orange)",
+        "Spor (Sports): #22C55E (Green)",
+        "Eğitim (Edu): #A855F7 (Purple)",
+        "Finans: #10B981 (Emerald)",
+        "Komedi: #EAB308 (Yellow)",
+        "Film (Movie): #EF4444 (Red)",
+        "Anime: #FB923C (Orange-light)",
+        "Sanat (Art): #C026D3 (Fuchsia)",
+        "Gece (Night): #3730A3 (Indigo)",
+        "VIP/Altın: #F59E0B (Amber)",
+        "Deep Space: #0A0A0F (Main background)",
+        "Cosmic Purple: #1A0B2E (Gradient mid)",
+        "Midnight Blue: #0D1B2A (Gradient end)",
+        "Card Background: rgba(255,255,255,0.04) (Glass base)",
+        "Card Border: rgba(255,255,255,0.08) (Subtle borders)",
+        "Glass BG: rgba(255, 255, 255, 0.08)",
+        "Glass Border: rgba(255, 255, 255, 0.15)",
+        "Glass Blur: blur(20px) saturate(160%)",
+        "Glow Magenta: 0 0 60px rgba(255, 0, 170, 0.4)",
+        "Glow Cyan: 0 0 60px rgba(0, 240, 255, 0.4)",
+        "Legend: #FF00AA (Pink gradient)",
+        "Grandmaster: #FF006E (Dark pink)",
+        "Master: #FF6B9D (Light pink)",
+        "Diamond: #B9F2FF (Cyan-white)",
+        "Platinum: #E5E4E2 (Light gray)",
+        "Gold: #FFD700 (Gold)",
+        "Silver: #C0C0C0 (Silver)",
+        "Bronze: #CD7F32 (Bronze)",
+        "Rookie: #8B5CF6 (Purple)"
+      ]
+    },
+    "B": {
+      "features": [
+        "Dynamic Island (Kamera + Hoparlör simülasyonu)",
+        "Status Bar (Saat, Sinyal, WiFi, Batarya)",
+        "Home Bar (Gesture indicator)",
+        "Side Buttons (Volume, Power - Dekoratif)",
+        "Header (Back button, Title, Actions)",
+        "Tab Switcher (Canlı / Ses / Oyun)",
+        "Hamburger Menu (Modül erişimi)",
+        "Create Room Button (+) Floating action",
+        "Room Type Selector (Canlı Yayın / Ses Odası / Oyun)",
+        "Form Wizard (Başlık, Kategori, Oda Tipi)",
+        "VIP Package Selector (Giriş/Orta/İleri Seviye)",
+        "Token Input (1-2000 arası giriş ücreti)",
+        "Friend Invitation Chips (DM davet sistemi)",
+        "Module Cards (7 farklı modül)",
+        "Category Grouping (Sosyal / Kazan / Araçlar)",
+        "Status Badges (HOT / NEW / AI / EARN / PRO)",
+        "Soon Chips (Yakında gelen özellikler)",
+        "Category Filter Bar (21 kategori)",
+        "Stream Cards (Twitch-style anatomy)",
+        "Hero Card (Full-width featured stream)",
+        "Live Badge (Pulsing red indicator)",
+        "Viewer Count (Real-time display)",
+        "Streamer Info (Avatar + Flag + Name)",
+        "Engagement Metrics (Likes + Tokens)",
+        "Category Filter (20 kategori)",
+        "Room Cards (Left accent bar color-coded)",
+        "Speaker Grid (3-slot layout)",
+        "Active Speaker Wave Animation",
+        "Queue System (Söz kuyruğu)",
+        "Join Button (Category-tinted)",
+        "Games Browser (Steam Library style)",
+        "Game Rooms (Discord + Hago hybrid)",
+        "Ranking System (Leaderboard)",
+        "Streak System (Daily login rewards)",
+        "User Card (Self position display)",
+        "Podium Display (Top 3 users)",
+        "XP Progress Bar (Level indicator)",
+        "Period Selector (Günlük/Haftalık/Aylık)",
+        "Category Tabs (Token/XP/Streak)",
+        "VIP Room Entry Fees",
+        "Earning Tiers (3 seviye)",
+        "Cost Calculation (Submit button integration)",
+        "Balance Indicators (🪙 iconography)",
+        "Queue Sheet Overlay",
+        "Rank Display (Sıralama)",
+        "Wait Time Indicator",
+        "Hand Raise System"
+      ],
+      "tech": [
+        "iphone-frame (Cihaz çerçevesi)",
+        "iphone-screen (Scrollable viewport)",
+        "app-container (Main scroll area)",
+        "content-area (Tab içerik alanı)",
+        "modules-scroll (Modül listesi)",
+        "create-room-overlay (Backdrop + Sheet)",
+        "module-overlay (Blur + Panel)",
+        "queue-sheet-overlay (Söz kuyruğu)",
+        "rk-xpinfo-overlay (XP bilgi sheet)",
+        "games-all-overlay (Tüm oyunlar modal)",
+        "gro-browser-overlay (Oyun gezgini)",
+        "stream-card (Canlı yayın - Twitch style)",
+        "room-card (Ses odası - Clubhouse style)",
+        "game-card (Oyun listesi - Steam style)",
+        "gro-card (Oyun odası - Discord+Hago)",
+        "module-card (Modül tanıtım)",
+        "rk-me-card (Kendi sıralama kartı)",
+        "tab-switcher (Ana tab bar)",
+        "category-filter (Yatay scroll chip list)",
+        "game-subnav (Oyun alt navigasyonu)",
+        "header-actions (Üst bar aksiyonları)",
+        "hamburger-btn (Modül menü trigger)",
+        "rp-input (Text input)",
+        "rp-select-btn (Custom dropdown trigger)",
+        "rp-dropdown (Custom select list)",
+        "rp-room-type-opt (Radio-style selector)",
+        "rp-vip-pkg (Package selector)",
+        "rp-player-opt (Mikrofon/oyuncu sayısı)",
+        "rp-invite-chip (Friend selector chip)",
+        "create-room-btn (Floating action)",
+        "header-close (Gradient border button)",
+        "join-btn (Category-colored outline)",
+        "rp-submit (Gradient submit)",
+        "game-card-play-btn (Steam style)",
+        "gro-act (Join/Watch action)",
+        "rk-info-btn (Info pill button)",
+        "streamer-avatar (Rounded avatar + border)",
+        "room-speaker-av (Active speaker ring)",
+        "twitch-live-badge (Pulsing live indicator)",
+        "category-chip (Filter pill)",
+        "module-badge (Status label)",
+        "stream-category-tag (Tag badge)",
+        "room-wave (Ses dalgası animasyonu)",
+        "tlb-dot (Pulse animasyonu)",
+        "entering (Slide-in animasyonu)",
+        "backdrop-filter (Blur effects)",
+        "box-shadow (Glow effects)"
+      ],
+      "colors": [
+        "Neon Magenta: #FF00AA (Primary accent)",
+        "Neon Cyan: #00F0FF (Secondary accent)",
+        "Neon Gold: #FFD700 (Token/VIP indicator)",
+        "Vibella Purple: #8B5CF6 (Brand purple)",
+        "Vibella Cyan: #45D3D0 (Brand teal)",
+        "Deep Black: #06040E (Darkest base)",
+        "Dark Purple: #110826 (Mid gradient)",
+        "Dark Blue: #060B18 (Cool gradient)",
+        "Card Background: #0C0C18 (Card surfaces)",
+        "Glass BG: rgba(255,255,255,0.08)",
+        "Glass Border: rgba(255,255,255,0.15)",
+        "Glass Blur: 20px (backdrop-filter)",
+        "Live/Stream: #E91916 (Twitch red)",
+        "Audio/Chat: #0EA5E9 (Sky blue)",
+        "Game: #F97316 (Orange)",
+        "Music: #EC4899 (Pink)",
+        "Sports: #22C55E (Green)",
+        "Comedy: #EAB308 (Yellow)",
+        "VIP/Gold: #F59E0B (Amber)",
+        "Primary Gradient: linear-gradient(135deg, #FF00AA, #00F0FF)",
+        "Gold Gradient: linear-gradient(135deg, #FFD700, #FF00AA)"
+      ]
+    },
+    "C": {
+      "features": [
+        "Çoklu kategori filtreleme (21 kategori)",
+        "Hero card + grid layout (portrait/landscape)",
+        "Canlı gösterge (pulse animasyonlu)",
+        "İzleyici sayısı ve etkileşim metrikleri",
+        "PK Savaşı modu (VS overlay)",
+        "VIP odaları (token girişi)",
+        "Yakındakiler (konum bazlı)",
+        "18 kategori desteği (Müzik, Sohbet, Oyun, vs.)",
+        "3 slot konuşmacı grid'i (Clubhouse tarzı)",
+        "Söz sırası kuyruğu (queue system)",
+        "Ses dalgası animasyonu (speaking indicator)",
+        "Mikrofon sayısı seçimi (2-12)",
+        "VIP oda seçenekleri",
+        "Kategori bazlı renk kodlaması",
+        "3 alt-sekme: Oyunlar / Odalar / Sıralama",
+        "Steam Library tarzı liste görünümü",
+        "Horizontal scroll şeritleri",
+        "Tümünü Gör genişletilmiş grid",
+        "Oyun odası oluşturma (12 oyun)",
+        "Slot bazlı oyuncu gösterimi",
+        "Sıralama sistemi (XP, Token, Streak)",
+        "3 oda tipi: Canlı / Ses / Oyun",
+        "VIP seviye seçimi (Entry/Mid/Pro)",
+        "Token giriş ücreti ayarlama",
+        "Kategori dropdown seçimi",
+        "Davetli listesi (invite chips)",
+        "Anlık oda önizleme",
+        "7 aktif modül kartı",
+        "2 yakında geliyor placeholder",
+        "Bento grid layout",
+        "Glow efektli kartlar",
+        "Full-screen overlay",
+        "Tab geçişleri (slide animasyon)",
+        "Kategori filtreleme (snake indicator)",
+        "Bottom sheet açılışları",
+        "Hamburger menü animasyonu",
+        "Pull-to-refresh hazırlığı",
+        "Scroll-based lazy loading"
+      ],
+      "tech": [
+        "Tab Switcher (3 ana sekme)",
+        "Category Filter (horizontal scroll)",
+        "Sub-navigation (game tabs)",
+        "Breadcrumb (back button)",
+        "Status Bar (iOS native)",
+        "Stream Card (Twitch browse anatomy)",
+        "Room Card (Clubhouse anatomy)",
+        "Game Card (Steam library style)",
+        "Game Room Card (Discord + HAGO hybrid)",
+        "Module Card (Bento grid)",
+        "Create Room Launcher (bottom sheet)",
+        "Module Panel (full-screen)",
+        "Queue Sheet (speaker queue)",
+        "XP Info Sheet (ranking details)",
+        "Games All Overlay (expanded grid)",
+        "Backdrop blur (glassmorphism)",
+        "Text Input (floating label)",
+        "Custom Dropdown (searchable)",
+        "Toggle Switch (iOS style)",
+        "Selection Chips (single/multi)",
+        "Radio Button Group",
+        "Number Input (token amount)",
+        "Live Badge (pulse animation)",
+        "Viewer Count (glass pill)",
+        "Flame Badge (trending)",
+        "Category Tag (color coded)",
+        "Level Badge (progress ring)",
+        "XP Progress Bar (gradient fill)",
+        "Tab indicator (snake transition)",
+        "Card hover/active states",
+        "Bottom sheet slide",
+        "Micro-interactions (button press)",
+        "Skeleton loading (placeholder)",
+        "Wave bars (speaking indicator)"
+      ],
+      "colors": [
+        "Neon Magenta: #FF00AA (Primary accent, CTAs)",
+        "Neon Cyan: #00F0FF (Secondary accent, glows)",
+        "Neon Gold: #FFD700 (VIP, premium, tokens)",
+        "Vibella Purple: #8B5CF6 (Brand primary)",
+        "Vibella Cyan: #45D3D0 (Brand secondary)",
+        "Amber: #f59e0b (Primary warm accent)",
+        "Rose: #f43f5e (Live streams, danger)",
+        "Indigo: #6366f1 (Games, info)",
+        "Sky: #0ea5e9 (Links, highlights)",
+        "Warm Background: #111018 (Dark base)",
+        "Surface Glass: rgba(255,255,255,0.055) (Cards)",
+        "Border Subtle: rgba(255,255,255,0.09) (Dividers)",
+        "Müzik: #ec4899 (Pink)",
+        "Sohbet: #0ea5e9 (Sky)",
+        "Oyun: #f97316 (Orange)",
+        "Spor: #22c55e (Green)",
+        "Gündem: #6366f1 (Indigo)",
+        "Komedi: #eab308 (Yellow)",
+        "Film & Dizi: #ef4444 (Red)",
+        "Anime: #fb923c (Light Orange)",
+        "Teknoloji: #06b6d4 (Cyan)",
+        "Finans: #10b981 (Emerald)",
+        "Eğitim: #a855f7 (Purple)",
+        "Sağlık: #14b8a6 (Teal)",
+        "Seyahat: #f59e0b (Amber)",
+        "Yemek: #ea580c (Dark Orange)",
+        "Sanat: #c026d3 (Fuchsia)",
+        "Burç & Fal: #7c3aed (Violet)",
+        "Gece Sohbeti: #3730a3 (Dark Indigo)",
+        "Doğa & Hayvan: #16a34a (Green)",
+        "Success: #22c55e (Green)",
+        "Warning: #f59e0b (Amber)",
+        "Error: #ef4444 (Red)",
+        "Info: #0ea5e9 (Sky)"
+      ]
+    }
+  },
+  "fal": {
+    "title": "AI Fal (Mystic / Aura)",
+    "A": {
+      "features": [
+        "Multi-Angle Upload: 2 fincan (farklı açı) + 1 tabak fotoğrafı desteği",
+        "Visual Progress: DOT indicator sistemi ile yükleme durum takibi",
+        "Native Capture: capture='environment' ile doğrudan kamera erişimi",
+        "Ritual Flow: Fotoğraf onay adımları, başlat butonu validasyonu",
+        "3 Kart Yayılımı: Geçmiş (Past), Şimdi (Present), Gelecek (Future) slotları",
+        "Hibrit Seçim: Touch drag-drop (ghost element) + tap-to-select kombinasyonu",
+        "Horizontal Deck: CSS scroll-snap ile momentum scroll, 25 kart havuzu",
+        "Slot Validation: Dolu slot kontrolü, seçim counter (0/3)",
+        "Palm Scanner: Simüle edilmiş tarayıcı çizgisi (scan-line animation)",
+        "Single Upload: Avuç içi fotoğrafı (environment capture)",
+        "Visual Feedback: 3 saniyelik tarama animasyonu (progressive blur)",
+        "Çizgi Analizi: Kalp, kader ve beyin çizgisi yorum algoritması simülasyonu",
+        "Interactive Bowl: SVG/CSS gradient ile su kasesi renderı",
+        "Drop Animation: Touch-triggered damla düşüşü (water-drop keyframes)",
+        "Ripple Effect: Su dalga genişlemesi (splashExpand animation)",
+        "Symbol Reveal: Yüzeyde beliren sembollerin fade-in gösterimi",
+        "Card Selection: 3 kart arasından single-select mekanizması",
+        "Feather Animation: CSS keyframes ile tüy düşüşü (featherFall)",
+        "Angelic Theme: White/gold color scheme, halo efektleri",
+        "Message Reveal: Kart çevirme animasyonu (cardFlip)",
+        "Crystal Orb: Radial gradient ile 3D küre efekti (crystalGlow)",
+        "Particle System: Touch-triggered 8 yönlü parçacık saçılımı",
+        "Flash Effect: Beyaz patlama (flash keyframes) ile reveal anı",
+        "Gyro Simulation: CSS transform ile hafif rotasyon efekti",
+        "Natural Input: Çok satırlı metin girişi (textarea)",
+        "Category Filter: Aşk, Kariyer, Para, Genel badge filtresi",
+        "Contextual Cost: Kategoriye göre token maliyeti değişimi",
+        "AI Simulation: Loading state, natural language processing animasyonu",
+        "Zodiac Grid: 4x3 responsive grid, 12 burç desteği",
+        "Aspect Bars: Aşk, Kariyer, Sağlık, Para için linear progress bar",
+        "Lucky Numbers: Animasyonlu şanslı sayı daireleri (glowPulse)",
+        "Dynamic Content: Seçili burca göre conditional text render",
+        "Balance Display: Global header badge, real-time update",
+        "Package System: 4 tier (50/150/350/800) satın alma seçenekleri",
+        "Cost Structure: Fal bazlı dinamik maliyetler (20-45 token arası)",
+        "Daily Reset: Her gün 00:00'da ücretsiz hak yenilenmesi",
+        "Countdown Timer: 5 saniyelik progress bar ile zorunlu bekleme",
+        "Skip Option: 5 token karşılığı reklam atlama mekanizması",
+        "History List: Tarih sıralamalı fal geçmişi, fav icon desteği",
+        "Detail View: Kaydedilmiş falların full-text görüntülenmesi",
+        "Share Function: WhatsApp entegrasyonu ile metin paylaşımı"
+      ],
+      "tech": [
+        "iPhone 14 Pro simülasyonu (393x852px, border-radius: 55px)",
+        "Dynamic Island (120x35px, static)",
+        "Safe Area: 54px status bar, 70px bottom nav padding",
+        "Vanilla Router: router.navigate() SPA mimarisi, screen-based routing",
+        "Bottom Tab Bar: 3-item navigation (Home, History, Shop)",
+        "Global Back Button: Context-aware floating button",
+        "Base Panel: backdrop-filter: blur(20px), rgba(255,255,255,0.05) bg",
+        "Gradient Border: mask-composite: exclude ile border gradient efekti",
+        "Parchment Variant: Gold-tinted glass (rgba(201,162,39,0.12))",
+        "Strong Variant: 30px blur, higher opacity (0.08)",
+        "Mystic Card: Hover translateY(-8px), gold glow shadow",
+        "Tarot Card: perspective 3D, flip animation (rotateY)",
+        "Angel Card: White glassmorphism, selected state border",
+        "Zodiac Item: Square aspect-ratio, hover scale(1.05)",
+        "@keyframes Float: translateY loop (6s ease-in-out infinite)",
+        "@keyframes Pulse Glow: Box-shadow alternation (gold/cyan)",
+        "@keyframes Scan Line: Absolute positioned laser sweep (2s ease-in-out)",
+        "@keyframes Ripple: Scale transform on click (0.6s ease-out)",
+        "@keyframes Smoke Rise: Opacity + translateY combination (3s ease-out)",
+        "File Upload: Hidden input, custom drop zone styling",
+        "Drag Overlay: Visual feedback (border-color change)",
+        "Text Input: Custom textarea, placeholder styling",
+        "Category Badge: Pill-shaped buttons, color-coded states",
+        "Toast System: Absolute positioned, slide-up animation",
+        "Modal Overlay: Backdrop blur, centered content, click-outside close",
+        "Progress Ring: SVG circle, stroke-dashoffset manipulation",
+        "Loading Orb: Conic gradient spinner (1s linear infinite)",
+        "Horizontal Deck: overflow-x: scroll, scroll-snap-type: x proximity",
+        "Momentum Scroll: -webkit-overflow-scrolling: touch",
+        "Scroll Hide: ::-webkit-scrollbar { display: none }",
+        "Token Badge: Coin icon + monospace amount display",
+        "Typography: Cinzel Decorative (serif), Space Grotesk (UI), Cormorant Garamond (body), Inter (fallback)"
+      ],
+      "colors": [
+        "Mystic Navy: #0A0A1F (Primary background, deep void)",
+        "Mystic Navy Light: #121230 (Secondary surface, cards)",
+        "Pure Black: #000000 (Body background, device frame)",
+        "Mystic Purple: #C026D3 (Primary action, mystical glow)",
+        "Mystic Magenta: #FF00AA (Secondary accent, love/relationship)",
+        "Mystic Cyan: #00F0FF (Tertiary accent, water/scanner themes)",
+        "Gold Primary: #C9A227 (Main gold, buttons, highlights)",
+        "Gold Light: #E8C547 (Hover states, bright accents)",
+        "Gold Dim: #8A6D18 (Borders, disabled states)",
+        "Gold Alpha Heavy: rgba(201,162,39,0.4) (Glow effects)",
+        "Gold Alpha Light: rgba(201,162,39,0.08) (Parchment bg)",
+        "Coffee Dark: #8B4513 (Coffee reading theme primary)",
+        "Coffee Light: #A0522D (Secondary coffee accent)",
+        "Glass BG: rgba(255,255,255,0.05) (Standard panels)",
+        "Glass BG Strong: rgba(255,255,255,0.08) (Elevated panels)",
+        "Glass Border: rgba(255,255,255,0.10) (Subtle dividers)",
+        "Glass Border Gold: rgba(201,162,39,0.25) (Parchment borders)",
+        "Cream: #F5F5DC (Primary text, high contrast)",
+        "Gray Primary: #4A4A4A (Secondary text, labels)",
+        "Gray Secondary: #6A6A6A (Tertiary text, dates)",
+        "Gold Text: #A09070 (Muted gold, captions)",
+        "Free Badge: rgba(0,220,255,0.13) bg, #55deff text, #00dcff border",
+        "Token Badge: rgba(201,162,39,0.13) bg, #d4a93a text, #c9a227 border",
+        "Premium Badge: rgba(200,50,230,0.13) bg, #d060e8 text, #c832e6 border"
+      ]
+    },
+    "B": {
+      "features": [
+        "Kahve Falı - Fotoğraf yükleme (fincan + tabak), 4 adımlık ritüel",
+        "Tarot Falı - 22 kart destesi, drag-drop seçim, ters kart desteği",
+        "El Falı - Kamera/Galeri seçimi, AI analiz simülasyonu",
+        "Su Falı - Canvas etkileşimli dalga animasyonu (20+ stroke aktivasyon)",
+        "Melek Falı - 4 melek kartı, soru girişi + sezgisel seçim",
+        "Kristal Falı - Canvas parçacık sistemi (50+ hareket aktivasyon)",
+        "Rüya Yorumu - Metin girişi, 4 kategori etiketi (Aşk/Kariyer/Para/Genel)",
+        "Günlük/Haftalık/Aylık yorum modları",
+        "12 burç zodyak grid",
+        "Aspect değerlendirmesi (Aşk/Kariyer/Sağlık/Para barları)",
+        "Zodiac picker dropdown (Ana sayfa entegrasyonu)",
+        "LocalStorage burç kaydı",
+        "Profil yönetimi (8 alan: kişisel/yıldızname bilgileri)",
+        "Fal geçmişi (favori/star sistemi)",
+        "Rüya günlüğü (otomatik kayıt)",
+        "Token/Sikke sistemi (başlangıç: 150)",
+        "4 paket (50/150/350/1000 sikke)",
+        "Bonus tier sistemi (%25/%40/%65)",
+        "Bottom sheet satın alma modalı",
+        "Anlık bakiye güncelleme",
+        "5 saniyelik reklam/loading ekranı (progress bar)",
+        "Reklamı atla seçeneği (5 sikke)",
+        "Toast bildirim sistemi",
+        "Drawer navigasyon (sol menü)",
+        "Screen routing (15+ ekran)",
+        "Canvas interaktif elementler (2 adet)"
+      ],
+      "tech": [
+        "iphone - Ana container (393x852px, iPhone frame)",
+        "screen - Ekran yönetimi (absolute positioning)",
+        "drawer - Sol navigasyon menüsü (270px genişlik)",
+        "topbar - Üst bar (menu + title + token chip)",
+        "chamber-content - Fal odası içerik alanı",
+        "menu-btn - Hamburger menü butonu",
+        "drawer-item - Menü öğeleri (active state destekli)",
+        "drawer-overlay - Karartma katmanı",
+        "back-x - Geri dönüş butonu",
+        "token-chip - Bakiye göstergesi",
+        "c-btn - Ana buton (6 varyant: purple/cyan/gold/ghost/white/magenta)",
+        "c-btn:disabled - Disabled state",
+        "c-btn:active - Scale transform (0.97)",
+        "c-tag - Kategori etiketleri (toggle destekli)",
+        "c-panel - Cam efektli panel (backdrop-blur)",
+        "c-tarot-card - Tarot kartları (hover/selected states)",
+        "c-angel-card - Melek kartları (gradient background)",
+        "c-slot - Tarot drop zone (dashed border)",
+        "s-pkg - Mağaza paket kartları",
+        "c-upload - Dosya yükleme alanı (dashed border)",
+        "c-textarea - Çok satırlı metin girişi",
+        "pf-input - Profil input alanları",
+        "pf-chip - Seçim çipleri (radio behavior)",
+        "portal-glow - Nefes alan radial gradient",
+        "chamber-halo - Odak ışığı (blur)",
+        "c-particle - Canvas parçacıklar",
+        "c-star - Yıldız animasyonu (twinkle)",
+        "ad-orb - Yükleme animasyonu (pulse)",
+        "c-orb - Kristal küre widget",
+        "c-steps - Numaralı adım listesi",
+        "c-zodiac-grid - Burç seçim gridi",
+        "c-aspect-bar - İlerleme çubukları",
+        "sigil - Dekoratif ayraç",
+        "Typography: Syncopate (başlık), Cormorant (vücut), DM Sans (UI)"
+      ],
+      "colors": [
+        "Ink: #08070F (Ana arka plan - en koyu)",
+        "Ink2: #0E0B1A (Drawer arka planı)",
+        "Ink3: #14101F (Yükseltilmiş yüzey)",
+        "Surface: rgba(255,255,255,0.04) (Cam efekti)",
+        "Border: rgba(255,255,255,0.07) (Ince kenarlık)",
+        "Text: #F0EBE3 (Birincil metin)",
+        "Text2: rgba(240,235,227,0.55) (İkincil metin)",
+        "Text3: rgba(240,235,227,0.25) (Üçüncül metin/vurgu)",
+        "Gold: #C8A227 (Birincil vurgu - altın)",
+        "Gold-s: rgba(200,162,39,0.15) (Altın arka plan)",
+        "Cyan: #00C0FF (İkincil vurgu - mavi)",
+        "Blue: #3366FF (Link/interaktif)",
+        "Purple: #7733FF (Spiritüel vurgu)",
+        "Magenta: #CC00FF (Kristal/Mistik)",
+        "Pink: #FF33FF (Ekstra vurgu)",
+        "Ch-Coffee: #1C0E06 (Kahve falı - ısıtıcı ton)",
+        "Ch-Tarot: #0C0519 (Tarot - mor/mistik)",
+        "Ch-Palm: #030C18 (El falı - mavi ton)",
+        "Ch-Water: #02101A (Su falı - turkuaz)",
+        "Ch-Angel: #141208 (Melek - altın ton)",
+        "Ch-Crystal: #0A0415 (Kristal - mor derinlik)",
+        "Ch-Dream: #060818 (Rüya - mor/lacivert)",
+        "Ch-Horo: #070514 (Burç - koyu mor)"
+      ]
+    },
+    "C": {
+      "features": [
+        "Zodiac Pill: Collapsible burç seçici (localStorage persistency)",
+        "Energy Badge: Token display + shop navigation",
+        "Fal Bubbles: 2-tier grid (big cards + small bubbles)",
+        "Quick Links: Fal geçmişi + Rüya günlüğü shortcut",
+        "Daily Quote: Static Mevlana alıntısı",
+        "Dual Upload: Fincan (2 açı) + Tabak fotoğrafı",
+        "Visual Steps: 3 adımlı hazırlanma rehberi",
+        "Progress Indicator: Checkmark transformation on upload",
+        "Element Theme: Toprak (earth) elementi, warm orange gradient",
+        "22 Kart Destesi: Horizontal scrollable deck",
+        "Drag-Drop + Tap: Hibrit seçim mekanizması",
+        "3 Slot Sistem: Geçmiş/Şimdi/Gelecek (reversible deste)",
+        "Reversed Cards: Ters bırakma desteği (65% threshold)",
+        "Drop Zones: Visual feedback (border-color change)",
+        "Dual Input: Kamera (live) veya Galeri (file)",
+        "Selection Highlight: Border color state management",
+        "Palm Lines Info: Kalp/Kader/Akıl çizgisi açıklamaları",
+        "Element Theme: Toprak elementi, cyan accent",
+        "Interactive Canvas: 210x210px touch-responsive water bowl",
+        "Ripple Physics: Particle system with decay animation",
+        "Activation Threshold: 15+ ripple triggers enable button",
+        "Hint Overlay: Fade-out on first interaction",
+        "Element Theme: Su elementi, ocean blue palette",
+        "Question Input: Textarea with min-length validation (3 chars)",
+        "4 Kart Seçimi: Uriel, Mikail, Cebrail, Raphael",
+        "Angel Info Panel: Sembol ve enerji açıklamaları",
+        "Card Reveal: Inner emoji + numeral display on selection",
+        "Element Theme: Hava elementi, soft white/pink",
+        "Interactive Canvas: 190x190px crystal sphere",
+        "Particle Trail: Mouse/touch drag spawns colored particles",
+        "Activation Threshold: 40+ particle triggers enable button",
+        "Hint Overlay: Icon-based initial state",
+        "Element Theme: Ateş elementi, purple gradient",
+        "Free Text Input: Multi-line textarea",
+        "Category Tags: Genel/Aşk/Kariyer/Para (single-select)",
+        "Dream Journal: Persistent entry list with date stamps",
+        "Element Theme: Su elementi, deep blue",
+        "12 Zodiac Grid: 4x3 responsive layout",
+        "Dynamic Content: Günlük/Haftalık/Aylık modları",
+        "Aspect Bars: Aşk/Kariyer/Sağlık/Para progress bars",
+        "LocalStorage: Seçili burç persistency",
+        "Personal Info: Ad, Doğum tarihi/yeri/saati",
+        "Chip Selectors: Cinsiyet, Medeni durum, İş durumu",
+        "Validation: Min-length ve required field checks",
+        "Save Feedback: Toast confirmation",
+        "Entry List: Tarih sıralamalı kartlar",
+        "Empty State: Illustrative placeholder",
+        "Balance Display: Global header + shop screen",
+        "4 Tier Packages: 50/150/350/800 birim",
+        "Visual Badges: Popular tag, gradient orbs",
+        "Dynamic Content: Fal tipine göre icon/title/text",
+        "Glass Card: Organic glassmorphism container",
+        "Confidence Score: %94 güven göstergesi"
+      ],
+      "tech": [
+        "Device Frame: iPhone 14 Pro (393x852px, 55px radius)",
+        "Aurora Background: CSS gradient animation (400% size, 15s loop)",
+        "Floating Orbs: Absolute positioned blur circles (3 instances)",
+        "Dynamic Island: Static pill (120x35px, blur backdrop)",
+        "Safe Area: 54px top, 70px bottom nav padding",
+        "Vanilla Router: navigateTo() screen switching",
+        "Soft Back Button: Circular glass button (absolute positioned)",
+        "Screen Reset: Entry/exit state cleanup functions",
+        "Scroll Management: el.scrollTop = 0 on navigation",
+        "Organic Glass: backdrop-filter: blur(20px), rgba(255,255,255,0.08)",
+        "Gradient Overlays: 135deg multi-stop gradients (before pseudo)",
+        "Border Treatment: 1px solid rgba(255,255,255,0.15)",
+        "Inner Glow: Radial gradient highlights (fal-card-big::after)",
+        "Water Bowl: 2D context, particle-based ripple system",
+        "Crystal Sphere: 2D context, trail particle animation",
+        "Hit Detection: Circle-based boundary checking",
+        "Animation Loop: requestAnimationFrame based rendering",
+        "Fal Card Big: Gradient backgrounds, icon containers, price tags",
+        "Fal Bubble: Compact grid items, radial glow effects",
+        "Tarot Card: CSS transform rotation, drag states",
+        "Angel Card: Selection states, inner reveal pattern",
+        "@keyframes Breathe: Scale + opacity oscillation (6s ease-in-out)",
+        "@keyframes Float Soft: TranslateY + rotate combination (8s)",
+        "@keyframes Morph: Border-radius shape shifting (8s, organic blob)",
+        "@keyframes Aurora: Background-position shift (15s, 400% size)",
+        "@keyframes Ripple: Scale expansion with opacity decay (3s)",
+        "Text Inputs: Custom styled with focus states",
+        "Textareas: Auto-resize disabled, fixed min-height",
+        "Chip Buttons: Toggle selection, group management",
+        "File Upload: Hidden input, visual proxy triggers",
+        "Soft Toast: Blurred pill, slide-up animation (2.5s duration)",
+        "Visual Checkmarks: Upload confirmation indicators",
+        "Border Highlights: Active state color changes",
+        "Particle Effects: Canvas-based interactive feedback",
+        "Typography: Cormorant Garamond (headers), Quicksand (UI), Inter (fallback)"
+      ],
+      "colors": [
+        "Dawn Pink-Purple: #FF66FF (Primary accent, dawn energy)",
+        "Dusk Magenta: #CC00FF (Secondary accent, twilight)",
+        "Ocean Cyan: #00B4FF (Tertiary accent, water themes)",
+        "Twilight Blue: #3366FF (Deep accent, night sky)",
+        "Mist Pink: #FF33FF (Soft accent, ethereal glow)",
+        "Sand: #FFE4E1 (Warm light, text highlights)",
+        "Pearl: #F8F8FF (Cool light, backgrounds)",
+        "Dark Navy: #1a1a2e (Primary dark background)",
+        "Deeper Navy: #16213e (Secondary dark, depth)",
+        "Glass BG: rgba(255,255,255,0.08) (Standard panels)",
+        "Glass BG Light: rgba(255,255,255,0.06) (Input fields)",
+        "Glass Border: rgba(255,255,255,0.15) (Subtle borders)",
+        "Glass Border Thin: rgba(255,255,255,0.10) (Input borders)",
+        "Aurora BG: -45deg gradient with 5 stops (dawn/dusk/ocean/twilight/mist)",
+        "Organic Glass: 135deg (dawn 10%, ocean 5%, white 5%)",
+        "Fal Card Big: 145deg (thematic color 14%, white 5%)",
+        "White Primary: rgba(255,255,255,0.90) (Main content)",
+        "White Secondary: rgba(255,255,255,0.65) (Body text)",
+        "White Muted: rgba(255,255,255,0.40) (Labels, hints)",
+        "White Subtle: rgba(255,255,255,0.25) (Disabled, metadata)",
+        "Coffee Warm: rgba(255,102,80,0.15) (Kahve falı cards)",
+        "Tarot Purple: rgba(120,60,255,0.16) (Tarot cards)",
+        "Water Blue: rgba(0,180,255,0.12) (Su falı cards)",
+        "Angel Gold: rgba(255,210,80,0.10) (Melek cards)",
+        "Crystal Magenta: rgba(204,0,255,0.12) (Kristal cards)"
+      ]
+    }
+  },
+  "canli": {
+    "title": "Canlı Yayınlar",
+    "A": {
+      "features": [
+        "Öne çıkan yayın (featured stream)",
+        "Popüler yayınlar grid görünümü (2 kolon)",
+        "Yeni başlayanlar yatay scroll",
+        "'Senin İçin' kişiselleştirilmiş öneriler",
+        "Sonsuz kaydırma (infinite scroll / auto-load)",
+        "Tüm yayınlar listesi overlay",
+        "Kategoriler: Herkes, Arkadaşlar, Takip Ettiklerin",
+        "Tam ekran yayın görüntüleyici",
+        "Canlı sohbet (chat overlay)",
+        "Kalp/Beğeni sistemi",
+        "Token gönderme (monetization)",
+        "Yayıncı takip etme",
+        "İzleyici sayacı (real-time)",
+        "Paylaşım fonksiyonu",
+        "Kamera ön/arka yüz değiştirme",
+        "Yayın başlığı girişi",
+        "Katılım kısıtlama (restricted mode)",
+        "Canlı yayın başlatma ve önizleme",
+        "Arkadaşların canlı yayınları",
+        "Son görünenler (past activity)",
+        "Arkadaşların takip ettikleri",
+        "Son etkinlikler (offline activity)",
+        "Kullanıcı profil kartları",
+        "Tab bazlı kategori geçişi (slide animasyon)",
+        "Alt navigasyon (5 butonlu dock)",
+        "Arama butonu ve Geri navigasyonu",
+        "Dynamic Island entegrasyonu"
+      ],
+      "tech": [
+        "iPhone frame simülasyonu (402x874px)",
+        "Side button simülasyonu (volume/power)",
+        "Dynamic Island (notch simulation)",
+        "Screen container (border-radius 47px)",
+        "Safe area padding",
+        "Header (logo + arama + yayın aç)",
+        "Tab bar (3 kategori + animasyonlu indicator)",
+        "Bottom nav (5 ikonlu dock)",
+        "Featured card (hero banner)",
+        "Live card (9:14 aspect ratio)",
+        "Horizontal scroll card (110px genişlik)",
+        "Friend card (96x148px)",
+        "All streams overlay (tam liste)",
+        "Watch overlay (yayın izleme)",
+        "Go Live overlay (yayın açma)",
+        "Beğeni butonu (kalp toggle)",
+        "Token butonu (coin animasyonu)",
+        "Takip butonu (gradient)",
+        "Loading spinner (circle-notch)",
+        "Canlı göstergesi (LIVE pill + pulse dot)",
+        "İzleyici sayacı (eye ikonu)",
+        "Token float animasyonu",
+        "Scroll indicator (sentinel)",
+        "Montserrat (başlıklar, 700-900)",
+        "Inter (gövde metni, 300-800)",
+        "Font Awesome 6.4 (ikonlar)",
+        "Gradient text (logo)"
+      ],
+      "colors": [
+        "Teal: #45D3D0 (Turkuaz - primary accent)",
+        "Purple: #8E82E6 (Mor - secondary accent)",
+        "Pink: #F07BB0 (Pembe - tertiary accent)",
+        "Gradient: linear-gradient(135deg,#45D3D0 0%,#8E82E6 55%,#F07BB0 100%) (Ana gradyan)",
+        "BG: #09090f (Ana arka plan - çok koyu)",
+        "Card: rgba(255,255,255,.04) (Kart arka planı)",
+        "Card Solid: #14141c (Kart yüzeyi)",
+        "Border: rgba(255,255,255,.07) (Kenarlıklar)",
+        "White Primary: #FFFFFF (Ana metin)",
+        "White 82%: rgba(255,255,255,.82) (İkincil metin)",
+        "White 75%: rgba(255,255,255,.75) (Placeholder)",
+        "White 55%: rgba(255,255,255,.55) (Pasif metin)",
+        "White 45%: rgba(255,255,255,.45) (Gölge metin)",
+        "White 35%: rgba(255,255,255,.35) (Zayıf metin)",
+        "White 28%: rgba(255,255,255,.28) (Çok zayıf metin)",
+        "White 25%: rgba(255,255,255,.25) (Disabled metin)",
+        "Live Red: rgba(220,0,60,.9) (LIVE badge)",
+        "Like Red: #ff4d6d (Kalh/Like aktif)",
+        "Token Yellow: #FFD700 (Coin/Token)",
+        "Nav Active Purple: #a855f7 (Aktif tab ikonu)",
+        "Body Gradient: linear-gradient(135deg,#667eea 0%,#764ba2 100%) (iPhone dış çerçeve)"
+      ]
+    },
+    "B": {
+      "features": [
+        "Asimetrik hero layout (60/40 split: big card + small stack)",
+        "Horizontal scroll card kategorileri (Popüler, Yeni, Senin İçin)",
+        "Masonry grid görünümü (Takip tab)",
+        "Featured slider (snap-scroll ile öne çıkan yayınlar)",
+        "Son görülenler (avatar bubble row)",
+        "Canlı arkadaşlar (horizontal detail cards)",
+        "Arkadaşların takip ettikleri (mini 3-col grid)",
+        "Yayın katılım istekleri (restrict toggle)",
+        "Go Live overlay (kamera preview + başlık girişi)",
+        "Kamera flip (front/back simulation)",
+        "Kısıtlı katılım modu (checkbox toggle)",
+        "Canlı yayın izleme (watch overlay + chat)",
+        "Token gönderme (floating animation)",
+        "Like/beğeni (toggle state)",
+        "Chat sistemi (bubble UI)",
+        "Paylaşım entegrasyonu",
+        "Tab-based routing (Herkes/Arkadaşlar/Takip)",
+        "Bottom navigation (5-item dock)",
+        "All Streams overlay (list view)",
+        "Friends overlay (contextual listing)",
+        "Yakında yayın açacak (schedule list)",
+        "Zaman damgaları (relative time)",
+        "Countdown indicators"
+      ],
+      "tech": [
+        "iPhone frame simulation (402x874px, border-radius:55px)",
+        "Dynamic Island (126x37px, z-index:9999)",
+        "Glassmorphism panels (backdrop-filter:blur)",
+        "Noise texture overlay (SVG filter)",
+        "Tab bar (animated indicator, cubic-bezier transitions)",
+        "Bottom nav (5-column grid, active glow states)",
+        "Back buttons (circular, blur backdrop)",
+        "Overlay management (z-index layering: 700-850)",
+        "Hot-big card (60% width, gradient dim, live badge)",
+        "Hot-small card (stacked 40%, compact glass panel)",
+        "H-card (horizontal scroll, 140px fixed width)",
+        "M-card (masonry: tall/mid/short variants)",
+        "Mini-card (3-col grid, aspect-ratio:3/4)",
+        "Fr-card (friend detail, thumb + info split)",
+        "Gradient ring avatars (spin animation for live)",
+        "Live indicator pip (red dot, border offset)",
+        "Podium avatars (gold/silver/bronze borders)",
+        "Toggle switches (CSS-only, no JS dependency)",
+        "Like animation (heart fill transition)",
+        "Token float (CSS keyframes, random trajectory)",
+        "Camera flip (rotateY transition + opacity crossfade)",
+        "Bebas Neue (Headers, brand text)",
+        "DM Sans (UI elements, 400-800 weights)"
+      ],
+      "colors": [
+        "Purple: #6633FF (Ana marka rengi, nav active states)",
+        "Purple 2: #9933FF (Gradient mid-point, card glows)",
+        "Magenta: #CC00FF (Token/para birimi, CTA vurgu)",
+        "Pink: #FF33FF (Gradient end, hover states)",
+        "Cyan: #00C0FF (Secondary accent)",
+        "Live Red: rgba(220,0,60,0.88) (Canlı badge arka planı)",
+        "Live Dot: #FFFFFF (Blink animasyonu)",
+        "Gold: #FFD700 (1. sıra)",
+        "Silver: #C0C0C0 (2. sıra)",
+        "Bronze: #CD7F32 (3. sıra)",
+        "Background: #07070D (Ana arka plan)",
+        "Background 2: #0D0D18 (Kart yüzeyleri)",
+        "Card: rgba(255,255,255,0.038) (Glass base)",
+        "Card 2: rgba(255,255,255,0.065) (Elevated cards)",
+        "Border: rgba(255,255,255,0.07) (Subtle dividers)",
+        "Border Glow: rgba(204,0,255,0.3) (Neon outlines)",
+        "Text Primary: #FFFFFF (Başlıklar, isimler)",
+        "Text Secondary: rgba(255,255,255,0.55) (Konular, meta)",
+        "Text Tertiary: rgba(255,255,255,0.30) (Zaman, pasif)",
+        "Main Gradient: linear-gradient(135deg, #6633FF 0%, #CC00FF 60%, #FF33FF 100%)",
+        "Reverse Gradient: linear-gradient(135deg, #FF33FF 0%, #CC00FF 60%, #6633FF 100%)",
+        "Glow Gradient: linear-gradient(135deg, rgba(102,51,255,0.8), rgba(204,0,255,0.8))"
+      ]
+    },
+    "C": {
+      "features": [
+        "3 Ana Tab (Keşfet, Arkadaşlar, Takip)",
+        "VIP Üyeler Horizontal Scroll (10 profil, gradient ring)",
+        "Kategori Filtreleme (8 kategori: Oyun, Müzik, Sohbet, Sanat, Spor, Teknoloji, Yemek, Eğitim)",
+        "Popüler Yayınlar Spotlight List (sıralama, izleyici sayısı, süre)",
+        "Yeni Başlayanlar 3D Carousel (5 kart, perspective transform)",
+        "Arkadaşlar Yayında Grid (2 sütun, 7+ kart + keşfet butonu)",
+        "Yayın İzleyen Arkadaşlar Story Ring (çift katmanlı görsel + avatar overlay)",
+        "Takip Ettiklerin Canlıda (avatar wrap, canlı indikatör)",
+        "Yakında Yayın Açacak (zamanlayıcı, hatırlatma)",
+        "Full Screen Watch Overlay (arka plan, dim overlay, gradient)",
+        "Canlı Sohbet (bubble mesajlar, avatar, kullanıcı adı renkli)",
+        "Token Gönderme Sistemi (animasyonlu yükselen emojiler)",
+        "Beğeni Sistemi (kalp ikonu, sayaç, toggle state)",
+        "Paylaş & Raporlama (action buttons)",
+        "Go Live Overlay (kamera önizleme, arka/ön kamera flip)",
+        "Yayın Başlığı Input (icon + text field)",
+        "Katılım Kısıtlama Toggle (checkbox, kilit ikonu)",
+        "Yayını Başlat Butonu (gradient, büyük CTA)",
+        "Yayın Geçmişi Listesi (tarih, süre, kaçırıldı badge)",
+        "Geçmiş Avatar Gösterimi (opacity düşük, border)",
+        "Missed Yayın Vurgulama (kırmızı border, badge)",
+        "Tüm Geçmiş Overlay (scrollable liste)",
+        "Bottom Navigation (5 ikon: Ana Sayfa, Keşfet, Yayın Aç, Ara, Profil)",
+        "Tab Indicator (animated underline, cubic-bezier geçiş)",
+        "Swipe Gesture Desteği (touchstart/touchend)",
+        "Overlay Yönetimi (z-index hierarchy: 700-850)"
+      ],
+      "tech": [
+        "iPhone Frame (402x874px, 55px border-radius, 12px padding)",
+        "Dynamic Island (126x37px, saat + kamera simülasyonu)",
+        "Side Buttons (volume up/down, action, power - CSS pseudo)",
+        "Screen Container (border-radius: 47px, overflow hidden)",
+        "App Shell (flex column, padding-top: 60px)",
+        "Space Grotesk (body, 400-700 weight, button text)",
+        "Syne (display, başlıklar, 700-800 weight)",
+        "Font Scale: 9px (badge) - 26px (header title)",
+        "Gradient Text (background-clip: text, fill transparent)",
+        "--surface: rgba(255,255,255,0.045)",
+        "--surface2: rgba(255,255,255,0.07)",
+        "--border: rgba(255,255,255,0.08)",
+        "Backdrop-filter: blur (8px-20px range)",
+        "Gradient Overlays (linear-gradient to bottom, transparent to black)",
+        "Spotlight Card (54x68px thumbnail, live bar, rank badge)",
+        "Senin İçin Card (200px height, full bleed image, gradient overlay)",
+        "Friends Grid Card (220px height, 2-col grid, live dot)",
+        "VIP Item (66px ring, gradient border, avatar center)",
+        "History Item (flex row, icon box, avatar wrap)",
+        "Perspective Container (1000px perspective)",
+        "Transform Style: preserve-3d",
+        "Card States: active (scale 1), side (scale 0.85), far (scale 0.7)",
+        "Glow Back Effect (radial-gradient, sadece active kartta)",
+        "Navigation: prev/next buttons + dot indicators",
+        "Tab Buttons (active state, indicator animation)",
+        "Icon Buttons (38px, border-radius 12px, hover states)",
+        "Gradient Buttons (primary CTA, shadow effects)",
+        "Toggle Switch (checkbox simulation, on/off states)",
+        "Chip/Filter Buttons (active: cyan border + bg)",
+        "all-overlay (z-index: 700, full screen, slide up)",
+        "friends-all-overlay (z-index: 700, friend specific)",
+        "watch-overlay (z-index: 800, video player simulation)",
+        "go-live-overlay (z-index: 850, camera preview)",
+        "Tab Switch (translateX, 300ms, cubic-bezier)",
+        "Card Hover (transform: translateY, scale)",
+        "Pulse Animation (live dot, 1.4s ease-in-out infinite)",
+        "Token Float (translateY -170px, 1.8s ease-out)",
+        "Camera Flip (rotateY 180deg, 350ms)"
+      ],
+      "colors": [
+        "Cyan: #00C0FF (Ana vurgu, canlı indikatör, başlık gradyanı)",
+        "Blue: #0066FF (Ara geçiş tonu)",
+        "Purple: #6633FF (Marka moru, gradyan ortası)",
+        "Magenta: #CC00FF (Derin vurgu, gradyan bitişi)",
+        "Pink: #FF33FF (Neon vurgu, glow efektleri)",
+        "grad-main: linear-gradient(135deg, #00C0FF 0%, #6633FF 55%, #CC00FF 100%)",
+        "grad-subtle: linear-gradient(135deg, rgba(0,192,255,.15) 0%, rgba(102,51,255,.15) 100%)",
+        "vip-ring: linear-gradient(135deg, #00d4ff 0%, #7b2cbf 50%, #ff006e 100%)",
+        "bg: #08080E (Ana arka plan, derin siyah-mavi)",
+        "surface: rgba(255,255,255,0.045) (Kart yüzeyleri)",
+        "surface2: rgba(255,255,255,0.07) (Vurgulu yüzeyler)",
+        "border: rgba(255,255,255,0.08) (İnce borderlar)",
+        "text-primary: #FFFFFF (Beyaz, ana metin)",
+        "text-secondary: rgba(255,255,255,0.5) (Gri, ikincil metin)",
+        "text-muted: rgba(255,255,255,0.3) (Soluk, hint text)",
+        "Live Red: #ff003c (Canlı yayın indikatörü, pulse animasyonlu)",
+        "Live Pink: rgba(255,0,80,.85) (Live pill background)",
+        "Missed Badge: #ff0040 (Kaçırıldı badge, kırmızı vurgu)",
+        "Success/Token: #00C0FF (Token gönderme, başarı durumları)",
+        "Category Game: linear-gradient(180deg, #0a2f3a 0%, #051820 100%) + #00c8ff icon",
+        "Category Music: linear-gradient(180deg, #3a0a3a 0%, #200520 100%) + #e600ff icon",
+        "Category Chat: linear-gradient(180deg, #3a1528 0%, #200a18 100%) + #ff3399 icon",
+        "Category Art: linear-gradient(180deg, #0a1a3a 0%, #050d20 100%) + #3380ff icon",
+        "Category Sport: linear-gradient(180deg, #0a3a1a 0%, #051a0d 100%) + #33ff80 icon",
+        "Category Tech: linear-gradient(180deg, #15152a 0%, #0a0a18 100%) + #8080ff icon",
+        "Category Food: linear-gradient(180deg, #3a280a 0%, #201805 100%) + #ffaa33 icon",
+        "Category Edu: linear-gradient(180deg, #280a3a 0%, #180520 100%) + #bb33ff icon"
+      ]
+    }
+  }
+};
+        const pdfLinks = {
+  "adimsayar": {
+    "A": "https://drive.google.com/file/d/1890blqGi1-ysizX8F_yEcy46ksvEKI7y/preview",
+    "B": "https://drive.google.com/file/d/1ahIPm_KLrcyAlzH75l-XoeXxeQbSdxF0/preview",
+    "C": "https://drive.google.com/file/d/13fFTjP9bKEZJbvSZ9P8ShWT4dmkNeS19/preview"
+  },
+  "canli": {
+    "A": "https://drive.google.com/file/d/1EsHFm5NZRyDWoEfVURsVF3tTkq-YTvZ7/preview",
+    "B": "https://drive.google.com/file/d/1hM6jVz73q_jgj4ybzUZTalIdwk-5Uel8/preview",
+    "C": "https://drive.google.com/file/d/1MrghrOBWrsZHHhiMMvAeDNnaNDQKywk8/preview"
+  },
+  "event": {
+    "A": "https://drive.google.com/file/d/1kurSu5oevPeMVnhdZbl5ZmNp6jP2VoKH/preview",
+    "B": "https://drive.google.com/file/d/1kVWous-e5Hvyahf79aHC-DrEZbX8kuZD/preview",
+    "C": "https://drive.google.com/file/d/139Ar815LATVtvoJwFo32eu-h4Ai3kE7F/preview"
+  },
+  "fal": {
+    "A": "https://drive.google.com/file/d/1WdLah-NvWcR-UuaoqW9IJM0eeoq_tFRk/preview",
+    "B": "https://drive.google.com/file/d/1mxfHeDlzVQc7-dWvNXcsnYQ08HsTFgob/preview",
+    "C": "https://drive.google.com/file/d/1sYMRf51OAZ7aLjblrkT2Amp8_-n-cyWr/preview"
+  },
+  "kaydir": {
+    "A": "https://drive.google.com/file/d/1KiK5ZNjPfacifUR8uev_UoVrbVQXsaFb/preview",
+    "B": "https://drive.google.com/file/d/1XdGUilBeg6Tr5dkyO0PAC4guU3jj91lu/preview",
+    "C": "https://drive.google.com/file/d/1WeicOD2zp8rlipVvPmbBFr1s5pg2s0lS/preview"
+  },
+  "sesli": {
+    "A": "https://drive.google.com/file/d/1NkA_0En6De8Ymz9dJ9rq-OY9LTDUzKey/preview",
+    "B": "https://drive.google.com/file/d/17Gqy9NCMSBg-NBZ2zKTQOEXtHvszcujB/preview",
+    "C": "https://drive.google.com/file/d/1bvCt_7baWul-oD61Hln9v6t2WGjqR4Sc/preview"
+  }
+};
+        let currentModule = 'adimsayar';
+        let currentTab = 0;
+
+        function switchModule(moduleID) {
+            currentModule = moduleID;
+            currentTab = 0;
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === 0);
+            });
+            updateUI();
+        }
+
+        function switchTab(index) {
+            currentTab = index;
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            updateUI();
+        }
+
+        function updateUI() {
+            const container = document.getElementById('dynamic-content');
+            const data = modulesData[currentModule];
+
+            if (currentTab === 4) {
+                container.innerHTML = generatePDFView(currentModule);
+            } else if (currentTab === 3) {
+                container.innerHTML = generateComparisonView(data);
+            } else {
+                const designLetter = ['A', 'B', 'C'][currentTab];
+                container.innerHTML = generateDesignDetail(data, designLetter);
+            }
+        }
+
+        function generateDesignDetail(data, designLetter) {
+            const design = data[designLetter];
+
+            // Tüm özellikleri göster (slice kaldırıldı)
+            const featuresHtml = design.features.map(f => {
+                // Emoji/icon ekleme
+                let icon = '✓';
+                if (f.toLowerCase().includes('anim')) icon = '🎬';
+                else if (f.toLowerCase().includes('modal')) icon = '🪟';
+                else if (f.toLowerCase().includes('token') || f.toLowerCase().includes('coin')) icon = '🪙';
+                else if (f.toLowerCase().includes('glass')) icon = '🪟';
+                else if (f.toLowerCase().includes('gradient')) icon = '🌈';
+                else if (f.toLowerCase().includes('premium')) icon = '👑';
+                else if (f.toLowerCase().includes('3d') || f.toLowerCase().includes('carousel')) icon = '🎠';
+                else if (f.toLowerCase().includes('chart') || f.toLowerCase().includes('grafik')) icon = '📊';
+                else if (f.toLowerCase().includes('swipe') || f.toLowerCase().includes('drag')) icon = '👆';
+                return `<li style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 14px; line-height: 1.5;"><span style="font-size: 16px; flex-shrink: 0;">${icon}</span><span>${f}</span></li>`;
+            }).join('');
+
+            // Tüm teknik detayları göster, kategorilere ayır
+            const techCategories = {
+                'UI Bileşenleri': [],
+                'Animasyonlar': [],
+                'Tipografi': [],
+                'Diğer': []
+            };
+
+            design.tech.forEach(t => {
+                const lower = t.toLowerCase();
+                if (lower.includes('anim') || lower.includes('pulse') || lower.includes('float') || lower.includes('transition')) {
+                    techCategories['Animasyonlar'].push(t);
+                } else if (lower.includes('typography') || lower.includes('font') || lower.includes('display') || lower.includes('body')) {
+                    techCategories['Tipografi'].push(t);
+                } else if (lower.includes('card') || lower.includes('button') || lower.includes('modal') || lower.includes('navigation') || lower.includes('nav')) {
+                    techCategories['UI Bileşenleri'].push(t);
+                } else {
+                    techCategories['Diğer'].push(t);
+                }
+            });
+
+            let techHtml = '';
+            Object.entries(techCategories).forEach(([cat, items]) => {
+                if (items.length > 0) {
+                    techHtml += `<div style="margin-bottom: 20px;"><h4 style="color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 5px;">${cat}</h4><ul style="list-style: none; padding: 0;">`;
+                    items.forEach(item => {
+                        techHtml += `<li style="margin-bottom: 8px; font-size: 13px; color: var(--text-main); display: flex; align-items: center; gap: 8px;"><span style="color: var(--accent-cyan);">›</span> ${item}</li>`;
+                    });
+                    techHtml += '</ul></div>';
+                }
+            });
+
+            // Renkleri daha detaylı göster
+            let colorsHtml = '';
+            design.colors.forEach(color => {
+                const hexMatch = color.match(/#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/);
+                const rgbaMatch = color.match(/rgba?\([^)]+\)/);
+                const parts = color.split(':');
+                const colorName = parts[0].trim() || 'Renk';
+                const colorDesc = parts[1] ? parts[1].trim() : '';
+
+                if (hexMatch) {
+                    colorsHtml += `<div class="color-item" style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px;">
+                        <div class="color-preview" style="background: ${hexMatch[0]}; width: 50px; height: 50px; border-radius: 10px; box-shadow: 0 4px 15px ${hexMatch[0]}40; flex-shrink: 0;"></div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; color: ${hexMatch[0]};">${colorName}</div>
+                            <code style="font-size: 11px; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: var(--text-dim);">${hexMatch[0]}</code>
+                            ${colorDesc ? `<div style="font-size: 12px; color: var(--text-dim); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${colorDesc}</div>` : ''}
+                        </div>
+                    </div>`;
+                } else if (rgbaMatch) {
+                    colorsHtml += `<div class="color-item" style="background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; border: 1px solid var(--border); display: flex; align-items: center; gap: 15px;">
+                        <div class="color-preview" style="background: ${rgbaMatch[0]}; width: 50px; height: 50px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0;"></div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${colorName}</div>
+                            <code style="font-size: 11px; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; color: var(--text-dim);">${rgbaMatch[0]}</code>
+                        </div>
+                    </div>`;
+                }
+            });
+
+            // Tasarım karakteristiği belirle
+            let designChar = '';
+            if (designLetter === 'A') designChar = 'Temel • Minimal • Hızlı';
+            else if (designLetter === 'B') designChar = 'Dinamik • Profesyonel • Dengeli';
+            else if (designLetter === 'C') designChar = 'Premium • İmersif • Zengin';
+
+            return `<div class="design-detail-container">
+                <div class="design-header design-${designLetter.toLowerCase()}" style="margin-bottom: 30px;">
+                    <div>
+                        <h2 style="margin: 0 0 5px 0;">${data.title}</h2>
+                        <div style="color: var(--text-dim); font-size: 14px;">${designChar}</div>
+                    </div>
+                    <span class="design-badge" style="font-size: 28px; width: 60px; height: 60px;">${designLetter}</span>
+                </div>
+
+                <!-- Ana Grid: 2 sütunlu, eşit genişlik -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px;">
+                    <!-- Sol: Özellikler -->
+                    <div class="info-card" style="height: fit-content;">
+                        <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border);">
+                            <i class="fas fa-star" style="color: #FFD700;"></i> 
+                            <span>Özellikler (${design.features.length})</span>
+                        </h3>
+                        <ul style="list-style: none; padding: 0; margin: 0; max-height: 600px; overflow-y: auto; padding-right: 10px;">${featuresHtml}</ul>
+                    </div>
+
+                    <!-- Sağ: Teknik Detaylar -->
+                    <div class="info-card" style="height: fit-content;">
+                        <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border);">
+                            <i class="fas fa-code" style="color: var(--accent-cyan);"></i> 
+                            <span>Teknik Bileşenler (${design.tech.length})</span>
+                        </h3>
+                        <div style="max-height: 600px; overflow-y: auto; padding-right: 10px;">${techHtml}</div>
+                    </div>
+                </div>
+
+                <!-- Alt: Renkler - Tam genişlik -->
+                <div class="info-card" style="margin-top: 0;">
+                    <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--border);">
+                        <i class="fas fa-palette" style="color: var(--accent-pink);"></i> 
+                        <span>Renk Sistemi (${design.colors.length} Renk)</span>
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">${colorsHtml}</div>
+                </div>
+
+                <!-- Tasarım Özeti Kartı - Dinamik Metrikler -->
+                <div style="margin-top: 25px; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border: 1px solid var(--border); border-radius: 16px; padding: 25px;">
+                    <h4 style="margin: 0 0 15px 0; color: var(--text-main); font-size: 16px;">
+                        <i class="fas fa-clipboard-check" style="margin-right: 8px; color: var(--accent-cyan);"></i>
+                        Tasarım Özeti
+                    </h4>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; font-size: 14px;">
+                        <div>
+                            <strong style="color: var(--text-dim); display: block; margin-bottom: 5px; font-size: 12px; text-transform: uppercase;">Özellik</strong>
+                            <span style="font-size: 24px; font-weight: 700; color: var(--accent-cyan);">${design.features.length}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--text-dim); display: block; margin-bottom: 5px; font-size: 12px; text-transform: uppercase;">Teknik</strong>
+                            <span style="font-size: 24px; font-weight: 700; color: var(--accent-pink);">${design.tech.length}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--text-dim); display: block; margin-bottom: 5px; font-size: 12px; text-transform: uppercase;">Renk</strong>
+                            <span style="font-size: 24px; font-weight: 700; color: var(--accent-purple);">${design.colors.length}</span>
+                        </div>
+                        <div>
+                            <strong style="color: var(--text-dim); display: block; margin-bottom: 5px; font-size: 12px; text-transform: uppercase;">Karmaşıklık</strong>
+                            <span id="complexity-badge" style="font-size: 16px; font-weight: 600; padding: 4px 12px; border-radius: 20px; background: ${designLetter === 'A' ? 'rgba(192,38,211,0.2)' : designLetter === 'B' ? 'rgba(0,180,255,0.2)' : 'rgba(255,51,255,0.2)'}; color: ${designLetter === 'A' ? '#C026D3' : designLetter === 'B' ? '#00B4FF' : '#FF33FF'};">
+                                ${(() => {
+                                    const total = design.features.length + design.tech.length;
+                                    if (total < 40) return 'Düşük';
+                                    if (total < 60) return 'Düşük-Orta';
+                                    if (total < 90) return 'Orta-Yüksek';
+                                    return 'Yüksek';
+                                })()}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text-dim);">
+                        <i class="fas fa-info-circle" style="margin-right: 8px; color: var(--accent-cyan);"></i>
+                        Toplam <strong style="color: var(--text-main);">${design.features.length + design.tech.length}</strong> bileşen • 
+                        <strong style="color: var(--text-main);">${designLetter === 'A' ? 'Temel' : designLetter === 'B' ? 'Dengeli' : 'Premium'}</strong> mimari
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function generateComparisonView(data) {
+            // Renk paleti oluşturucu - daha detaylı
+            const extractColorDetailed = (color, design) => {
+                const hex = color.match(/#[A-Fa-f0-9]{6}/);
+                const rgba = color.match(/rgba?\([^)]+\)/);
+                let name = color.split(':')[0].trim();
+                let desc = color.includes('(') ? color.split('(')[1].replace(')', '') : '';
+
+                if (hex) {
+                    return `<div class="color-detail-item" style="border-left: 4px solid ${hex[0]}">
+                        <div class="color-swatch-large" style="background: ${hex[0]}"></div>
+                        <div class="color-info">
+                            <strong style="color:${hex[0]}">${name}</strong>
+                            <code>${hex[0]}</code>
+                            <small>${desc}</small>
+                        </div>
+                    </div>`;
+                }
+                return '';
+            };
+
+            let colorsA = '', colorsB = '', colorsC = '';
+            data.A.colors.forEach(c => colorsA += extractColorDetailed(c, 'A'));
+            data.B.colors.forEach(c => colorsB += extractColorDetailed(c, 'B'));
+            data.C.colors.forEach(c => colorsC += extractColorDetailed(c, 'C'));
+
+            // UI Analizi için veri çıkarımı
+            const getUIApproach = (design, letter) => {
+                const has3D = design.tech.some(t => t.toLowerCase().includes('3d') || t.toLowerCase().includes('carousel') || t.toLowerCase().includes('perspective'));
+                const hasCanvas = design.tech.some(t => t.toLowerCase().includes('canvas'));
+                const hasAurora = design.tech.some(t => t.toLowerCase().includes('aurora'));
+                const hasGlass = design.tech.some(t => t.toLowerCase().includes('glass') || t.toLowerCase().includes('blur'));
+                const animCount = design.tech.filter(t => t.toLowerCase().includes('anim')).length;
+
+                return { has3D, hasCanvas, hasAurora, hasGlass, animCount, letter };
+            };
+
+            const uiA = getUIApproach(data.A, 'A');
+            const uiB = getUIApproach(data.B, 'B');
+            const uiC = getUIApproach(data.C, 'C');
+
+            return `<h1>${data.title} <span class="badge" style="background: linear-gradient(135deg, var(--design-a), var(--design-b)); color: white;">Tasarım Analizi</span></h1>
+
+            <!-- Görsel Yaklaşım Karşılaştırması -->
+            <div class="comparison-section" style="background: linear-gradient(135deg, rgba(192,38,211,0.05), rgba(0,180,255,0.05));">
+                <h3 class="section-title"><i class="fas fa-paint-brush" style="color: var(--accent-cyan);"></i> Görsel Tasarım Yaklaşımı</h3>
+                <div class="design-approach-grid">
+                    <div class="approach-card design-a-card">
+                        <div class="approach-header">
+                            <span class="approach-letter">A</span>
+                            <div class="approach-title">
+                                <h4>Temel & Fonksiyonel</h4>
+                                <span class="approach-sub">Minimalist Başlangıç</span>
+                            </div>
+                        </div>
+                        <div class="approach-body">
+                            <div class="approach-visuals">
+                                <div class="viz-item ${uiA.hasGlass ? 'active' : ''}"><i class="fas fa-window-restore"></i><span>Glassmorphism</span></div>
+                                <div class="viz-item ${uiA.animCount > 3 ? 'active' : ''}"><i class="fas fa-film"></i><span>Animasyonlar (${uiA.animCount})</span></div>
+                                <div class="viz-item ${uiA.hasAurora ? 'active' : ''}"><i class="fas fa-cloud"></i><span>Aurora BG</span></div>
+                                <div class="viz-item ${uiA.has3D ? 'active' : ''}"><i class="fas fa-cube"></i><span>3D Elementler</span></div>
+                            </div>
+                            <p class="approach-desc">Temiz layout, temel etkileşimler, standart navigasyon yapısı. Kullanıcı deneyimi öncelikli, göz yormayan sade arayüz.</p>
+                        </div>
+                    </div>
+
+                    <div class="approach-card design-b-card">
+                        <div class="approach-header">
+                            <span class="approach-letter">B</span>
+                            <div class="approach-title">
+                                <h4>Dinamik & Profesyonel</h4>
+                                <span class="approach-sub">Gelişmiş Etkileşim</span>
+                            </div>
+                        </div>
+                        <div class="approach-body">
+                            <div class="approach-visuals">
+                                <div class="viz-item ${uiB.hasGlass ? 'active' : ''}"><i class="fas fa-window-restore"></i><span>Glassmorphism</span></div>
+                                <div class="viz-item ${uiB.animCount > 3 ? 'active' : ''}"><i class="fas fa-film"></i><span>Animasyonlar (${uiB.animCount})</span></div>
+                                <div class="viz-item ${uiB.hasAurora ? 'active' : ''}"><i class="fas fa-cloud"></i><span>Aurora BG</span></div>
+                                <div class="viz-item ${uiB.has3D ? 'active' : ''}"><i class="fas fa-cube"></i><span>3D Elementler</span></div>
+                            </div>
+                            <p class="approach-desc">Çoklu modal yapıları, gelişmiş filtreleme, profesyonel tipografi. Daha kompleks navigasyon ancak akıcı geçişler.</p>
+                        </div>
+                    </div>
+
+                    <div class="approach-card design-c-card">
+                        <div class="approach-header">
+                            <span class="approach-letter">C</span>
+                            <div class="approach-title">
+                                <h4>İmersif & Premium</h4>
+                                <span class="approach-sub">Maksimum Etkileyici</span>
+                            </div>
+                        </div>
+                        <div class="approach-body">
+                            <div class="approach-visuals">
+                                <div class="viz-item ${uiC.hasGlass ? 'active' : ''}"><i class="fas fa-window-restore"></i><span>Glassmorphism+</span></div>
+                                <div class="viz-item ${uiC.animCount > 3 ? 'active' : ''}"><i class="fas fa-film"></i><span>Zengin Animasyon</span></div>
+                                <div class="viz-item ${uiC.hasAurora ? 'active' : ''}"><i class="fas fa-cloud"></i><span>Aurora Efekt</span></div>
+                                <div class="viz-item ${uiC.has3D ? 'active' : ''}"><i class="fas fa-cube"></i><span>3D Carousel</span></div>
+                            </div>
+                            <p class="approach-desc">Canvas bazlı interaktif elementler, 3D carousel'ler, partikül sistemleri. Görsel şölen sunan, premium his veren arayüz.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Renk Paleti Detaylı -->
+            <div class="comparison-section">
+                <h3 class="section-title"><i class="fas fa-palette" style="color: var(--accent-pink);"></i> Renk Sistemleri & Etki Analizi</h3>
+                <div class="color-analysis-grid">
+                    <div class="color-col">
+                        <div class="color-col-header" style="background: linear-gradient(135deg, #C026D3, #FF00AA);">
+                            <h4>Tasarım A</h4>
+                            <span>Mor-Magenta Eksenli</span>
+                        </div>
+                        <div class="color-list">${colorsA}</div>
+                        <div class="color-psychology">
+                            <strong>Psikolojik Etki:</strong> Lüks, yaratıcılık, mistisizm. Koyu arka plan üzerinde neon vurgularla modern ama gizemli atmosfer.
+                        </div>
+                    </div>
+
+                    <div class="color-col">
+                        <div class="color-col-header" style="background: linear-gradient(135deg, #00B4FF, #0066FF);">
+                            <h4>Tasarım B</h4>
+                            <span>Mavi-Cyan Eksenli</span>
+                        </div>
+                        <div class="color-list">${colorsB}</div>
+                        <div class="color-psychology">
+                            <strong>Psikolojik Etki:</strong> Güven, teknoloji, serinlik. Profesyonel ve kurumsal his veren, teknolojik yeterliliği vurgulayan palet.
+                        </div>
+                    </div>
+
+                    <div class="color-col">
+                        <div class="color-col-header" style="background: linear-gradient(135deg, #FF33FF, #CC00FF, #0066FF);">
+                            <h4>Tasarım C</h4>
+                            <span>Pembe-Mavi Gradyan</span>
+                        </div>
+                        <div class="color-list">${colorsC}</div>
+                        <div class="color-psychology">
+                            <strong>Psikolojik Etki:</strong> Enerji, tutku, dinamizm. Aurora efektleriyle derinlik kazanan, dikkat çekici ve canlı görsel deneyim.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tipografi & Animasyon Analizi -->
+            <div class="comparison-section" style="background: rgba(255,255,255,0.02);">
+                <h3 class="section-title"><i class="fas fa-font" style="color: var(--accent-purple);"></i> Tipografi & Hareket Dili</h3>
+                <div class="typo-motion-grid">
+                    <div class="tm-card">
+                        <div class="tm-header" style="color: #C026D3;">Tasarım A</div>
+                        <div class="tm-content">
+                            <div class="tm-item"><strong>Font:</strong> ${data.A.tech.find(t => t.includes('Typography'))?.split(':')[1] || 'Inter, Orbitron'}</div>
+                            <div class="tm-item"><strong>Ana Animasyon:</strong> Pulse Glow, Float</div>
+                            <div class="tm-item"><strong>Geçişler:</strong> Standart fade/slide</div>
+                            <div class="tm-item"><strong>Vurgu:</strong> Progress ring, Glow efektler</div>
+                        </div>
+                    </div>
+                    <div class="tm-card">
+                        <div class="tm-header" style="color: #00B4FF;">Tasarım B</div>
+                        <div class="tm-content">
+                            <div class="tm-item"><strong>Font:</strong> ${data.B.tech.find(t => t.includes('Typography'))?.split(':')[1] || 'Syne, Epilogue'}</div>
+                            <div class="tm-item"><strong>Ana Animasyon:</strong> Sound Wave, DNA Paths</div>
+                            <div class="tm-item"><strong>Geçişler:</strong> Cubic-bezier smooth</div>
+                            <div class="tm-item"><strong>Vurgu:</strong> Floating indicators, Shimmer</div>
+                        </div>
+                    </div>
+                    <div class="tm-card">
+                        <div class="tm-header" style="color: #FF33FF;">Tasarım C</div>
+                        <div class="tm-content">
+                            <div class="tm-item"><strong>Font:</strong> ${data.C.tech.find(t => t.includes('Typography'))?.split(':')[1] || 'Inter, Orbitron, Playfair'}</div>
+                            <div class="tm-item"><strong>Ana Animasyon:</strong> Particle Float, 3D Transform</div>
+                            <div class="tm-item"><strong>Geçişler:</strong> Perspective, Scale transforms</div>
+                            <div class="tm-item"><strong>Vurgu:</strong> Canvas interaktifler, Ripple</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evrim Analizi (A→B→C) -->
+            <div class="comparison-section">
+                <h3 class="section-title"><i class="fas fa-code-branch" style="color: var(--accent-cyan);"></i> Tasarım Evrimi & Geçiş Analizi</h3>
+                <div class="evolution-timeline">
+                    <div class="evo-step">
+                        <div class="evo-badge" style="background: linear-gradient(135deg, #C026D3, #FF00AA);">A</div>
+                        <div class="evo-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="evo-content">
+                            <h4>Temelden Gelişmişe</h4>
+                            <ul>
+                                <li><strong>Görsel Derinlik:</strong> Düz arka plan → Gradient/Glassmorphism</li>
+                                <li><strong>Navigasyon:</strong> Temel tab'ler → Screen-based routing</li>
+                                <li><strong>Veri Gösterimi:</strong> Basit listeler → Card'lar ve Grid'ler</li>
+                                <li><strong>Etkileşim:</strong> Button clicks → Swipe gestures</li>
+                                <li><strong>Tipografi:</strong> Tek font ailesi → Display + Body ayrımı</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="evo-step">
+                        <div class="evo-badge" style="background: linear-gradient(135deg, #00B4FF, #0066FF);">B</div>
+                        <div class="evo-arrow"><i class="fas fa-arrow-right"></i></div>
+                        <div class="evo-content">
+                            <h4>Profesyonelden Premiuma</h4>
+                            <ul>
+                                <li><strong>Görsel Efektler:</strong> Blur → Aurora/Canvas animasyonlar</li>
+                                <li><strong>Layout:</strong> Standart grid → Asimetrik/Masonry</li>
+                                <li><strong>Mikro-etkileşimler:</strong> Hover states → Particle effects</li>
+                                <li><strong>Derinlik:</strong> 2D planes → 3D perspective transforms</li>
+                                <li><strong>Detay:</strong> Statik görseller → Ripple/Trail efektler</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="evo-step">
+                        <div class="evo-badge" style="background: linear-gradient(135deg, #FF33FF, #CC00FF);">C</div>
+                        <div class="evo-content final">
+                            <h4>Son Aşama: İmersif Deneyim</h4>
+                            <ul>
+                                <li><strong>Teknoloji:</strong> CSS-only → Canvas/WebGL hazırlık</li>
+                                <li><strong>Kullanıcı Kontrolü:</strong> Passif izleme → Aktif manipülasyon</li>
+                                <li><strong>Hikaye Anlatımı:</strong> Bilgi sunumu → Deneyim tasarımı</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Yaratıcı Fikirler & Öne Çıkanlar -->
+            <div class="comparison-section" style="background: linear-gradient(135deg, rgba(255,0,170,0.1), rgba(0,192,255,0.1)); border: 1px solid rgba(255,255,255,0.1);">
+                <h3 class="section-title"><i class="fas fa-lightbulb" style="color: #FFD700;"></i> Yaratıcı Fikirler & Öne Çıkan Tasarım Unsurları</h3>
+                <div class="creative-highlights">
+                    <div class="ch-card">
+                        <div class="ch-icon" style="background: linear-gradient(135deg, #FFD700, #FFA500);"><i class="fas fa-magic"></i></div>
+                        <h4>En İyi Etkileşim</h4>
+                        <div class="ch-winner" style="color: #FF33FF;">Tasarım C</div>
+                        <p>Canvas bazlı su falı kasesi ve kristal küre interaktifleri. Kullanıcı dokunuşuna gerçek zamanlı tepki veren partikül sistemleri.</p>
+                    </div>
+
+                    <div class="ch-card">
+                        <div class="ch-icon" style="background: linear-gradient(135deg, #00C0FF, #0066FF);"><i class="fas fa-eye"></i></div>
+                        <h4>En İyi Görsel Hiyerarşi</h4>
+                        <div class="ch-winner" style="color: #00B4FF;">Tasarım B</div>
+                        <p>Syne ve Epilogue font kombinasyonu ile profesyonel bilgi mimarisi. Glassmorphism kartlarla derinlik hissi.</p>
+                    </div>
+
+                    <div class="ch-card">
+                        <div class="ch-icon" style="background: linear-gradient(135deg, #C026D3, #FF00AA);"><i class="fas fa-bolt"></i></div>
+                        <h4>En Verimli Performans</h4>
+                        <div class="ch-winner" style="color: #C026D3;">Tasarım A</div>
+                        <p>Minimal animasyon ve optimize edilmiş SVG'ler ile hızlı yükleme. Temiz kod yapısı ve düşük kaynak kullanımı.</p>
+                    </div>
+
+                    <div class="ch-card">
+                        <div class="ch-icon" style="background: linear-gradient(135deg, #FF33FF, #CC00FF);"><i class="fas fa-crown"></i></div>
+                        <h4>En Premium Hissiyat</h4>
+                        <div class="ch-winner" style="color: #FF33FF;">Tasarım C</div>
+                        <p>3D carousel, VIP gradient ring'ler ve aurora arka planlar. Kullanıcıya "özel" hissettiren detaylar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Genel Özet -->
+            <div class="comparison-section" style="margin-top: 30px;">
+                <div class="final-verdict">
+                    <h3><i class="fas fa-balance-scale"></i> Genel Değerlendirme</h3>
+                    <div class="verdict-grid">
+                        <div class="verdict-item">
+                            <strong style="color: #C026D3;">Tasarım A</strong>
+                            <span>MVPhızlı geliştirme, temel kullanıcı ihtiyaçları, düşük cihaz gereksinimi</span>
+                        </div>
+                        <div class="verdict-item">
+                            <strong style="color: #00B4FF;">Tasarım B</strong>
+                            <span>Profesyonel ürün, geniş kitleye hitap, dengeli özellik/yük dengesi</span>
+                        </div>
+                        <div class="verdict-item">
+                            <strong style="color: #FF33FF;">Tasarım C</strong>
+                            <span>Flagship deneyim, premium kullanıcılar, maksimum görsel etki</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gerekli CSS eklentileri -->
+            <style>
+                .design-approach-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+                @media (max-width: 1200px) { .design-approach-grid { grid-template-columns: 1fr; } }
+
+                .approach-card { background: var(--card-bg); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); transition: transform 0.3s; }
+                .approach-card:hover { transform: translateY(-5px); }
+                .approach-header { display: flex; align-items: center; gap: 15px; padding: 20px; background: rgba(0,0,0,0.2); }
+                .approach-letter { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; }
+                .design-a-card .approach-letter { background: rgba(192,38,211,0.2); color: #C026D3; }
+                .design-b-card .approach-letter { background: rgba(0,180,255,0.2); color: #00B4FF; }
+                .design-c-card .approach-letter { background: rgba(255,51,255,0.2); color: #FF33FF; }
+                .approach-title h4 { margin: 0; font-size: 16px; }
+                .approach-sub { font-size: 12px; color: var(--text-dim); }
+                .approach-body { padding: 20px; }
+                .approach-visuals { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+                .viz-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dim); opacity: 0.4; transition: 0.3s; }
+                .viz-item.active { opacity: 1; color: var(--text-main); }
+                .viz-item i { font-size: 14px; }
+                .approach-desc { font-size: 13px; line-height: 1.6; color: var(--text-dim); }
+
+                .color-analysis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+                @media (max-width: 1200px) { .color-analysis-grid { grid-template-columns: 1fr; } }
+                .color-col { background: var(--card-bg); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+                .color-col-header { padding: 20px; color: white; }
+                .color-col-header h4 { margin: 0 0 5px 0; }
+                .color-col-header span { font-size: 12px; opacity: 0.9; }
+                .color-list { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+                .color-detail-item { display: flex; align-items: center; gap: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+                .color-swatch-large { width: 40px; height: 40px; border-radius: 8px; flex-shrink: 0; }
+                .color-info { display: flex; flex-direction: column; }
+                .color-info strong { font-size: 13px; margin-bottom: 2px; }
+                .color-info code { font-size: 11px; color: var(--text-dim); background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; margin-bottom: 2px; }
+                .color-info small { font-size: 10px; color: var(--text-dim); opacity: 0.8; }
+                .color-psychology { padding: 15px 20px; background: rgba(0,0,0,0.2); font-size: 13px; line-height: 1.5; border-top: 1px solid var(--border); }
+
+                .typo-motion-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+                @media (max-width: 1200px) { .typo-motion-grid { grid-template-columns: 1fr; } }
+                .tm-card { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
+                .tm-header { font-size: 18px; font-weight: 700; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+                .tm-item { margin-bottom: 10px; font-size: 13px; color: var(--text-dim); }
+                .tm-item strong { color: var(--text-main); }
+
+                .evolution-timeline { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; }
+                .evo-step { display: flex; align-items: flex-start; gap: 20px; background: var(--card-bg); padding: 25px; border-radius: 16px; border: 1px solid var(--border); }
+                .evo-badge { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 24px; color: white; flex-shrink: 0; }
+                .evo-arrow { color: var(--text-dim); font-size: 20px; margin-top: 15px; }
+                .evo-content { flex: 1; }
+                .evo-content h4 { margin: 0 0 12px 0; color: var(--text-main); }
+                .evo-content ul { margin: 0; padding-left: 0; list-style: none; }
+                .evo-content li { margin-bottom: 8px; font-size: 14px; color: var(--text-dim); padding-left: 20px; position: relative; }
+                .evo-content li:before { content: "→"; position: absolute; left: 0; color: var(--accent-cyan); }
+
+                .creative-highlights { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 20px; }
+                @media (max-width: 1200px) { .creative-highlights { grid-template-columns: repeat(2, 1fr); } }
+                @media (max-width: 768px) { .creative-highlights { grid-template-columns: 1fr; } }
+                .ch-card { background: var(--card-bg); border-radius: 16px; padding: 25px; text-align: center; border: 1px solid var(--border); transition: transform 0.3s; }
+                .ch-card:hover { transform: translateY(-5px); }
+                .ch-icon { width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; }
+                .ch-card h4 { margin: 0 0 8px 0; font-size: 14px; color: var(--text-main); }
+                .ch-winner { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+                .ch-card p { font-size: 13px; color: var(--text-dim); line-height: 1.5; margin: 0; }
+
+                .final-verdict { background: rgba(255,255,255,0.03); padding: 25px; border-radius: 16px; }
+                .final-verdict h3 { margin: 0 0 20px 0; display: flex; align-items: center; gap: 10px; }
+                .verdict-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+                @media (max-width: 900px) { .verdict-grid { grid-template-columns: 1fr; } }
+                .verdict-item { display: flex; flex-direction: column; gap: 8px; }
+                .verdict-item strong { font-size: 16px; }
+                .verdict-item span { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+            </style>`;
+        }
+
+        function generatePDFView(module) {
+            const links = pdfLinks[module];
+            return `<h1>${modulesData[module].title} <span class="badge" style="background:var(--bg); border: 1px solid var(--border)">PDF Önizleme</span></h1>
+            <div class="pdf-view-container">
+                <div class="pdf-column">
+                    <div class="pdf-col-header a">TASARIM A</div>
+                    <div class="pdf-scroll-area">
+                        <div class="pdf-aspect-wrapper">
+                            <iframe src="${links.A}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+                <div class="pdf-column">
+                    <div class="pdf-col-header b">TASARIM B</div>
+                    <div class="pdf-scroll-area">
+                        <div class="pdf-aspect-wrapper">
+                            <iframe src="${links.B}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+                <div class="pdf-column">
+                    <div class="pdf-col-header c">TASARIM C</div>
+                    <div class="pdf-scroll-area">
+                        <div class="pdf-aspect-wrapper">
+                            <iframe src="${links.C}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        window.onload = () => { updateUI(); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexlify — C Tasarım · Ritual Chamber</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Syncopate:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+/* ====================================================
+   NEXLIFY C — RITUAL CHAMBER
+   Konsept: Her fal kendi odası. Ana sayfa minimal portal.
+   Navigasyon: Sol drawer.
+   Tipografi: Cormorant (editorial serif) + Syncopate (caps display)
+   ==================================================== */
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;}
+body{background:#080808;display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden;}
+
+/* ===== TOKENS ===== */
+:root{
+  --ink:        #08070F;
+  --ink2:       #0E0B1A;
+  --ink3:       #14101F;
+  --surface:    rgba(255,255,255,0.04);
+  --border:     rgba(255,255,255,0.07);
+  --text:       #F0EBE3;
+  --text2:      rgba(240,235,227,0.55);
+  --text3:      rgba(240,235,227,0.25);
+  --gold:       #C8A227;
+  --gold-s:     rgba(200,162,39,0.15);
+  --cyan:       #00C0FF;
+  --blue:       #3366FF;
+  --purple:     #7733FF;
+  --magenta:    #CC00FF;
+  --pink:       #FF33FF;
+
+  /* Chamber tints — per-screen */
+  --ch-coffee:  #1C0E06;
+  --ch-tarot:   #0C0519;
+  --ch-palm:    #030C18;
+  --ch-water:   #02101A;
+  --ch-angel:   #141208;
+  --ch-crystal: #0A0415;
+  --ch-dream:   #060818;
+  --ch-horo:    #070514;
+}
+
+/* ===== iPHONE ===== */
+.iphone{
+  width:393px;height:852px;
+  position:relative;overflow:hidden;
+  border-radius:46px;
+  background:var(--ink);
+  box-shadow:
+    0 0 0 11px #111,
+    0 0 0 13px #2a2a2a,
+    0 40px 100px rgba(0,0,0,0.9),
+    0 0 80px rgba(119,51,255,0.12);
+}
+.dynamic-island{
+  position:absolute;top:13px;left:50%;transform:translateX(-50%);
+  width:118px;height:34px;background:#000;border-radius:19px;z-index:1000;
+}
+.home-bar{
+  position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+  width:134px;height:5px;background:rgba(255,255,255,0.2);border-radius:3px;z-index:1000;
+}
+.status-bar{
+  position:absolute;top:0;left:0;right:0;height:54px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 28px 10px;z-index:600;pointer-events:none;
+}
+.status-time{font-family:'Syncopate',sans-serif;font-size:12px;font-weight:700;color:var(--text);letter-spacing:1px;}
+.status-icons{display:flex;gap:6px;align-items:center;color:var(--text);font-size:13px;}
+
+/* ===== SCREEN SYSTEM ===== */
+.screen{
+  position:absolute;inset:0;
+  display:none;flex-direction:column;
+  overflow:hidden;
+  z-index:10;
+  transition:opacity 0.35s;
+}
+.screen.scrollable{overflow-y:auto;overflow-x:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:48px;padding-left:0;padding-right:0;}
+.screen.scrollable::-webkit-scrollbar{display:none;}
+/* Horoscope gets extra side clearance for iphone corner radius */
+#screen-horoscope{padding-left:0;padding-right:0;}
+.screen.active{display:flex;animation:fadeUp 0.45s cubic-bezier(0.4,0,0.2,1);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== DRAWER ===== */
+.drawer-overlay{
+  position:absolute;inset:0;z-index:700;
+  background:rgba(0,0,0,0);pointer-events:none;
+  transition:background 0.35s;
+}
+.drawer-overlay.open{background:rgba(0,0,0,0.65);pointer-events:all;}
+.drawer{
+  position:absolute;top:0;left:0;bottom:0;
+  width:270px;
+  background:var(--ink2);
+  border-right:1px solid var(--border);
+  transform:translateX(-100%);
+  transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  z-index:800;
+  display:flex;flex-direction:column;
+  padding:60px 0 40px;
+}
+.drawer-overlay.open .drawer{transform:translateX(0);}
+.drawer-logo{
+  padding:0 24px 28px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:16px;
+}
+.drawer-logo .d-title{
+  font-family:'Cormorant',serif;font-size:22px;font-weight:600;
+  font-style:italic;color:var(--gold);
+  letter-spacing:1px;
+}
+.drawer-logo .d-sub{
+  font-family:'Syncopate',sans-serif;font-size:7px;
+  letter-spacing:3px;color:var(--text3);margin-top:3px;
+}
+.drawer-token{
+  margin:0 24px 20px;
+  display:flex;align-items:center;gap:8px;
+  background:var(--gold-s);border:1px solid rgba(200,162,39,0.25);
+  border-radius:12px;padding:10px 14px;cursor:pointer;
+}
+.drawer-token .dt-coin{font-size:18px;}
+.drawer-token .dt-amount{font-family:'Syncopate',sans-serif;font-size:13px;font-weight:700;color:var(--gold);}
+.drawer-token .dt-label{font-family:'DM Sans',sans-serif;font-size:10px;color:var(--text3);margin-left:auto;}
+.drawer-nav-label{
+  padding:0 24px 6px;
+  font-family:'Syncopate',sans-serif;font-size:7px;
+  letter-spacing:3px;color:var(--text3);
+}
+.drawer-item{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 24px;cursor:pointer;
+  transition:all 0.2s;position:relative;
+}
+.drawer-item:active{background:var(--surface);}
+.drawer-item.active::before{
+  content:'';position:absolute;left:0;top:20%;bottom:20%;
+  width:2px;background:var(--gold);border-radius:1px;
+}
+.drawer-item .di-icon{font-size:18px;width:24px;text-align:center;}
+.drawer-item .di-label{
+  font-family:'DM Sans',sans-serif;font-size:13px;
+  color:var(--text2);font-weight:300;
+}
+.drawer-item.active .di-label{color:var(--text);}
+.drawer-item .di-badge{
+  margin-left:auto;
+  font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:1px;
+  color:var(--cyan);
+  background:rgba(0,192,255,0.1);border:1px solid rgba(0,192,255,0.2);
+  border-radius:8px;padding:2px 8px;
+}
+
+/* ===== TOP BAR ===== */
+.topbar{
+  position:absolute;top:56px;left:0;right:0;height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;z-index:200;
+  background:transparent;
+  pointer-events:none;
+}
+.topbar .menu-btn{
+  width:36px;height:36px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;cursor:pointer;pointer-events:all;transition:all 0.2s;
+  flex-shrink:0;
+}
+.topbar .menu-btn:active{transform:scale(0.9);}
+.menu-line{width:16px;height:1.5px;background:var(--text);border-radius:1px;transition:all 0.3s;}
+.topbar .screen-title{
+  font-family:'Cormorant',serif;font-size:15px;font-style:italic;
+  color:var(--text2);letter-spacing:1px;pointer-events:none;
+}
+.topbar .token-chip{
+  display:flex;align-items:center;gap:5px;
+  background:var(--gold-s);border:1px solid rgba(200,162,39,0.2);
+  border-radius:20px;padding:5px 12px;cursor:pointer;pointer-events:all;
+  transition:all 0.2s;
+}
+.topbar .token-chip:active{transform:scale(0.95);}
+.topbar .token-chip span{font-family:'Syncopate',sans-serif;font-size:11px;font-weight:700;color:var(--gold);}
+
+/* ===== HOME SCREEN ===== */
+.home-portal{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;
+  height:100%;
+  padding-top:150px;
+  padding-bottom:56px;
+  position:relative;
+  overflow:hidden;
+}
+/* Radial glow center */
+.portal-glow{
+  position:absolute;
+  width:320px;height:320px;
+  border-radius:50%;
+  background:radial-gradient(circle,
+    rgba(119,51,255,0.18) 0%,
+    rgba(0,192,255,0.06) 40%,
+    transparent 70%);
+  pointer-events:none;
+  animation:breathe 6s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{transform:scale(1);opacity:0.8;}50%{transform:scale(1.12);opacity:1;}}
+.portal-title{
+  font-family:'Cormorant',serif;font-size:13px;font-style:italic;
+  letter-spacing:4px;color:var(--text3);text-transform:uppercase;
+  margin-bottom:6px;text-align:center;position:relative;
+}
+.portal-name{
+  font-family:'Syncopate',sans-serif;font-size:24px;font-weight:700;
+  letter-spacing:6px;color:var(--text);text-align:center;
+  position:relative;
+  text-shadow:0 0 40px rgba(119,51,255,0.4);
+  margin-bottom:4px;
+}
+.portal-moon{
+  font-size:60px;line-height:1;
+  position:relative;margin-bottom:6px;
+  animation:moonGlow 4s ease-in-out infinite;
+  filter:drop-shadow(0 0 30px rgba(200,162,39,0.5)) drop-shadow(0 0 60px rgba(200,162,39,0.2));
+  color:#FFF6E0;
+}
+@keyframes moonGlow{
+  0%,100%{filter:drop-shadow(0 0 20px rgba(200,162,39,0.3)) drop-shadow(0 0 40px rgba(200,162,39,0.1));}
+  50%{filter:drop-shadow(0 0 40px rgba(200,162,39,0.7)) drop-shadow(0 0 80px rgba(200,162,39,0.35)) drop-shadow(0 0 120px rgba(200,162,39,0.15));}
+}
+
+/* Daily pill */
+.home-daily{
+  margin-top:16px;
+  padding:14px 24px;
+  border-radius:30px;
+  background:linear-gradient(135deg,rgba(119,51,255,0.15),rgba(0,192,255,0.08));
+  border:1px solid rgba(255,255,255,0.12);
+  cursor:pointer;
+  transition:all 0.3s;position:relative;
+  backdrop-filter:blur(20px);
+  box-shadow:0 4px 24px rgba(119,51,255,0.1),inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.home-daily:active{transform:scale(0.96);}
+.home-daily::before{
+  content:'';position:absolute;inset:-1px;border-radius:30px;
+  background:linear-gradient(135deg,rgba(119,51,255,0.4),rgba(0,192,255,0.2),rgba(200,162,39,0.3));
+  z-index:-1;opacity:0.5;filter:blur(8px);
+}
+.home-daily .hd-label{
+  font-family:'Syncopate',sans-serif;font-size:7px;
+  letter-spacing:3px;text-transform:uppercase;color:var(--cyan);
+  text-align:center;margin-bottom:4px;
+}
+.home-daily .hd-text{
+  font-family:'Cormorant',serif;font-size:14px;font-style:italic;
+  color:var(--text2);text-align:center;
+}
+
+/* Fal grid — 2 rows x 4 cols */
+.fal-carousel{
+  margin-top:20px;width:100%;
+  padding:0 20px;
+}
+.fal-carousel-track{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px 6px;
+}
+.fal-orbit{
+  display:flex;flex-direction:column;
+  align-items:center;gap:6px;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.fal-orbit:active{transform:scale(0.93);}
+.fal-orbit .fo-ring{
+  width:70px;height:70px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  transition:all 0.3s;
+}
+.fal-orbit:active .fo-ring{transform:scale(0.9);}
+.fal-orbit .fo-ring::before{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.fal-orbit .fo-ring::after{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1px dashed rgba(255,255,255,0.04);
+}
+.fal-orbit .fo-emoji{font-size:28px;line-height:1;position:relative;}
+.fal-orbit .fo-name{
+  font-family:'Syncopate',sans-serif;font-size:8px;
+  letter-spacing:0.8px;text-transform:uppercase;
+  color:var(--text3);text-align:center;
+}
+.fal-orbit .fo-cost{
+  font-family:'DM Sans',sans-serif;font-size:10.5px;
+  color:rgba(200,162,39,0.7);
+}
+
+/* ===== CHAMBER SCREEN BASE ===== */
+/* Immersive full-bg per fal */
+.chamber-bg{
+  position:absolute;inset:0;pointer-events:none;z-index:0;
+  transition:background 0.5s;
+}
+.chamber-particles{
+  position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden;
+}
+.c-particle{
+  position:absolute;border-radius:50%;
+  animation:particleDrift linear infinite;
+  opacity:0;
+}
+@keyframes particleDrift{
+  0%{transform:translateY(100%) scale(0);opacity:0;}
+  10%{opacity:1;}
+  90%{opacity:0.4;}
+  100%{transform:translateY(-120%) scale(1.5);opacity:0;}
+}
+
+/* Chamber scrollable content */
+.chamber-content{
+  position:relative;z-index:5;
+  padding:118px 24px 0;
+  display:flex;flex-direction:column;
+  min-height:100%;
+}
+
+/* Big fal icon at top of chamber */
+.chamber-icon-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  margin-bottom:10px;
+  position:relative;
+}
+.chamber-big-icon{
+  font-size:42px;line-height:1;
+  position:relative;z-index:2;
+  margin-bottom:6px;
+}
+@keyframes chamberFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.chamber-halo{
+  position:absolute;
+  width:80px;height:80px;border-radius:50%;
+  filter:blur(24px);opacity:0.5;
+  animation:breathe 4s ease-in-out infinite;
+  z-index:1;
+}
+.chamber-title{
+  font-family:'Cormorant',serif;font-size:22px;font-weight:600;
+  font-style:italic;color:var(--text);text-align:center;
+  letter-spacing:1px;
+}
+.chamber-subtitle{
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;
+  color:var(--text2);text-align:center;line-height:1.6;
+  margin-top:3px;max-width:280px;
+}
+
+/* Sigil divider */
+.sigil{
+  display:flex;align-items:center;gap:10px;
+  margin:10px 0;
+}
+.sigil .s-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);}
+.sigil .s-mark{font-size:11px;color:rgba(255,255,255,0.12);letter-spacing:5px;}
+
+/* Glass panel */
+.c-panel{
+  border-radius:20px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.07);
+  backdrop-filter:blur(20px);
+  padding:18px;
+  margin-bottom:14px;
+  position:relative;overflow:hidden;
+}
+.c-panel::before{
+  content:'';position:absolute;inset:0;
+  border-radius:20px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 60%);
+  pointer-events:none;
+}
+.c-panel-label{
+  font-family:'Syncopate',sans-serif;font-size:7px;
+  letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:10px;opacity:0.6;
+}
+.c-panel p{
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;
+  color:var(--text2);line-height:1.75;
+}
+
+/* Upload zone */
+.c-upload{
+  border:1px dashed rgba(255,255,255,0.1);
+  border-radius:18px;padding:22px 16px;
+  text-align:center;cursor:pointer;
+  background:rgba(255,255,255,0.02);
+  transition:all 0.3s;margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.c-upload:active{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.04);}
+.c-upload .cu-icon{font-size:26px;margin-bottom:8px;display:block;}
+.c-upload .cu-title{
+  font-family:'Cormorant',serif;font-size:15px;color:var(--text);margin-bottom:3px;
+}
+.c-upload .cu-hint{
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--text3);font-style:italic;
+}
+
+/* Steps */
+.c-steps{margin-bottom:14px;}
+.c-step{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.c-step:last-child{border-bottom:none;}
+.c-step .cs-n{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syncopate',sans-serif;font-size:8px;color:var(--text3);
+  flex-shrink:0;margin-top:1px;
+}
+.c-step .cs-t{
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;
+  color:var(--text2);line-height:1.6;
+}
+
+/* Central orb widget */
+.c-orb-wrap{
+  display:flex;flex-direction:column;align-items:center;
+  margin:12px 0 24px;gap:10px;
+}
+.c-orb{
+  width:150px;height:150px;border-radius:50%;
+  cursor:pointer;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.3s;
+}
+.c-orb:active{transform:scale(0.93);}
+.c-orb .co-ring1{
+  position:absolute;inset:0;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.08);
+  animation:orbRing 4s ease-in-out infinite;
+}
+.c-orb .co-ring2{
+  position:absolute;inset:-14px;border-radius:50%;
+  border:1px dashed rgba(255,255,255,0.04);
+  animation:orbRing 4s ease-in-out infinite 1.3s;
+}
+.c-orb .co-ring3{
+  position:absolute;inset:-28px;border-radius:50%;
+  border:1px dotted rgba(255,255,255,0.02);
+  animation:orbRing 4s ease-in-out infinite 2.6s;
+}
+@keyframes orbRing{0%,100%{opacity:0.5;transform:scale(1);}50%{opacity:1;transform:scale(1.03);}}
+.c-orb .co-emoji{font-size:52px;line-height:1;position:relative;z-index:2;}
+.c-orb-hint{
+  font-family:'DM Sans',sans-serif;font-size:10px;font-weight:300;
+  font-style:italic;color:var(--text3);
+}
+
+/* Tarot horizontal */
+.c-tarot-scroll{
+  overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;padding:10px 0 18px;
+  -webkit-overflow-scrolling:touch;
+}
+.c-tarot-scroll::-webkit-scrollbar{display:none;}
+.c-tarot-track{display:flex;gap:8px;padding:0 24px;width:max-content;}
+.c-tarot-card{
+  width:56px;height:88px;border-radius:8px;
+  flex-shrink:0;
+  background:linear-gradient(160deg,#1C0A3A,#0E0622);
+  border:1.5px solid rgba(140,80,255,0.35);
+  display:flex;align-items:center;justify-content:center;
+  cursor:grab;transition:all 0.25s;position:relative;overflow:hidden;
+  transform:rotate(calc((var(--i,0) - 7) * 1.2deg));
+  box-shadow:0 4px 12px rgba(0,0,0,0.5);
+}
+/* Card back ornament */
+.c-tarot-card::before{
+  content:'';position:absolute;inset:4px;
+  border:1px solid rgba(140,80,255,0.2);border-radius:5px;
+  pointer-events:none;
+}
+.c-tarot-card::after{
+  content:'✦';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:18px;color:rgba(160,100,255,0.3);
+  pointer-events:none;
+}
+.c-tarot-card:active{cursor:grabbing;}
+.c-tarot-card:hover,.c-tarot-card.hov{
+  transform:rotate(0deg) translateY(-14px) scale(1.08);
+  border-color:rgba(160,100,255,0.7);
+  box-shadow:0 12px 32px rgba(119,51,255,0.4);
+  z-index:10;
+}
+.c-tarot-card.selected{
+  opacity:0.15;transform:scale(0.82);
+  border-color:rgba(119,51,255,0.1);
+}
+/* Slots */
+.c-slots{
+  display:flex;justify-content:center;gap:10px;
+  padding:0 20px;margin:4px 0 28px;
+}
+.c-slot{
+  width:90px;height:126px;border-radius:12px;
+  border:1.5px dashed rgba(200,162,39,0.3);
+  background:rgba(200,162,39,0.03);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;transition:all 0.3s;
+}
+.c-slot.filled{
+  border-color:rgba(200,162,39,0.55);border-style:solid;
+  background:rgba(200,162,39,0.06);
+  box-shadow:0 0 20px rgba(200,162,39,0.08);
+}
+.c-slot .cs-empty-txt{
+  font-family:'DM Sans',sans-serif;font-size:10px;
+  color:rgba(200,162,39,0.3);font-style:italic;
+}
+.c-slot.drag-over{
+  border-color:rgba(119,51,255,0.7);background:rgba(119,51,255,0.1);
+  box-shadow:0 0 20px rgba(119,51,255,0.15);
+}
+.c-tarot-card[draggable]{cursor:grab;}
+.c-tarot-card[draggable]:active{cursor:grabbing;}
+.c-tarot-card.reversed::after{transform:translate(-50%,-50%) rotate(180deg);}
+.c-slot .cs-reversed-badge{
+  position:absolute;top:4px;right:4px;
+  font-family:'Syncopate',sans-serif;font-size:5.5px;letter-spacing:0.5px;
+  color:rgba(255,80,80,0.9);background:rgba(255,80,80,0.12);
+  border:1px solid rgba(255,80,80,0.3);border-radius:4px;padding:2px 5px;
+}
+.c-slot .cs-label{
+  position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-family:'Syncopate',sans-serif;font-size:7px;font-weight:700;
+  letter-spacing:2px;color:rgba(200,162,39,0.6);
+  text-transform:uppercase;
+}
+.c-slot .cs-emoji{font-size:24px;margin-bottom:4px;}
+.c-slot .cs-name{
+  font-family:'Cormorant',serif;font-size:10px;font-weight:600;
+  color:var(--gold);text-align:center;line-height:1.3;
+}
+
+/* Angel cards — tarot back style */
+.c-angel-row{display:flex;gap:12px;justify-content:center;margin:4px 0 20px;}
+.c-angel-card{
+  width:80px;height:116px;border-radius:12px;
+  background:linear-gradient(160deg,#1A0A30,#0D0520);
+  border:1.5px solid rgba(200,162,39,0.2);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;cursor:pointer;transition:all 0.3s;
+  position:relative;overflow:hidden;
+}
+.c-angel-card::before{
+  content:'';position:absolute;inset:6px;
+  border:1px solid rgba(200,162,39,0.12);border-radius:8px;
+  pointer-events:none;
+}
+.c-angel-card::after{
+  content:'✦';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-size:28px;color:rgba(200,162,39,0.15);
+  pointer-events:none;
+}
+.c-angel-card:active,.c-angel-card.sel{
+  border-color:rgba(200,162,39,0.6);
+  background:linear-gradient(160deg,#2A1050,#150830);
+  box-shadow:0 0 24px rgba(200,162,39,0.2),0 0 48px rgba(119,51,255,0.1);
+  transform:translateY(-4px);
+}
+.c-angel-card .ca-glyph{display:none;}
+.c-angel-card .ca-lbl{
+  font-family:'Syncopate',sans-serif;font-size:6px;letter-spacing:1.5px;
+  color:rgba(200,162,39,0.35);z-index:1;
+}
+
+/* Dream textarea */
+.c-textarea{
+  width:100%;background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:16px;
+  padding:16px;color:var(--text);
+  font-family:'Cormorant',serif;font-size:15px;font-style:italic;
+  line-height:1.8;resize:none;min-height:120px;
+  transition:all 0.3s;margin-bottom:12px;
+}
+.c-textarea:focus{outline:none;border-color:rgba(119,51,255,0.35);box-shadow:0 0 24px rgba(119,51,255,0.06);}
+.c-textarea::placeholder{color:var(--text3);}
+.c-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.c-tag{
+  padding:6px 14px;border-radius:20px;
+  background:var(--surface);border:1px solid var(--border);
+  font-family:'Syncopate',sans-serif;font-size:7px;
+  letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);cursor:pointer;transition:all 0.2s;
+}
+.c-tag.active{background:rgba(119,51,255,0.12);border-color:rgba(119,51,255,0.35);color:var(--text2);}
+.c-tag:active{transform:scale(0.95);}
+
+/* Zodiac */
+.c-zodiac-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:6px;padding:0 40px;margin-bottom:18px;
+}
+.c-z-item{
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px 4px;border-radius:14px;
+  cursor:pointer;transition:all 0.2s;
+  border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.05);
+}
+.c-z-item:active,.c-z-item.sel{
+  background:rgba(200,162,39,0.07);
+  border-color:rgba(200,162,39,0.25);
+}
+.c-z-item .cz-sym{font-size:22px;filter:drop-shadow(0 0 4px rgba(200,162,39,0.3));}
+.c-z-item .cz-lbl{
+  font-family:'Syncopate',sans-serif;font-size:6.5px;
+  letter-spacing:0.5px;text-transform:uppercase;
+  color:var(--text3);margin-top:4px;
+}
+.c-horo-detail{
+  margin:0 32px 24px;border-radius:16px;
+  background:rgba(0,192,255,0.07);border:1px solid rgba(0,192,255,0.2);
+  padding:16px 14px;
+}
+.c-horo-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.c-horo-sign{font-size:28px;}
+.c-horo-name{font-family:'Cormorant',serif;font-size:16px;font-weight:600;color:var(--text);}
+.c-horo-dates{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:300;color:var(--text3);margin-top:2px;}
+.c-horo-text{
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:300;
+  color:rgba(240,235,227,0.75);font-style:italic;line-height:1.75;margin-bottom:14px;
+}
+.c-aspect-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.c-aspect{}.c-aspect-row{
+  display:flex;justify-content:space-between;
+  font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:1px;
+  color:rgba(240,235,227,0.5);margin-bottom:4px;
+}
+.c-aspect-val{color:rgba(240,235,227,0.75)!important;}
+.c-aspect-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden;}
+.c-aspect-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+
+/* ===== RESULT ===== */
+.result-chamber{
+  min-height:852px;
+  position:relative;
+  display:flex;flex-direction:column;
+}
+.r-top{
+  padding:118px 24px 16px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+}
+.r-icon-big{font-size:42px;display:block;margin-bottom:10px;}
+.r-title{
+  font-family:'Cormorant',serif;font-size:24px;font-style:italic;
+  font-weight:600;color:var(--gold);margin-bottom:4px;
+}
+.r-date{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:300;color:var(--text3);letter-spacing:1px;}
+.r-body{padding:0 24px;}
+.r-scroll-text{
+  border-radius:20px;padding:22px;
+  background:linear-gradient(160deg,rgba(26,16,8,0.8),rgba(14,10,5,0.9));
+  border:1px solid rgba(200,162,39,0.15);
+  position:relative;overflow:hidden;
+  margin-bottom:14px;
+}
+.r-scroll-text::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 22px,rgba(200,162,39,0.015) 23px);
+  pointer-events:none;border-radius:20px;
+}
+.r-eyebrow{
+  font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:4px;
+  color:rgba(200,162,39,0.4);margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;
+}
+.r-text{
+  font-family:'Cormorant',serif;font-size:15px;font-style:italic;
+  color:rgba(240,235,227,0.8);line-height:1.9;
+  position:relative;
+}
+.r-footer{
+  display:flex;align-items:center;gap:10px;
+  margin-top:16px;padding-top:14px;
+  border-top:1px solid rgba(200,162,39,0.08);
+}
+.r-footer .rf-icon{font-size:18px;}
+.r-footer .rf-n{font-family:'Cormorant',serif;font-size:14px;color:var(--text);}
+.r-footer .rf-s{font-family:'DM Sans',sans-serif;font-size:9px;font-weight:300;color:var(--text3);margin-top:1px;}
+
+/* ===== HISTORY ===== */
+.h-items{padding:0 24px;}
+.h-row{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 0;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:all 0.2s;
+}
+.h-row:active{opacity:0.7;}
+.h-ic{
+  width:44px;height:44px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
+}
+.h-inf{flex:1;}
+.h-inf .hi-t{font-family:'Cormorant',serif;font-size:15px;color:var(--text);font-weight:600;margin-bottom:2px;}
+.h-inf .hi-e{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--text3);font-style:italic;line-height:1.4;}
+.h-inf .hi-d{font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:1px;color:rgba(255,255,255,0.12);margin-top:4px;}
+.h-star{color:var(--text3);font-size:16px;cursor:pointer;flex-shrink:0;transition:color 0.2s;}
+.h-star.on{color:var(--gold);}
+
+/* ===== SHOP ===== */
+.shop-bal{
+  margin:8px 24px 20px;
+  border-radius:22px;padding:22px;
+  text-align:center;
+  background:radial-gradient(ellipse at 50% 0%,rgba(200,162,39,0.12),rgba(200,162,39,0.02));
+  border:1px solid rgba(200,162,39,0.2);
+}
+.shop-bal .sb-num{
+  font-family:'Syncopate',sans-serif;font-size:36px;font-weight:700;
+  color:var(--gold);margin-bottom:4px;
+}
+.shop-bal .sb-lbl{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:300;color:var(--text3);letter-spacing:1px;}
+.s-pkg{
+  margin:0 24px 10px;
+  border-radius:18px;padding:16px 18px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;
+}
+.s-pkg:active{transform:scale(0.98);}
+.s-pkg.feat{border-color:rgba(200,162,39,0.3);background:linear-gradient(135deg,rgba(200,162,39,0.06),rgba(255,255,255,0.02));}
+.s-pkg .sp-badge{
+  position:absolute;top:0;right:0;
+  background:var(--gold);color:var(--ink);
+  font-family:'Syncopate',sans-serif;font-size:7px;font-weight:700;
+  letter-spacing:1px;padding:4px 10px;
+  border-radius:0 18px 0 10px;
+}
+.s-pkg .sp-ico{font-size:26px;flex-shrink:0;}
+.s-pkg .sp-inf{flex:1;}
+.s-pkg .sp-amt{font-family:'Cormorant',serif;font-size:17px;color:var(--text);font-weight:600;margin-bottom:2px;}
+.s-pkg .sp-bon{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--text3);font-style:italic;}
+.s-pkg .sp-price{font-family:'Syncopate',sans-serif;font-size:13px;font-weight:700;color:var(--gold);flex-shrink:0;}
+
+/* ===== PROFILE ===== */
+.profile-top{
+  padding:70px 24px 20px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.p-avatar{
+  width:76px;height:76px;border-radius:50%;
+  background:radial-gradient(circle at 40% 40%,rgba(119,51,255,0.4),rgba(204,0,255,0.2));
+  border:1.5px solid rgba(119,51,255,0.3);
+  display:flex;align-items:center;justify-content:center;font-size:30px;
+}
+.p-name{font-family:'Cormorant',serif;font-size:18px;font-weight:600;font-style:italic;color:var(--text);}
+.p-level{font-family:'Syncopate',sans-serif;font-size:8px;letter-spacing:2px;color:var(--text3);}
+.p-rows{padding:0 24px;}
+.p-section-lbl{
+  font-family:'Syncopate',sans-serif;font-size:7px;
+  letter-spacing:3px;color:var(--text3);margin-bottom:8px;
+  padding-bottom:6px;border-bottom:1px solid var(--border);
+}
+.p-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+  cursor:pointer;
+}
+.p-row:active{opacity:0.7;}
+.p-row-l{display:flex;align-items:center;gap:12px;}
+.p-row-ic{
+  width:34px;height:34px;border-radius:10px;
+  background:rgba(119,51,255,0.1);border:1px solid rgba(119,51,255,0.15);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.p-row-lbl{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;color:var(--text2);}
+.p-row-arr{color:var(--text3);font-size:12px;}
+
+/* ===== LOADING / AD ===== */
+.ad-inner{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0 24px;text-align:center;
+}
+.ad-orb{
+  width:100px;height:100px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,rgba(204,0,255,0.6),rgba(119,51,255,0.3),rgba(8,7,15,0.9));
+  box-shadow:0 0 60px rgba(204,0,255,0.25),inset 0 0 30px rgba(255,255,255,0.04);
+  animation:adPulse 2.5s ease-in-out infinite;margin-bottom:28px;
+}
+@keyframes adPulse{
+  0%,100%{box-shadow:0 0 40px rgba(204,0,255,0.2),inset 0 0 20px rgba(255,255,255,0.04);}
+  50%{box-shadow:0 0 100px rgba(204,0,255,0.5),0 0 150px rgba(119,51,255,0.15),inset 0 0 40px rgba(255,255,255,0.07);}
+}
+.ad-title{font-family:'Cormorant',serif;font-size:18px;font-style:italic;color:var(--gold);margin-bottom:8px;}
+.ad-text{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--text3);line-height:1.8;margin-bottom:28px;font-style:italic;}
+.ad-card{
+  width:100%;max-width:280px;
+  border-radius:18px;border:1px solid var(--border);background:var(--surface);padding:20px;
+}
+.ad-placeholder-box{
+  height:80px;border-radius:12px;
+  background:rgba(255,255,255,0.02);border:1px dashed var(--border);
+  display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;
+}
+.ad-bar-bg{height:2px;background:rgba(255,255,255,0.05);border-radius:1px;overflow:hidden;}
+.ad-bar-fill{height:100%;border-radius:1px;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width 0.1s linear;}
+.ad-secs{font-family:'Syncopate',sans-serif;font-size:9px;letter-spacing:2px;color:var(--gold);margin-top:8px;}
+
+/* ===== BUTTONS ===== */
+.c-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:calc(100% - 48px);margin:0 24px;
+  min-height:54px;padding:14px 24px;
+  border-radius:16px;border:none;cursor:pointer;
+  font-family:'Syncopate',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:white;
+  transition:all 0.25s;
+}
+.c-btn:active{transform:scale(0.97);}
+.c-btn:disabled{opacity:0.3;cursor:not-allowed;transform:none!important;}
+.c-btn.purple{background:linear-gradient(135deg,#4A1EA0,#8833EE);box-shadow:0 4px 24px rgba(119,51,255,0.3);}
+.c-btn.cyan{background:linear-gradient(135deg,#005A9A,#00B8F0);box-shadow:0 4px 24px rgba(0,192,255,0.2);}
+.c-btn.gold{background:linear-gradient(135deg,#6A4408,#C8A227);box-shadow:0 4px 24px rgba(200,162,39,0.25);}
+.c-btn.ghost{background:transparent;border:1px solid rgba(200,162,39,0.25);color:var(--gold);box-shadow:none;}
+.c-btn.ghost:active{background:rgba(200,162,39,0.05);}
+.c-btn.white{background:linear-gradient(135deg,#707080,#B8B8C8);color:var(--ink);box-shadow:0 4px 20px rgba(184,184,200,0.15);}
+.c-btn.magenta{background:linear-gradient(135deg,#6A0090,#CC00FF);box-shadow:0 4px 24px rgba(204,0,255,0.25);}
+.c-btn.dream-col{background:linear-gradient(135deg,#280F6A,#6644CC);}
+.sp8{height:8px;display:block;}
+.sp16{height:16px;display:block;}
+
+/* ===== TOAST ===== */
+.c-toast{
+  position:absolute;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:rgba(20,16,30,0.95);border:1px solid rgba(119,51,255,0.3);
+  border-radius:28px;padding:10px 20px;
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;
+  color:var(--text);white-space:nowrap;
+  z-index:9999;opacity:0;transition:all 0.3s;
+  pointer-events:none;backdrop-filter:blur(20px);
+}
+.c-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ===== MODAL (bottom sheet) ===== */
+.c-modal-ov{
+  position:absolute;inset:0;z-index:850;
+  background:rgba(0,0,0,0);pointer-events:none;transition:background 0.3s;
+  display:flex;align-items:flex-end;
+}
+.c-modal-ov.open{background:rgba(0,0,0,0.7);pointer-events:all;}
+.c-modal-sheet{
+  width:100%;background:var(--ink2);
+  border-radius:28px 28px 0 0;
+  border-top:1px solid var(--border);
+  padding:28px 24px 56px;
+  transform:translateY(100%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.c-modal-ov.open .c-modal-sheet{transform:translateY(0);}
+.c-modal-handle{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);margin:0 auto 22px;}
+
+/* Stars */
+.star-bg{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.c-star{position:absolute;border-radius:50%;background:#fff;}
+@keyframes cTwinkle{0%,100%{opacity:0.08;}50%{opacity:0.6;}}
+
+/* Zodiac Picker */
+.zp-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:9px 4px;border-radius:12px;cursor:pointer;
+  border:1px solid transparent;background:rgba(255,255,255,0.03);
+  transition:all 0.2s;
+}
+.zp-item:active,.zp-item.sel{
+  background:rgba(119,51,255,0.15);
+  border-color:rgba(119,51,255,0.4);
+}
+.zp-sym{font-size:20px;line-height:1;}
+.zp-lbl{font-family:'Syncopate',sans-serif;font-size:6px;letter-spacing:0.5px;color:var(--text3);text-transform:uppercase;}
+
+/* Section header for sub-screens */
+.sub-header{
+  padding:66px 24px 0;margin-bottom:4px;
+  display:flex;align-items:center;gap:14px;
+}
+.sub-header h2{
+  font-family:'Cormorant',serif;font-size:22px;font-style:italic;font-weight:600;color:var(--text);
+}
+.back-x{
+  width:34px;height:34px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;color:var(--text3);
+  transition:all 0.2s;flex-shrink:0;
+}
+.back-x:active{transform:scale(0.9);}
+
+/* Profile form */
+.pf-field{margin-bottom:16px;}
+.pf-label{font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:2px;color:var(--text3);margin-bottom:6px;}
+.pf-input{
+  width:100%;background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:300;
+  transition:all 0.2s;outline:none;
+}
+.pf-input:focus{border-color:rgba(119,51,255,0.4);box-shadow:0 0 16px rgba(119,51,255,0.06);}
+.pf-chip{
+  padding:7px 14px;border-radius:20px;
+  background:var(--surface);border:1px solid var(--border);
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;
+  color:var(--text3);cursor:pointer;transition:all 0.2s;white-space:nowrap;
+}
+.pf-chip.sel{background:rgba(119,51,255,0.15);border-color:rgba(119,51,255,0.4);color:var(--text);}
+.pf-chip:active{transform:scale(0.95);}
+</style>
+</head>
+<body>
+
+<div class="iphone" id="iphone">
+  <div class="dynamic-island"></div>
+  <div class="home-bar"></div>
+
+  <!-- STARS -->
+  <div class="star-bg" id="starBg"></div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="status-time" id="clock">09:41</span>
+    <div class="status-icons"><span>▲</span><span>🔋</span></div>
+  </div>
+
+  <!-- ===== DRAWER ===== -->
+  <div class="drawer-overlay" id="drawer" onclick="handleDrawerClick(event)">
+    <div class="drawer">
+      <div class="drawer-logo">
+        <div class="d-title">Nexlify</div>
+        <div class="d-sub">Kaderin Sesi</div>
+      </div>
+      <!-- Profile mini -->
+      <div style="padding:0 24px 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);margin-bottom:8px;">
+        <div style="width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(119,51,255,0.5),rgba(204,0,255,0.2));border:1px solid rgba(119,51,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🔮</div>
+        <div>
+          <div style="font-family:'Cormorant',serif;font-size:15px;font-weight:600;color:var(--text);">Mystic Kullanıcı</div>
+          <div style="font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:2px;color:var(--text3);margin-top:2px;">🪙 <span id="drawerTokens">150</span> sikke</div>
+        </div>
+      </div>
+      <div class="drawer-nav-label">Hesabım</div>
+      <div class="drawer-item" onclick="goScreen('profile');closeDrawer();">
+        <span class="di-icon">👤</span><span class="di-label">Profil & Kişisel Bilgiler</span>
+      </div>
+      <div class="drawer-item" onclick="goScreen('history');closeDrawer();">
+        <span class="di-icon">📜</span><span class="di-label">Fal Geçmişi</span>
+      </div>
+      <div class="drawer-item" onclick="goScreen('dreamjournal');closeDrawer();">
+        <span class="di-icon">🌙</span><span class="di-label">Rüya Günlüğüm</span>
+      </div>
+      <div class="drawer-item" onclick="goScreen('shop');closeDrawer();">
+        <span class="di-icon">🪙</span><span class="di-label">Mağaza</span>
+      </div>
+      <div class="drawer-nav-label" style="margin-top:12px;">Burç & Yıldız</div>
+      <div class="drawer-item" onclick="openHoroscope('weekly');closeDrawer();">
+        <span class="di-icon">✨</span><span class="di-label">Haftalık Burç</span>
+        <span class="di-badge">ÜCRETSİZ</span>
+      </div>
+      <div class="drawer-item" onclick="openHoroscope('monthly');closeDrawer();">
+        <span class="di-icon">🌕</span><span class="di-label">Aylık Burç</span>
+        <span class="di-badge">ÜCRETSİZ</span>
+      </div>
+      <div class="drawer-item" onclick="cToast('Yıldızname yakında açılıyor ✦');closeDrawer();">
+        <span class="di-icon">🌌</span><span class="di-label">Yıldızname</span>
+        <span class="di-badge" style="color:rgba(200,162,39,0.7);background:rgba(200,162,39,0.08);border-color:rgba(200,162,39,0.2);">YAKINDA</span>
+      </div>
+      <div class="drawer-nav-label" style="margin-top:12px;">Gizli Bilgeler</div>
+      <div class="drawer-item" onclick="cToast('Numeroloji yakında açılıyor ✦');closeDrawer();">
+        <span class="di-icon">🔢</span><span class="di-label">Numeroloji</span>
+        <span class="di-badge" style="color:rgba(200,162,39,0.7);background:rgba(200,162,39,0.08);border-color:rgba(200,162,39,0.2);">YAKINDA</span>
+      </div>
+      <div class="drawer-item" onclick="cToast('Ruh Hayvanı yakında açılıyor ✦');closeDrawer();">
+        <span class="di-icon">🦋</span><span class="di-label">Ruh Hayvanı</span>
+        <span class="di-badge" style="color:rgba(200,162,39,0.7);background:rgba(200,162,39,0.08);border-color:rgba(200,162,39,0.2);">YAKINDA</span>
+      </div>
+      <div class="drawer-item" onclick="cToast('Aura Rengi yakında açılıyor ✦');closeDrawer();">
+        <span class="di-icon">🌈</span><span class="di-label">Aura Rengi</span>
+        <span class="di-badge" style="color:rgba(200,162,39,0.7);background:rgba(200,162,39,0.08);border-color:rgba(200,162,39,0.2);">YAKINDA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HOME ===== -->
+  <div id="screen-home" class="screen active">
+    <!-- BG -->
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 35%,rgba(119,51,255,0.14) 0%,rgba(0,192,255,0.04) 45%,var(--ink) 75%);"></div>
+    <!-- Topbar -->
+    <div class="topbar">
+      <div class="menu-btn" onclick="openDrawer()">
+        <div class="menu-line"></div><div class="menu-line"></div><div class="menu-line"></div>
+      </div>
+      <div class="token-chip" onclick="goScreen('shop')">
+        <span>🪙</span><span id="tokenDisplay">150</span>
+      </div>
+    </div>
+    <!-- Content -->
+    <div class="home-portal">
+      <div class="portal-glow"></div>
+      <div class="portal-title">Kaderin Sesi</div>
+      <div class="portal-moon">☽</div>
+      <div class="portal-name">NEXLIFY</div>
+
+      <!-- Daily pill — Zodiac Selector -->
+      <div class="home-daily" id="dailyPill" onclick="openZodiacPicker()">
+        <div class="hd-label" id="dailyPillLabel">☽ Günün Mesajı</div>
+        <div class="hd-text" id="dailyPillText">Burcunu seç, günlük mesajını al ✦</div>
+      </div>
+
+      <!-- Zodiac Picker Dropdown -->
+      <div id="zodiacPicker" style="display:none;width:calc(100% - 48px);margin-top:8px;border-radius:20px;background:rgba(20,16,30,0.97);border:1px solid rgba(119,51,255,0.25);backdrop-filter:blur(20px);padding:14px 12px;z-index:50;position:relative;">
+        <div style="font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:3px;color:var(--text3);text-align:center;margin-bottom:12px;">BURCUNU SEÇ</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
+          <div class="zp-item" data-sign="♈" data-name="Koç" data-dates="21 Mar – 19 Nis" onclick="selectZodiac(this)"><span class="zp-sym">♈</span><span class="zp-lbl">Koç</span></div>
+          <div class="zp-item" data-sign="♉" data-name="Boğa" data-dates="20 Nis – 20 May" onclick="selectZodiac(this)"><span class="zp-sym">♉</span><span class="zp-lbl">Boğa</span></div>
+          <div class="zp-item" data-sign="♊" data-name="İkizler" data-dates="21 May – 20 Haz" onclick="selectZodiac(this)"><span class="zp-sym">♊</span><span class="zp-lbl">İkizler</span></div>
+          <div class="zp-item" data-sign="♋" data-name="Yengeç" data-dates="21 Haz – 22 Tem" onclick="selectZodiac(this)"><span class="zp-sym">♋</span><span class="zp-lbl">Yengeç</span></div>
+          <div class="zp-item" data-sign="♌" data-name="Aslan" data-dates="23 Tem – 22 Ağu" onclick="selectZodiac(this)"><span class="zp-sym">♌</span><span class="zp-lbl">Aslan</span></div>
+          <div class="zp-item" data-sign="♍" data-name="Başak" data-dates="23 Ağu – 22 Eyl" onclick="selectZodiac(this)"><span class="zp-sym">♍</span><span class="zp-lbl">Başak</span></div>
+          <div class="zp-item" data-sign="♎" data-name="Terazi" data-dates="23 Eyl – 22 Eki" onclick="selectZodiac(this)"><span class="zp-sym">♎</span><span class="zp-lbl">Terazi</span></div>
+          <div class="zp-item" data-sign="♏" data-name="Akrep" data-dates="23 Eki – 21 Kas" onclick="selectZodiac(this)"><span class="zp-sym">♏</span><span class="zp-lbl">Akrep</span></div>
+          <div class="zp-item" data-sign="♐" data-name="Yay" data-dates="22 Kas – 21 Ara" onclick="selectZodiac(this)"><span class="zp-sym">♐</span><span class="zp-lbl">Yay</span></div>
+          <div class="zp-item" data-sign="♑" data-name="Oğlak" data-dates="22 Ara – 19 Oca" onclick="selectZodiac(this)"><span class="zp-sym">♑</span><span class="zp-lbl">Oğlak</span></div>
+          <div class="zp-item" data-sign="♒" data-name="Kova" data-dates="20 Oca – 18 Şub" onclick="selectZodiac(this)"><span class="zp-sym">♒</span><span class="zp-lbl">Kova</span></div>
+          <div class="zp-item" data-sign="♓" data-name="Balık" data-dates="19 Şub – 20 Mar" onclick="selectZodiac(this)"><span class="zp-sym">♓</span><span class="zp-lbl">Balık</span></div>
+        </div>
+      </div>
+
+      <!-- Fal orbit carousel -->
+      <div class="fal-carousel">
+        <div class="fal-carousel-track">
+
+          <div class="fal-orbit" onclick="goScreen('coffee')">
+            <div class="fo-ring" style="background:radial-gradient(circle,rgba(139,69,19,0.2),rgba(80,30,5,0.12));">
+              <span class="fo-emoji" style="filter:drop-shadow(0 0 14px rgba(200,120,50,0.6));">☕</span>
+            </div>
+            <div class="fo-name">Kahve</div>
+            <div class="fo-cost">🪙 30</div>
+          </div>
+
+          <div class="fal-orbit" onclick="goScreen('tarot')">
+            <div class="fo-ring" style="background:radial-gradient(circle,rgba(119,51,255,0.2),rgba(60,20,120,0.12));">
+              <span class="fo-emoji" style="filter:drop-shadow(0 0 14px rgba(150,100,255,0.6));">🃏</span>
+            </div>
+            <div class="fo-name">Tarot</div>
+            <div class="fo-cost">🪙 25</div>
+          </div>
+
+          <div class="fal-orbit" onclick="goScreen('palm')">
+            <div class="fo-ring" style="background:radial-gradient(circle,rgba(0,192,255,0.15),rgba(0,80,140,0.1));">
+              <span class="fo-emoji" style="filter:drop-shadow(0 0 14px rgba(0,192,255,0.5));">✋</span>
+            </div>
+            <div class="fo-name">El Falı</div>
+            <div class="fo-cost">🪙 40</div>
+          </div>
+
+          <div class="fal-orbit" onclick="goScreen('water')">
+            <div class="fo-ring" style="background:radial-gradient(circle,rgba(0,160,220,0.15),rgba(0,60,110,0.1));">
+              <span class="fo-emoji" style="filter:drop-shadow(0 0 14px rgba(0,160,220,0.5));">💧</span>
+            </div>
+            <div class="fo-name">Su Falı</div>
+            <div class="fo-cost">🪙 35</div>
+          </div>
+
+          <div class="fal-orbit" onclick="goScreen('horoscope')">
+            <div class="fo-ring" style="background:radial-gradient(circle,rgba(0,192,255,0.12),rgba(0,80,160,0.08));">
+              <span class="fo-emoji" style="filter:drop-shadow(0 0 14px rgba(0,200,255,0.4));">✨</span>
+            </div>
+            <div class="fo-name">Burç</div>
+            <div class="fo-cost" style="color:rgba(0,192,255,0.7);">Ücretsiz</div>
+          </div>
+
+          <div class="fal-orbit" onclick="goScreen('angel')">
+            <div class="fo-ring" style="background:radial-gradient(circle,rgba(220,196,100,0.12),rgba(140,120,40,0.08));">
+              <span class="fo-emoji" style="filter:drop-shadow(0 0 14px rgba(220,196,100,0.4));">👼</span>
+            </div>
+            <div class="fo-name">Melek</div>
+            <div class="fo-cost">🪙 45</div>
+          </div>
+
+          <div class="fal-orbit" onclick="goScreen('crystal')">
+            <div class="fo-ring" style="background:radial-gradient(circle,rgba(204,0,255,0.18),rgba(100,0,140,0.1));">
+              <span class="fo-emoji" style="filter:drop-shadow(0 0 14px rgba(204,0,255,0.6));">🔮</span>
+            </div>
+            <div class="fo-name">Kristal</div>
+            <div class="fo-cost">🪙 35</div>
+          </div>
+
+          <div class="fal-orbit" onclick="goScreen('dream')">
+            <div class="fo-ring" style="background:radial-gradient(circle,rgba(100,80,200,0.15),rgba(50,30,120,0.1));">
+              <span class="fo-emoji" style="filter:drop-shadow(0 0 14px rgba(100,80,200,0.5));">🌙</span>
+            </div>
+            <div class="fo-name">Rüya</div>
+            <div class="fo-cost">🪙 20</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Daily quote -->
+      <div style="margin:auto 24px 0;padding-top:12px;padding-bottom:20px;text-align:center;width:100%;">
+        <div style="font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:3px;color:var(--text3);margin-bottom:10px;">BUGÜNÜN SÖZÜ</div>
+        <div style="font-family:'Cormorant',serif;font-size:15px;font-style:italic;color:rgba(240,235,227,0.45);line-height:1.7;">"Yıldızlar yolu gösterir, adımları sen atarsın."</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:300;color:var(--text3);margin-top:8px;">— Mevlana</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== COFFEE ===== -->
+  <div id="screen-coffee" class="screen scrollable">
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 20%,rgba(139,60,10,0.35) 0%,rgba(80,30,5,0.15) 40%,var(--ink) 70%);"></div>
+    <div class="chamber-particles" id="coffeeParts"></div>
+    <div class="topbar">
+      <div class="menu-btn" onclick="goScreen('home')"><div style="font-size:16px;color:var(--text3);">←</div></div>
+      
+      <div class="token-chip" onclick="goScreen('shop')"><span>🪙</span><span id="td2">150</span></div>
+    </div>
+    <div class="chamber-content">
+      <div class="chamber-icon-wrap">
+        <div class="chamber-halo" style="background:rgba(180,90,20,0.4);top:10px;"></div>
+        <div class="chamber-big-icon" style="filter:drop-shadow(0 0 30px rgba(200,120,50,0.6));">☕</div>
+        <div class="chamber-title">Kahve Falı</div>
+        <div class="chamber-subtitle">Fincandaki telveden hayatınızın sırlarını okuyoruz.</div>
+      </div>
+      <div class="sigil"><div class="s-line"></div><div class="s-mark">✦ ✧ ✦</div><div class="s-line"></div></div>
+      <div class="c-upload" style="padding:14px 16px;margin-bottom:8px;" onclick="cToast('Fincan fotoğrafı seçildi')">
+        <span class="cu-icon" style="font-size:22px;margin-bottom:4px;">☕</span>
+        <div class="cu-title">Fincan Fotoğrafları</div>
+        <div class="cu-hint">2 fotoğraf · farklı açılardan</div>
+      </div>
+      <div class="c-upload" style="padding:14px 16px;margin-bottom:8px;" onclick="cToast('Tabak fotoğrafı seçildi')">
+        <span class="cu-icon" style="font-size:22px;margin-bottom:4px;">🍽️</span>
+        <div class="cu-title">Tabak Fotoğrafı</div>
+        <div class="cu-hint">1 fotoğraf · tabaktaki şekiller</div>
+      </div>
+      <div class="c-panel" style="margin-bottom:10px;">
+        <div class="c-panel-label" style="color:rgba(200,130,50,0.6);">Hazırlanma Ritüeli</div>
+        <div class="c-steps">
+          <div class="c-step"><div class="cs-n">1</div><div class="cs-t">Türk kahvenizi için ve tam olarak bitirin</div></div>
+          <div class="c-step"><div class="cs-n">2</div><div class="cs-t">Fincana tabağını kapatın, niyet tutun</div></div>
+          <div class="c-step"><div class="cs-n">3</div><div class="cs-t">Ters çevirin, 20 dakika bekleyin</div></div>
+          <div class="c-step"><div class="cs-n">4</div><div class="cs-t">Fotoğrafları yükleyin, falınız hazırlansın</div></div>
+        </div>
+      </div>
+      <button class="c-btn gold" style="margin-top:8px;" onclick="goScreen('ad')">FALI GÖR — 🪙 30</button>
+      <span class="sp16"></span>
+    </div>
+  </div>
+
+  <!-- ===== TAROT ===== -->
+  <div id="screen-tarot" class="screen scrollable">
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 20%,rgba(100,40,220,0.35) 0%,rgba(60,20,120,0.15) 40%,var(--ink) 70%);"></div>
+    <div class="topbar">
+      <div class="menu-btn" onclick="goScreen('home')"><div style="font-size:16px;color:var(--text3);">←</div></div>
+      
+      <div class="token-chip" onclick="goScreen('shop')"><span>🪙</span><span>150</span></div>
+    </div>
+    <div class="chamber-content" style="padding-top:118px;padding-bottom:0;">
+      <div class="chamber-icon-wrap" style="margin-bottom:10px;">
+        <div class="chamber-halo" style="background:rgba(119,51,255,0.45);top:10px;"></div>
+        <div class="chamber-big-icon" style="filter:drop-shadow(0 0 30px rgba(150,100,255,0.7));">🃏</div>
+        <div class="chamber-title">Tarot</div>
+        <div class="chamber-subtitle">Kartı tıkla veya sürükle slota bırak.</div>
+      </div>
+      <!-- Deck -->
+      <div class="c-tarot-scroll" style="margin:0 -24px;">
+        <div class="c-tarot-track" id="cTarotDeck"></div>
+      </div>
+      <div style="height:10px;"></div>
+      <!-- Slots -->
+      <div class="c-slots" id="tarotSlots" style="margin:0;padding:0 0 8px;">
+        <div class="c-slot" id="cs0" data-slot="0" ondragover="tarotDragOver(event)" ondrop="tarotDrop(event,0)" ondragenter="tarotDragEnter(this)" ondragleave="tarotDragLeave(this)">
+          <span class="cs-empty-txt">boş</span><span class="cs-label">GEÇMİŞ</span>
+        </div>
+        <div class="c-slot" id="cs1" data-slot="1" ondragover="tarotDragOver(event)" ondrop="tarotDrop(event,1)" ondragenter="tarotDragEnter(this)" ondragleave="tarotDragLeave(this)">
+          <span class="cs-empty-txt">boş</span><span class="cs-label">ŞİMDİ</span>
+        </div>
+        <div class="c-slot" id="cs2" data-slot="2" ondragover="tarotDragOver(event)" ondrop="tarotDrop(event,2)" ondragenter="tarotDragEnter(this)" ondragleave="tarotDragLeave(this)">
+          <span class="cs-empty-txt">boş</span><span class="cs-label">GELECEK</span>
+        </div>
+      </div>
+      <div style="height:28px;"></div>
+      <button class="c-btn purple" id="cTarotBtn" onclick="goScreen('ad')" disabled>TAROT FALINA BAK — 🪙 25</button>
+      <span class="sp16"></span>
+    </div>
+  </div>
+
+  <!-- ===== PALM ===== -->
+  <div id="screen-palm" class="screen scrollable">
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 20%,rgba(0,150,220,0.25) 0%,rgba(0,80,140,0.12) 45%,var(--ink) 72%);"></div>
+    <div class="topbar">
+      <div class="menu-btn" onclick="goScreen('home')"><div style="font-size:16px;color:var(--text3);">←</div></div>
+      
+      <div class="token-chip" onclick="goScreen('shop')"><span>🪙</span><span>150</span></div>
+    </div>
+    <div class="chamber-content">
+      <div class="chamber-icon-wrap">
+        <div class="chamber-halo" style="background:rgba(0,150,220,0.4);top:10px;"></div>
+        <div class="chamber-big-icon" style="filter:drop-shadow(0 0 30px rgba(0,192,255,0.65));">✋</div>
+        <div class="chamber-title">El Falı</div>
+        <div class="chamber-subtitle">Elinizin fotoğrafını çekin, çizgilerinizin sırrı açılsın.</div>
+      </div>
+      <div class="sigil"><div class="s-line"></div><div class="s-mark">✦ ✧ ✦</div><div class="s-line"></div></div>
+      <!-- Camera / File choice -->
+      <div style="display:flex;gap:12px;margin:0 0 16px;">
+        <div id="palmCamBtn" style="flex:1;border:1px solid rgba(0,192,255,0.2);border-radius:18px;padding:20px 12px;text-align:center;cursor:pointer;background:rgba(0,192,255,0.05);transition:all 0.2s;" onclick="palmChoose('cam')">
+          <div style="font-size:28px;margin-bottom:8px;">📷</div>
+          <div style="font-family:'Cormorant',serif;font-size:14px;color:var(--text);">Kamera</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:10px;color:var(--text3);margin-top:3px;">Elini çek</div>
+        </div>
+        <div id="palmFileBtn" style="flex:1;border:1px solid rgba(0,192,255,0.2);border-radius:18px;padding:20px 12px;text-align:center;cursor:pointer;background:rgba(0,192,255,0.05);transition:all 0.2s;" onclick="palmChoose('file')">
+          <div style="font-size:28px;margin-bottom:8px;">🖼️</div>
+          <div style="font-family:'Cormorant',serif;font-size:14px;color:var(--text);">Dosya</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:10px;color:var(--text3);margin-top:3px;">Galeriden seç</div>
+        </div>
+      </div>
+      <div id="palmPreview" style="display:none;text-align:center;padding:12px;border-radius:16px;background:rgba(0,192,255,0.08);border:1px solid rgba(0,192,255,0.2);margin-bottom:14px;">
+        <div style="font-size:32px;margin-bottom:6px;">✋</div>
+        <div style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--cyan);">El fotoğrafı hazır ✓</div>
+      </div>
+      <div class="c-panel">
+        <div class="c-panel-label" style="color:rgba(0,192,255,0.6);">Nasıl Çalışır?</div>
+        <div class="c-steps">
+          <div class="c-step"><div class="cs-n">1</div><div class="cs-t">Elinizi aydınlık bir ortamda fotoğraflayın</div></div>
+          <div class="c-step"><div class="cs-n">2</div><div class="cs-t">Yapay zeka çizgilerinizi analiz eder</div></div>
+          <div class="c-step"><div class="cs-n">3</div><div class="cs-t">Kalp, kader ve akıl çizgileriniz yorumlanır</div></div>
+          <div class="c-step"><div class="cs-n">4</div><div class="cs-t">Kişiselleştirilmiş yorumunuzu alın</div></div>
+        </div>
+      </div>
+      <span class="sp8"></span>
+      <button class="c-btn cyan" id="palmGoBtn" disabled onclick="goScreen('ad')">EL FALINA BAK — 🪙 40</button>
+      <span class="sp16"></span>
+    </div>
+  </div>
+
+  <!-- ===== WATER ===== -->
+  <div id="screen-water" class="screen scrollable">
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 20%,rgba(0,130,200,0.22) 0%,rgba(0,70,120,0.1) 45%,var(--ink) 72%);"></div>
+    <div class="topbar">
+      <div class="menu-btn" onclick="goScreen('home')"><div style="font-size:16px;color:var(--text3);">←</div></div>
+      
+      <div class="token-chip" onclick="goScreen('shop')"><span>🪙</span><span>150</span></div>
+    </div>
+    <div class="chamber-content">
+      <div class="chamber-icon-wrap">
+        <div class="chamber-halo" style="background:rgba(0,140,210,0.35);top:10px;"></div>
+        <div class="chamber-big-icon" style="filter:drop-shadow(0 0 30px rgba(0,192,255,0.6));">💧</div>
+        <div class="chamber-title" style="color:#70D8FF;">Su Falı</div>
+        <div class="chamber-subtitle">Su yüzeyinde beliren semboller geleceğinizi aydınlatır.</div>
+      </div>
+      <div class="sigil"><div class="s-line"></div><div class="s-mark">✦ ✧ ✦</div><div class="s-line"></div></div>
+      <!-- Water bowl canvas -->
+      <div style="position:relative;margin:0 auto 16px;width:220px;height:220px;">
+        <canvas id="waterCanvas" width="220" height="220" style="border-radius:50%;cursor:crosshair;display:block;"></canvas>
+        <div id="waterHint" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+          <div style="text-align:center;padding:0 24px;">
+            <div style="font-family:'Cormorant',serif;font-size:14px;font-style:italic;color:rgba(0,192,255,0.6);line-height:1.6;">Parmağınızı kasede<br>dolaştırın…</div>
+          </div>
+        </div>
+      </div>
+      <div class="c-panel">
+        <div class="c-panel-label" style="color:rgba(0,192,255,0.6);">Ritüel Hakkında</div>
+        <p>Su, kaderin en eski aynasıdır. Yüzeyinde beliren şekiller sezginizle konuşur — akılla değil, ruhla okunur.</p>
+      </div>
+      <span class="sp8"></span>
+      <button class="c-btn cyan" id="waterGoBtn" disabled onclick="goScreen('ad')">SU FALINA BAŞLA — 🪙 35</button>
+      <span class="sp16"></span>
+    </div>
+  </div>
+
+  <!-- ===== ANGEL ===== -->
+  <div id="screen-angel" class="screen scrollable">
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 20%,rgba(220,196,100,0.15) 0%,rgba(140,120,40,0.07) 45%,var(--ink) 72%);"></div>
+    <div class="topbar">
+      <div class="menu-btn" onclick="goScreen('home')"><div style="font-size:16px;color:var(--text3);">←</div></div>
+      
+      <div class="token-chip" onclick="goScreen('shop')"><span>🪙</span><span>150</span></div>
+    </div>
+    <div class="chamber-content">
+      <div class="chamber-icon-wrap">
+        <div class="chamber-halo" style="background:rgba(220,196,100,0.2);top:10px;"></div>
+        <div class="chamber-big-icon" style="filter:drop-shadow(0 0 24px rgba(220,196,100,0.4));">👼</div>
+        <div class="chamber-title" style="color:#F0ECD8;">Melek Falı</div>
+        <div class="chamber-subtitle">Kalbindeki soruyu tut. Melek sana rehberlik etsin.</div>
+      </div>
+      <div class="sigil"><div class="s-line"></div><div class="s-mark">✦ ✧ ✦</div><div class="s-line"></div></div>
+      <!-- Intent input -->
+      <div style="margin-bottom:14px;">
+        <textarea id="angelQuestion" class="c-textarea" placeholder="Aklındaki soruyu buraya yaz… Örn: Bu ilişkide doğru yolda mıyım?" rows="3" style="min-height:80px;" oninput="checkAngelReady()"></textarea>
+      </div>
+      <div class="c-panel" style="margin-bottom:16px;">
+        <div class="c-panel-label" style="color:rgba(220,196,100,0.8);font-size:8px;letter-spacing:3px;">MELEK SEÇ · SEZGİNE GÜVEN</div>
+        <p>Kalbindeki soruyu tut, sana çağrılan meleği hisset.</p>
+      </div>
+      <div class="c-angel-row">
+        <div class="c-angel-card" data-angel="Uriel" data-msg="Uriel bilgelik ışığı sunuyor. Aklın ve sezgin bugün güçlü — doğru karar önünde." onclick="selAngel(this)" style="background:linear-gradient(135deg,#1A0A30,#0D1520);">
+          <span class="ca-glyph"></span><span class="ca-lbl">I</span>
+        </div>
+        <div class="c-angel-card" data-angel="Mikail" data-msg="Mikail sana bolluk ve bereket getiriyor. Korku değil, güven ile ilerle." onclick="selAngel(this)" style="background:linear-gradient(135deg,#150A20,#1A0A10);">
+          <span class="ca-glyph"></span><span class="ca-lbl">II</span>
+        </div>
+        <div class="c-angel-card" data-angel="Cebrail" data-msg="Cebrail sana bir mesaj taşıyor: Söylemek istediklerini artık söyleme vakti." onclick="selAngel(this)" style="background:linear-gradient(135deg,#0A1520,#0A0A1A);">
+          <span class="ca-glyph"></span><span class="ca-lbl">III</span>
+        </div>
+        <div class="c-angel-card" data-angel="Raphael" data-msg="Raphael şifa gönderiyor. Bedenini ve ruhunu dinle, iyileşme yoldasın." onclick="selAngel(this)" style="background:linear-gradient(135deg,#0A1A15,#0D0A1A);">
+          <span class="ca-glyph"></span><span class="ca-lbl">IV</span>
+        </div>
+      </div>
+      <button class="c-btn white" id="angelGoBtn" disabled onclick="goScreen('ad')">MELEKLERDEN YARDIM İSTE — 🪙 45</button>
+      <span class="sp16"></span>
+    </div>
+  </div>
+
+  <!-- ===== CRYSTAL ===== -->
+  <div id="screen-crystal" class="screen scrollable">
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 20%,rgba(180,0,240,0.28) 0%,rgba(100,0,160,0.12) 42%,var(--ink) 72%);"></div>
+    <div class="topbar">
+      <div class="menu-btn" onclick="goScreen('home')"><div style="font-size:16px;color:var(--text3);">←</div></div>
+      
+      <div class="token-chip" onclick="goScreen('shop')"><span>🪙</span><span>150</span></div>
+    </div>
+    <div class="chamber-content">
+      <div class="chamber-icon-wrap">
+        <div class="chamber-halo" style="background:rgba(180,0,240,0.5);top:10px;"></div>
+        <div class="chamber-big-icon" style="filter:drop-shadow(0 0 30px rgba(204,0,255,0.7));animation:crystalPulse 4s ease-in-out infinite;">🔮</div>
+        <style>@keyframes crystalPulse{0%,100%{filter:drop-shadow(0 0 20px rgba(204,0,255,0.5));}50%{filter:drop-shadow(0 0 50px rgba(204,0,255,0.9)) drop-shadow(0 0 80px rgba(119,51,255,0.4));}}</style>
+        <div class="chamber-title" style="color:#CC88FF;">Kristal Falı</div>
+        <div class="chamber-subtitle">Parmağınla küreyi uyandır. Sihir kendiliğinden belirir.</div>
+      </div>
+      <div class="sigil"><div class="s-line"></div><div class="s-mark">✦ ✧ ✦</div><div class="s-line"></div></div>
+      <!-- Crystal drag sphere -->
+      <div style="position:relative;margin:0 auto 16px;width:180px;height:180px;">
+        <canvas id="crystalCanvas" width="180" height="180" style="border-radius:50%;cursor:crosshair;display:block;box-shadow:0 0 50px rgba(204,0,255,0.25),inset 0 0 30px rgba(255,255,255,0.08);"></canvas>
+        <div id="crystalHint" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+          <div style="font-size:40px;">🔮</div>
+        </div>
+      </div>
+      <div class="c-panel">
+        <div class="c-panel-label" style="color:rgba(204,0,255,0.6);">Hazırlanma Ritüeli</div>
+        <p>Parmağınızı küre üzerinde gezdirin. Görüntüler belirdikçe zihin sessizleşir.</p>
+      </div>
+      <span class="sp8"></span>
+      <button class="c-btn magenta" id="crystalGoBtn" disabled onclick="goScreen('ad')">KRİSTALE BAK — 🪙 35</button>
+      <span class="sp16"></span>
+    </div>
+  </div>
+
+  <!-- ===== DREAM ===== -->
+  <div id="screen-dream" class="screen scrollable">
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 20%,rgba(80,60,180,0.25) 0%,rgba(40,30,120,0.1) 44%,var(--ink) 72%);"></div>
+    <div class="topbar">
+      <div class="menu-btn" onclick="goScreen('home')"><div style="font-size:16px;color:var(--text3);">←</div></div>
+      
+      <div class="token-chip" onclick="goScreen('shop')"><span>🪙</span><span>150</span></div>
+    </div>
+    <div class="chamber-content">
+      <div class="chamber-icon-wrap">
+        <div class="chamber-halo" style="background:rgba(80,60,200,0.35);top:10px;"></div>
+        <div class="chamber-big-icon" style="filter:drop-shadow(0 0 24px rgba(100,80,220,0.6));">🌙</div>
+        <div class="chamber-title" style="color:#B090FF;">Rüya Yorumu</div>
+        <div class="chamber-subtitle">Gördüğünüz rüyayı anlatın, yapay zeka yorumlasın.</div>
+      </div>
+      <div class="sigil"><div class="s-line"></div><div class="s-mark">✦ ✧ ✦</div><div class="s-line"></div></div>
+      <textarea class="c-textarea" placeholder="Rüyanızı buraya yazın… Örn: Uçan bir balina gördüm ve beni okyanusun derinliklerine götürdü…" rows="5"></textarea>
+      <div class="c-tags">
+        <button class="c-tag active">Genel</button>
+        <button class="c-tag">Aşk</button>
+        <button class="c-tag">Kariyer</button>
+        <button class="c-tag">Para</button>
+      </div>
+      <button class="c-btn dream-col" onclick="goScreen('ad')">RÜYAMI YORUMLA — 🪙 20</button>
+      <span class="sp16"></span>
+    </div>
+  </div>
+
+  <!-- ===== HOROSCOPE ===== -->
+  <div id="screen-horoscope" class="screen scrollable" style="background:rgba(5,10,20,0.0);">
+    <div class="chamber-bg" style="background:linear-gradient(180deg,rgba(0,40,80,0.25) 0%,rgba(20,10,60,0.15) 50%,transparent 100%);"></div>
+    <div class="topbar">
+      <div class="menu-btn" onclick="goScreen('home')"><div style="font-size:16px;color:var(--text3);">←</div></div>
+      <span class="screen-title" id="horoModeTitle"></span>
+      <div class="token-chip" onclick="goScreen('shop')"><span>🪙</span><span>150</span></div>
+    </div>
+    <div style="height:118px;"></div>
+    <div style="padding:0 24px;margin-bottom:18px;text-align:center;">
+      <div style="font-family:'Cormorant',serif;font-size:24px;font-style:italic;color:var(--text);" id="horoModeHeading">Günlük Burç</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--text3);margin-top:5px;" id="horoModeSubtitle">Bugün yıldızlar sizin için ne diyor?</div>
+    </div>
+    <div class="c-zodiac-grid">
+      <div class="c-z-item" onclick="cSelZodiac(this,'♈','Koç','21 Mar–19 Nis')"><div class="cz-sym">♈</div><div class="cz-lbl">KOÇ</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♉','Boğa','20 Nis–20 May')"><div class="cz-sym">♉</div><div class="cz-lbl">BOĞA</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♊','İkizler','21 May–21 Haz')"><div class="cz-sym">♊</div><div class="cz-lbl">İKİZLER</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♋','Yengeç','22 Haz–22 Tem')"><div class="cz-sym">♋</div><div class="cz-lbl">YENGEÇ</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♌','Aslan','23 Tem–22 Ağu')"><div class="cz-sym">♌</div><div class="cz-lbl">ASLAN</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♍','Başak','23 Ağu–22 Eyl')"><div class="cz-sym">♍</div><div class="cz-lbl">BAŞAK</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♎','Terazi','23 Eyl–23 Eki')"><div class="cz-sym">♎</div><div class="cz-lbl">TERAZİ</div></div>
+      <div class="c-z-item sel" onclick="cSelZodiac(this,'♏','Akrep','24 Eki–21 Kas')"><div class="cz-sym">♏</div><div class="cz-lbl">AKREP</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♐','Yay','22 Kas–21 Ara')"><div class="cz-sym">♐</div><div class="cz-lbl">YAY</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♑','Oğlak','22 Ara–19 Oca')"><div class="cz-sym">♑</div><div class="cz-lbl">OĞLAK</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♒','Kova','20 Oca–18 Şub')"><div class="cz-sym">♒</div><div class="cz-lbl">KOVA</div></div>
+      <div class="c-z-item" onclick="cSelZodiac(this,'♓','Balık','19 Şub–20 Mar')"><div class="cz-sym">♓</div><div class="cz-lbl">BALIK</div></div>
+    </div>
+    <div class="c-horo-detail" id="cHoroDetail">
+      <div class="c-horo-head">
+        <span class="c-horo-sign" id="cHSign">♏</span>
+        <div><div class="c-horo-name" id="cHName">Akrep</div><div class="c-horo-dates" id="cHDates">24 Eki – 21 Kas</div></div>
+      </div>
+      <p class="c-horo-text" id="cHoroText">Bugün Pluton'un etkisiyle derin bir içgüdüsel uyanış yaşıyorsunuz. Gizli kalan bir gerçek yüzeye çıkabilir. Duygusal bağlarınız güçleniyor.</p>
+      <div class="c-aspect-grid">
+        <div class="c-aspect"><div class="c-aspect-row"><span>Aşk</span><span class="c-aspect-val">85%</span></div><div class="c-aspect-bar"><div class="c-aspect-fill" style="width:85%;background:linear-gradient(90deg,#7A5010,#C8A227);"></div></div></div>
+        <div class="c-aspect"><div class="c-aspect-row"><span>Kariyer</span><span class="c-aspect-val">70%</span></div><div class="c-aspect-bar"><div class="c-aspect-fill" style="width:70%;background:linear-gradient(90deg,#005A9A,#00C0FF);"></div></div></div>
+        <div class="c-aspect"><div class="c-aspect-row"><span>Sağlık</span><span class="c-aspect-val">90%</span></div><div class="c-aspect-bar"><div class="c-aspect-fill" style="width:90%;background:linear-gradient(90deg,#4A1EA0,#8833EE);"></div></div></div>
+        <div class="c-aspect"><div class="c-aspect-row"><span>Para</span><span class="c-aspect-val">60%</span></div><div class="c-aspect-bar"><div class="c-aspect-fill" style="width:60%;background:linear-gradient(90deg,#6A0090,#CC00FF);"></div></div></div>
+      </div>
+    </div>
+    <div style="height:32px;"></div>
+  </div>
+
+  <!-- ===== AD / LOADING ===== -->
+  <div id="screen-ad" class="screen">
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 40%,rgba(119,51,255,0.2),rgba(204,0,255,0.08),var(--ink));"></div>
+    <div class="ad-inner">
+      <div class="ad-orb"></div>
+      <div class="ad-title" id="cAdTitle">Falınız Hazırlanıyor</div>
+      <div class="ad-text">Yıldızların hizalanmasını bekliyoruz.<br>Kahin enerjinizi okuyor…</div>
+      <div class="ad-card">
+        <div class="ad-placeholder-box"><span style="font-size:24px;">📺</span><span style="font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text3);">Reklam alanı</span></div>
+        <div class="ad-bar-bg"><div class="ad-bar-fill" id="cAdFill" style="width:0%"></div></div>
+        <div class="ad-secs">⏱ <span id="cAdSecs">5</span> saniye</div>
+      </div>
+      <button class="c-btn ghost" id="cSkipBtn" style="margin-top:20px;display:none;" onclick="goScreen('result')">REKLAMI ATLA 🪙 5</button>
+    </div>
+  </div>
+
+  <!-- ===== RESULT ===== -->
+  <div id="screen-result" class="screen scrollable">
+    <div class="chamber-bg" style="background:radial-gradient(ellipse at 50% 20%,rgba(139,60,10,0.2),rgba(200,162,39,0.04),var(--ink));"></div>
+    <div class="topbar">
+      <div class="menu-btn" onclick="goScreen('home')" title="Ana Sayfa">
+        <div style="font-size:16px;color:var(--text3);">←</div>
+      </div>
+      <span class="screen-title"></span>
+      <div class="token-chip" onclick="goScreen('shop')"><span>🪙</span><span>150</span></div>
+    </div>
+    <div class="r-top">
+      <span class="r-icon-big" id="cRIcon">☕</span>
+      <div class="r-title" id="cRTitle">Kahve Falınız</div>
+      <div class="r-date" id="cRDate">22 Mart 2026</div>
+    </div>
+    <div class="sigil" style="padding:0 24px;"><div class="s-line"></div><div class="s-mark">✦ ✧ ✦</div><div class="s-line"></div></div>
+    <div class="r-body">
+      <div class="r-scroll-text">
+        <div class="r-eyebrow"><span>✦</span><span>Kaderin Sesi</span><span>✦</span></div>
+        <p class="r-text">Fincanınızda derin bir geçiş dönemi okudum. Sol taraftaki kuş figürü özgürlüğe olan derin özleminizi yansıtıyor. Fincanın dibindeki yol çizgisi önünüzdeki yolculuğa işaret ediyor — bu yolculuk içsel bir dönüşüm. Üst kenardaki çiçek motifi ise beklenmedik bir müjdenin habercisi.</p>
+        <div class="r-footer">
+          <div class="rf-icon">🔮</div>
+          <div><div class="rf-n">Nexlify Mystic</div><div class="rf-s">Yapay Zeka Kahini</div></div>
+        </div>
+      </div>
+      <button class="c-btn gold" style="width:100%;margin:0;" onclick="cToast('Kader Günlüğüne kaydedildi ✦')">✦ KADER GÜNLÜĞÜNE KAYDET</button>
+      <span class="sp8"></span>
+      <button class="c-btn ghost" style="width:100%;margin:0;" onclick="cToast('Paylaşıldı ↗')">↗ PAYLAŞ</button>
+      <div style="padding:16px 0;text-align:center;">
+        <p style="font-family:'DM Sans',sans-serif;font-size:9px;font-weight:300;color:var(--text3);line-height:1.8;">Bu fal kişisel rehberlik amaçlıdır.<br>Tıbbi/hukuki karar almada kullanmayınız.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HISTORY ===== -->
+  <div id="screen-history" class="screen scrollable">
+    <div class="sub-header" style="padding-top:80px;">
+      <div class="back-x" onclick="goScreen('home')">←</div>
+      <h2>Fal Geçmişi</h2>
+    </div>
+    <div class="h-items" style="padding-top:12px;">
+      <div class="h-row" onclick="goScreen('result')" style="background:radial-gradient(ellipse at 0% 50%,rgba(139,69,19,0.18),transparent 70%);border-radius:14px;padding:14px 12px;margin-bottom:4px;">
+        <div class="h-ic" style="background:rgba(139,69,19,0.2);border-color:rgba(200,120,50,0.25);">☕</div>
+        <div class="h-inf"><div class="hi-t">Kahve Falı</div><div class="hi-e">Fincanınızda derin bir geçiş dönemi…</div><div class="hi-d">20 Mart 2026</div></div>
+        <div class="h-star on">★</div>
+      </div>
+      <div class="h-row" onclick="goScreen('result')" style="background:radial-gradient(ellipse at 0% 50%,rgba(100,40,220,0.18),transparent 70%);border-radius:14px;padding:14px 12px;margin-bottom:4px;">
+        <div class="h-ic" style="background:rgba(100,40,220,0.2);border-color:rgba(150,100,255,0.25);">🃏</div>
+        <div class="h-inf"><div class="hi-t">Tarot Falı</div><div class="hi-e">Dünya kartı: tamamlanma ve yeni başlangıç…</div><div class="hi-d">18 Mart 2026</div></div>
+        <div class="h-star">☆</div>
+      </div>
+      <div class="h-row" onclick="goScreen('result')" style="background:radial-gradient(ellipse at 0% 50%,rgba(80,60,180,0.18),transparent 70%);border-radius:14px;padding:14px 12px;margin-bottom:4px;">
+        <div class="h-ic" style="background:rgba(80,60,180,0.2);border-color:rgba(100,80,200,0.25);">🌙</div>
+        <div class="h-inf"><div class="hi-t">Rüya Yorumu</div><div class="hi-e">Uçan balina — özgürlük arzusu…</div><div class="hi-d">15 Mart 2026</div></div>
+        <div class="h-star">☆</div>
+      </div>
+      <div class="h-row" onclick="goScreen('result')" style="background:radial-gradient(ellipse at 0% 50%,rgba(180,0,240,0.18),transparent 70%);border-radius:14px;padding:14px 12px;margin-bottom:4px;">
+        <div class="h-ic" style="background:rgba(180,0,240,0.2);border-color:rgba(204,0,255,0.25);">🔮</div>
+        <div class="h-inf"><div class="hi-t">Kristal Falı</div><div class="hi-e">Kristalde beliren ışık halkası…</div><div class="hi-d">12 Mart 2026</div></div>
+        <div class="h-star">☆</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DREAM JOURNAL ===== -->
+  <div id="screen-dreamjournal" class="screen scrollable">
+    <div class="sub-header" style="padding-top:80px;">
+      <div class="back-x" onclick="goScreen('home')">←</div>
+      <h2>Rüya Günlüğüm</h2>
+    </div>
+    <div id="dreamJournalList" style="padding:12px 24px 0;">
+      <div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--text3);font-style:italic;text-align:center;padding:32px 0;" id="dreamEmptyMsg">
+        Henüz rüya yorumu yaptırmadınız.<br>İlk rüya yorumunuz burada görünecek.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SHOP ===== -->
+  <div id="screen-shop" class="screen scrollable">
+    <div class="sub-header" style="padding-top:80px;">
+      <div class="back-x" onclick="goScreen('home')">←</div>
+      <h2>Mağaza</h2>
+    </div>
+    <div class="shop-bal">
+      <div class="sb-num">🪙 <span id="cShopTokens">150</span></div>
+      <div class="sb-lbl">Mevcut Bakiyeniz</div>
+    </div>
+    <div style="padding:0 24px 10px;font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:3px;color:var(--text3);">PAKETLER</div>
+    <div class="s-pkg" onclick="cBuy(50,'₺19')"><div class="sp-ico">🪙</div><div class="sp-inf"><div class="sp-amt">50 Sikke</div><div class="sp-bon">Başlangıç paketi</div></div><div class="sp-price">₺19</div></div>
+    <div class="s-pkg feat" onclick="cBuy(150,'₺49')"><div class="sp-badge">EN İYİ</div><div class="sp-ico">🪙</div><div class="sp-inf"><div class="sp-amt">150 Sikke</div><div class="sp-bon">%25 bonus dahil</div></div><div class="sp-price">₺49</div></div>
+    <div class="s-pkg" onclick="cBuy(350,'₺99')"><div class="sp-ico">🪙</div><div class="sp-inf"><div class="sp-amt">350 Sikke</div><div class="sp-bon">%40 bonus dahil</div></div><div class="sp-price">₺99</div></div>
+    <div class="s-pkg" onclick="cBuy(1000,'₺249')"><div class="sp-ico">👑</div><div class="sp-inf"><div class="sp-amt">1000 Sikke</div><div class="sp-bon">Kahin paketi · %65 bonus</div></div><div class="sp-price">₺249</div></div>
+    <div style="height:16px;"></div>
+  </div>
+
+  <!-- ===== PROFILE ===== -->
+  <div id="screen-profile" class="screen scrollable">
+    <div class="sub-header" style="padding-top:80px;">
+      <div class="back-x" onclick="goScreen('home')">←</div>
+      <h2>Profil</h2>
+    </div>
+    <div style="padding:0 24px 8px;">
+      <div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--text3);line-height:1.6;">Bu bilgiler fallarınızın kişiselleştirilmesinde kullanılır.</div>
+    </div>
+    <!-- Avatar -->
+    <div style="display:flex;flex-direction:column;align-items:center;padding:16px 0 20px;">
+      <div style="width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(119,51,255,0.5),rgba(204,0,255,0.2));border:1.5px solid rgba(119,51,255,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:10px;">🔮</div>
+      <div style="font-family:'Syncopate',sans-serif;font-size:7px;letter-spacing:2px;color:var(--cyan);cursor:pointer;">FOTOĞRAF DEĞİŞTİR</div>
+    </div>
+    <!-- Form fields -->
+    <div style="padding:0 24px;">
+      <div class="p-section-lbl">KİŞİSEL BİLGİLER</div>
+      <div class="pf-field">
+        <div class="pf-label">Ad Soyad</div>
+        <input class="pf-input" type="text" placeholder="Adınız Soyadınız" value="Mystic Kullanıcı">
+      </div>
+      <div class="pf-field">
+        <div class="pf-label">Doğum Tarihi</div>
+        <input class="pf-input" type="text" placeholder="GG / AA / YYYY" value="01 / 01 / 1990">
+      </div>
+      <div class="pf-field">
+        <div class="pf-label">Doğum Yeri</div>
+        <input class="pf-input" type="text" placeholder="Şehir, Ülke" value="İstanbul, Türkiye">
+      </div>
+      <div class="pf-field">
+        <div class="pf-label">Doğum Saati <span style="color:var(--text3);font-size:9px;">(bilmiyorsanız boş bırakın)</span></div>
+        <input class="pf-input" type="text" placeholder="SS:DD">
+      </div>
+      <div class="p-section-lbl" style="margin-top:20px;">YAŞAM BİLGİLERİ</div>
+      <div class="pf-field">
+        <div class="pf-label">Cinsiyet</div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <div class="pf-chip sel" onclick="pfChip(this,'cinsiyet')">Kadın</div>
+          <div class="pf-chip" onclick="pfChip(this,'cinsiyet')">Erkek</div>
+          <div class="pf-chip" onclick="pfChip(this,'cinsiyet')">Belirtmek istemiyorum</div>
+        </div>
+      </div>
+      <div class="pf-field">
+        <div class="pf-label">Medeni Durum</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+          <div class="pf-chip sel" onclick="pfChip(this,'medeni')">Bekar</div>
+          <div class="pf-chip" onclick="pfChip(this,'medeni')">Evli</div>
+          <div class="pf-chip" onclick="pfChip(this,'medeni')">Ayrılmış</div>
+          <div class="pf-chip" onclick="pfChip(this,'medeni')">İlişkide</div>
+        </div>
+      </div>
+      <div class="pf-field">
+        <div class="pf-label">Öğrenim Durumu</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+          <div class="pf-chip" onclick="pfChip(this,'egitim')">İlköğretim</div>
+          <div class="pf-chip" onclick="pfChip(this,'egitim')">Lise</div>
+          <div class="pf-chip sel" onclick="pfChip(this,'egitim')">Üniversite</div>
+          <div class="pf-chip" onclick="pfChip(this,'egitim')">Lisansüstü</div>
+        </div>
+      </div>
+      <div class="pf-field">
+        <div class="pf-label">İş Durumu</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+          <div class="pf-chip sel" onclick="pfChip(this,'is')">Çalışıyor</div>
+          <div class="pf-chip" onclick="pfChip(this,'is')">Öğrenci</div>
+          <div class="pf-chip" onclick="pfChip(this,'is')">Serbest</div>
+          <div class="pf-chip" onclick="pfChip(this,'is')">İş Arıyor</div>
+        </div>
+      </div>
+      <div style="height:16px;"></div>
+      <button class="c-btn gold" style="width:100%;margin:0;" onclick="saveProfile()">KAYDET</button>
+      <div style="height:32px;"></div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="c-toast" id="cToast"></div>
+
+  <!-- MODAL -->
+  <div class="c-modal-ov" id="cModal" onclick="cModalClose(event)">
+    <div class="c-modal-sheet">
+      <div class="c-modal-handle"></div>
+      <div id="cModalContent"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+const S = {tokens:150};
+let adT = null;
+
+// ===== STARS =====
+(()=>{
+  const sb = document.getElementById('starBg');
+  for(let i=0;i<55;i++){
+    const s=document.createElement('div');
+    s.className='c-star';
+    const sz=Math.random()<0.15?2:1.2;
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;
+      width:${sz}px;height:${sz}px;
+      animation:cTwinkle ${2+Math.random()*3}s ease-in-out infinite;
+      animation-delay:${Math.random()*5}s;`;
+    sb.appendChild(s);
+  }
+})();
+
+// ===== CLOCK =====
+(function tick(){
+  const n=new Date();
+  document.getElementById('clock').textContent=
+    `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+  setTimeout(tick,15000);
+})();
+
+// ===== NAVIGATION =====
+const resultTexts = {
+  coffee: {icon:'☕', title:'Kahve Falınız', text:'Fincanınızda derin bir geçiş dönemi okudum. Sol taraftaki kuş figürü özgürlüğe olan özleminizi yansıtıyor. Fincanın dibindeki yol çizgisi içsel bir yolculuğa işaret ediyor. Üst kenardaki çiçek motifi beklenmedik bir müjdenin habercisi.'},
+  tarot: {icon:'🃏', title:'Tarot Falınız', text:'Seçtiğiniz kartlar güçlü bir dönüşüm enerjisi taşıyor. Geçmiş kartı sizi buraya getiren gizli gücü gösteriyor. Şimdi kartı mevcut durumunuzun özünü yansıtıyor. Gelecek kartı ise önünüzdeki kapıya işaret ediyor — bu kapıyı açmak tamamen sizin elinizde.'},
+  palm: {icon:'✋', title:'El Falınız', text:'Kalp çizginiz derin duygusal bağlara işaret ediyor. Kader çizginiz beklenmedik bir sapmayla ilerliyor — bu bir kayıp değil, yeniden yönelim. Akıl çizginizdeki bölünme iki yönlü düşünce yapınızı ortaya koyuyor.'},
+  water: {icon:'💧', title:'Su Falınız', text:'Su yüzeyinde beliren izler içsel bir arınmaya işaret ediyor. Dairesel hareketler bir döngünün kapandığını gösteriyor. Merkeze doğru çekilen çizgiler odak ve berraklığa olan ihtiyacı simgeliyor.'},
+  angel: {icon:'👼', title:'Melek Mesajınız', text:'Seçtiğiniz melek bu soruyla ilgili size güçlü bir rehberlik gönderiyor. Yanıt tam da beklediğiniz yerden gelecek — gözlerinizi açık tutun. Şu an doğru yoldasınız, içgüdülerinize güvenin.'},
+  crystal: {icon:'🔮', title:'Kristal Kehanetiniz', text:'Kristal kürede beliren enerji dikkat çekici. Yakın bir zamanda hayatınıza yeni bir kişi girecek ve bu tanışıklık düşündüğünüzden kalıcı olacak. Para konusunda beklediğiniz bir gelişme sandığınızdan erken gerçekleşebilir. Sizi zorlayan bir ilişkide denge yeniden kuruluyor.'},
+  dream: {icon:'🌙', title:'Rüya Yorumunuz', text:'Gördüğünüz rüya bilinçaltınızın size ilettiği güçlü bir mesaj. Su sembolü duygusal akışı, yükseklik ise bakış açınızın genişlediğini gösteriyor. Rüyanızdaki renkler ve figürler hayatınızdaki bastırılmış bir isteğe işaret ediyor.'},
+};
+let lastScreen = 'home';
+
+function goScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const s=document.getElementById('screen-'+id);
+  if(s){s.classList.add('active');s.scrollTop=0;}
+  document.querySelectorAll('.drawer-item').forEach(d=>d.classList.remove('active'));
+  if(id==='ad') startAd();
+  if(id==='shop'){document.getElementById('cShopTokens').textContent=S.tokens;}
+  // Set result content based on last fal screen
+  if(id==='result'){
+    let src=resultTexts[lastScreen]||resultTexts['coffee'];
+    // For angel, dynamically build from selected card
+    if(lastScreen==='angel'){
+      const selCard=document.querySelector('.c-angel-card.sel');
+      if(selCard){
+        const angelName=selCard.dataset.angel||'Melek';
+        const angelMsg=selCard.dataset.msg||'Melek sana rehberlik ediyor.';
+        src={icon:'👼', title:`${angelName} Sana Şunu Söylüyor`, text:angelMsg};
+      }
+    }
+    document.getElementById('cRIcon').textContent=src.icon;
+    document.getElementById('cRTitle').textContent=src.title;
+    document.querySelector('.r-text').textContent=src.text;
+    const d=new Date();
+    document.getElementById('cRDate').textContent=d.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
+  }
+  // Track last fal screen for result context
+  if(['coffee','tarot','palm','water','angel','crystal','dream'].includes(id)) lastScreen=id;
+  // Auto-add dream to journal
+  if(id==='result'&&lastScreen==='dream'){
+    const dreamTA=document.querySelector('#screen-dream .c-textarea');
+    const dreamTxt=dreamTA?dreamTA.value.trim():'';
+    if(dreamTxt.length>5){
+      const rs=resultTexts['dream'];
+      addDreamJournalEntry(dreamTxt,rs.text);
+    }
+  }
+  // Reset water canvas on re-entry
+  if(id==='water') resetWaterCanvas();
+  // Reset crystal canvas on re-entry
+  if(id==='crystal') resetCrystalCanvas();
+  // Reset tarot on re-entry
+  if(id==='tarot') resetTarot();
+  // Reset palm on re-entry
+  if(id==='palm') resetPalm();
+  // Reset angel on re-entry
+  if(id==='angel') resetAngel();
+}
+window.goScreen=goScreen;
+
+// ===== DRAWER =====
+function openDrawer(){
+  document.getElementById('drawerTokens').textContent=S.tokens;
+  document.getElementById('drawer').classList.add('open');
+}
+function closeDrawer(){document.getElementById('drawer').classList.remove('open');}
+function handleDrawerClick(e){if(e.target===document.getElementById('drawer'))closeDrawer();}
+window.openDrawer=openDrawer;window.closeDrawer=closeDrawer;window.handleDrawerClick=handleDrawerClick;
+
+// ===== AD =====
+function startAd(){
+  let secs=5;
+  const fill=document.getElementById('cAdFill');
+  const secsEl=document.getElementById('cAdSecs');
+  const skip=document.getElementById('cSkipBtn');
+  fill.style.width='0%';skip.style.display='none';
+  if(adT)clearInterval(adT);
+  adT=setInterval(()=>{
+    secs--;
+    fill.style.width=((5-secs)/5*100)+'%';
+    secsEl.textContent=secs;
+    if(secs<=2)skip.style.display='flex';
+    if(secs<=0){clearInterval(adT);goScreen('result');}
+  },1000);
+}
+
+// ===== TAROT — drag & drop + reverse =====
+const tarotSlotData=[null,null,null];
+
+(()=>{
+  const cards=[
+    {n:'Cambaz'},{n:'Yüksek Rahibe'},{n:'İmparatoriçe'},{n:'İmparator'},
+    {n:'Başrahip'},{n:'Aşıklar'},{n:'Savaş Arabası'},{n:'Güç'},
+    {n:'Münzevi'},{n:'Talih Çarkı'},{n:'Adalet'},{n:'Asılan Adam'},
+    {n:'Ölüm'},{n:'Denge'},{n:'Şeytan'},{n:'Kule'},
+    {n:'Yıldız'},{n:'Ay'},{n:'Güneş'},{n:'Yargı'},
+    {n:'Dünya'},{n:'Aptal'},
+  ];
+  const deck=document.getElementById('cTarotDeck');
+  if(!deck)return;
+  cards.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='c-tarot-card';
+    el.style.setProperty('--i',i);
+    el.draggable=true;
+    // Pure card back — no text content
+    el.dataset.n=c.n;el.dataset.e='✦';el.dataset.i=i;
+    el.addEventListener('click',()=>{
+      if(el.classList.contains('selected'))return;
+      for(let s=0;s<3;s++){
+        if(!tarotSlotData[s]){tarotDropCard(el,c,s,false);break;}
+      }
+    });
+    el.addEventListener('dragstart',e=>{
+      e.dataTransfer.setData('cardIdx',i);
+      e.dataTransfer.setData('cardE','✦');
+      e.dataTransfer.setData('cardN',c.n);
+      const rect=el.getBoundingClientRect();
+      const reversed=e.clientY > rect.top + rect.height*0.65;
+      e.dataTransfer.setData('reversed',reversed?'1':'0');
+      setTimeout(()=>el.classList.add('dragging'),0);
+    });
+    el.addEventListener('dragend',()=>el.classList.remove('dragging'));
+    deck.appendChild(el);
+  });
+})();
+
+window.tarotDragOver=tarotDragOver;window.tarotDragEnter=tarotDragEnter;
+function tarotDragOver(e){e.preventDefault();}
+function tarotDragEnter(el){el.classList.add('drag-over');}
+function tarotDragLeave(el){el.classList.remove('drag-over');}
+function tarotDrop(e,slotIdx){
+  e.preventDefault();
+  const slot=document.getElementById('cs'+slotIdx);
+  slot.classList.remove('drag-over');
+  if(tarotSlotData[slotIdx])return;
+  const cardIdx=e.dataTransfer.getData('cardIdx');
+  const cardE=e.dataTransfer.getData('cardE');
+  const cardN=e.dataTransfer.getData('cardN');
+  const reversed=e.dataTransfer.getData('reversed')==='1';
+  const deckCard=document.querySelector(`#cTarotDeck .c-tarot-card[data-i="${cardIdx}"]`);
+  if(deckCard&&deckCard.classList.contains('selected'))return;
+  if(deckCard)deckCard.classList.add('selected');
+  tarotDropCard(null,{e:cardE,n:cardN},slotIdx,reversed);
+}
+function tarotDropCard(el,card,slotIdx,reversed){
+  if(el){
+    if(el.classList.contains('selected'))return;
+    el.classList.add('selected');
+  }
+  tarotSlotData[slotIdx]={...card,reversed};
+  const slot=document.getElementById('cs'+slotIdx);
+  slot.classList.add('filled');
+  slot.innerHTML=`
+    <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 6px;${reversed?'transform:rotate(180deg);':''}">
+      <div style="font-size:11px;color:rgba(200,162,39,0.5);letter-spacing:4px;margin-bottom:4px;">✦</div>
+      <div style="font-family:'Cormorant',serif;font-size:11px;font-weight:600;color:var(--gold);text-align:center;line-height:1.3;">${card.n}</div>
+    </div>
+    <span class="cs-label">${['GEÇMİŞ','ŞİMDİ','GELECEK'][slotIdx]}</span>
+    ${reversed?'<span class="cs-reversed-badge">TERS</span>':''}
+  `;
+  if(tarotSlotData.every(s=>s!==null))document.getElementById('cTarotBtn').disabled=false;
+}
+window.tarotDragLeave=tarotDragLeave;window.tarotDrop=tarotDrop;
+
+// ===== ANGEL =====
+function selAngel(el){
+  document.querySelectorAll('.c-angel-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  checkAngelReady();
+}
+function checkAngelReady(){
+  const q=document.getElementById('angelQuestion');
+  const sel=document.querySelector('.c-angel-card.sel');
+  const btn=document.getElementById('angelGoBtn');
+  if(btn)btn.disabled=!(q&&q.value.trim().length>3&&sel);
+}
+window.selAngel=selAngel;window.checkAngelReady=checkAngelReady;
+
+// ===== HOROSCOPE mode =====
+let horoMode='daily';
+function openHoroscope(mode){
+  horoMode=mode||'daily';
+  const labels={
+    daily:{title:'Günlük Burç',subtitle:'Bugün yıldızlar sizin için ne diyor?'},
+    weekly:{title:'Haftalık Burç',subtitle:'Bu hafta gezegenler nasıl hizalanıyor?'},
+    monthly:{title:'Aylık Burç',subtitle:'Bu ay sizi neler bekliyor?'},
+  };
+  const l=labels[horoMode]||labels.daily;
+  const t=document.getElementById('horoModeTitle');if(t)t.textContent='';
+  const h=document.getElementById('horoModeHeading');if(h)h.textContent=l.title;
+  const s=document.getElementById('horoModeSubtitle');if(s)s.textContent=l.subtitle;
+  goScreen('horoscope');
+}
+window.openHoroscope=openHoroscope;
+
+function cSelZodiac(el,sym,name,dates){
+  document.querySelectorAll('.c-z-item').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  document.getElementById('cHSign').textContent=sym;
+  document.getElementById('cHName').textContent=name;
+  document.getElementById('cHDates').textContent=dates;
+  // Update text based on mode
+  const texts={
+    daily:`${name} burcu için bugün güçlü bir enerji var. Duygusal bağlarınız öne çıkıyor, beklenmedik bir haber gelebilir. Sezgilerinize güvenin.`,
+    weekly:`${name} burcu için bu hafta Venüs etkisi öne çıkıyor. İlişkilerde yeni bir sayfa, iş hayatında önemli bir adım mümkün. Haftanın son günleri özellikle verimli geçecek.`,
+    monthly:`${name} burcu için bu ay dönüşüm zamanı. Merkür'ün hareketi kariyer alanında sürpriz kapılar açıyor. Maddi konularda temkinli ilerleyin, duygusal alanda ise cesur olun.`,
+  };
+  const txt=document.getElementById('cHoroText');
+  if(txt)txt.textContent=(texts[horoMode]||texts.daily);
+}
+window.cSelZodiac=cSelZodiac;
+
+// ===== DREAM JOURNAL =====
+const dreamJournalEntries=[];
+function addDreamJournalEntry(dreamText,resultText){
+  const d=new Date();
+  dreamJournalEntries.unshift({
+    dream:dreamText,
+    result:resultText,
+    date:d.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})
+  });
+  renderDreamJournal();
+}
+function renderDreamJournal(){
+  const list=document.getElementById('dreamJournalList');
+  const empty=document.getElementById('dreamEmptyMsg');
+  if(!list)return;
+  if(dreamJournalEntries.length===0){if(empty)empty.style.display='block';return;}
+  if(empty)empty.style.display='none';
+  list.innerHTML='';
+  dreamJournalEntries.forEach(entry=>{
+    const row=document.createElement('div');
+    row.style.cssText='background:radial-gradient(ellipse at 0% 50%,rgba(80,60,180,0.15),transparent 70%);border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid rgba(80,60,180,0.15);';
+    row.innerHTML=`
+      <div style="font-family:'DM Sans',sans-serif;font-size:7px;letter-spacing:2px;color:var(--text3);margin-bottom:6px;">${entry.date}</div>
+      <div style="font-family:'Cormorant',serif;font-size:13px;font-style:italic;color:var(--text2);margin-bottom:8px;line-height:1.5;">"${entry.dream.substring(0,80)}${entry.dream.length>80?'…':''}"</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--text3);line-height:1.6;">${entry.result.substring(0,120)}…</div>
+    `;
+    list.appendChild(row);
+  });
+}
+window.addDreamJournalEntry=addDreamJournalEntry;
+
+// ===== DREAM TAGS =====
+document.querySelectorAll('.c-tag').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.c-tag').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+  });
+});
+
+// ===== PALM — camera / file choose =====
+function palmChoose(type){
+  const camBtn=document.getElementById('palmCamBtn');
+  const fileBtn=document.getElementById('palmFileBtn');
+  const preview=document.getElementById('palmPreview');
+  const btn=document.getElementById('palmGoBtn');
+  // Highlight chosen
+  camBtn.style.borderColor=type==='cam'?'rgba(0,192,255,0.6)':'rgba(0,192,255,0.2)';
+  camBtn.style.background=type==='cam'?'rgba(0,192,255,0.12)':'rgba(0,192,255,0.05)';
+  fileBtn.style.borderColor=type==='file'?'rgba(0,192,255,0.6)':'rgba(0,192,255,0.2)';
+  fileBtn.style.background=type==='file'?'rgba(0,192,255,0.12)':'rgba(0,192,255,0.05)';
+  preview.style.display='block';
+  if(btn)btn.disabled=false;
+  cToast(type==='cam'?'Kamera hazırlandı 📷':'Dosya seçildi 🖼️');
+}
+window.palmChoose=palmChoose;
+
+// ===== PROFILE chips =====
+function pfChip(el,group){
+  el.closest('.pf-field').querySelectorAll('.pf-chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+window.pfChip=pfChip;
+
+// ===== PROFILE save / load =====
+function saveProfile(){
+  const data={
+    name:document.querySelector('.pf-input[placeholder*="Ad"]')?.value||'',
+    birthdate:document.querySelector('.pf-input[placeholder*="GG"]')?.value||'',
+    birthplace:document.querySelector('.pf-input[placeholder*="Şehir"]')?.value||'',
+    birthtime:document.querySelector('.pf-input[placeholder*="SS"]')?.value||'',
+    gender:document.querySelector('[onclick*="cinsiyet"].sel')?.textContent||'',
+    marital:document.querySelector('[onclick*="medeni"].sel')?.textContent||'',
+    edu:document.querySelector('[onclick*="egitim"].sel')?.textContent||'',
+    job:document.querySelector('[onclick*="is"].sel')?.textContent||'',
+  };
+  localStorage.setItem('nexlify_profile',JSON.stringify(data));
+  cToast('Profil kaydedildi ✦');
+}
+function loadProfile(){
+  try{
+    const data=JSON.parse(localStorage.getItem('nexlify_profile')||'{}');
+    if(data.name){const el=document.querySelector('.pf-input[placeholder*="Ad"]');if(el)el.value=data.name;}
+    if(data.birthdate){const el=document.querySelector('.pf-input[placeholder*="GG"]');if(el)el.value=data.birthdate;}
+    if(data.birthplace){const el=document.querySelector('.pf-input[placeholder*="Şehir"]');if(el)el.value=data.birthplace;}
+    if(data.birthtime){const el=document.querySelector('.pf-input[placeholder*="SS"]');if(el)el.value=data.birthtime;}
+  }catch(e){}
+}
+window.saveProfile=saveProfile;
+// Load on init
+loadProfile();
+
+// ===== WATER CANVAS =====
+(()=>{
+  const canvas=document.getElementById('waterCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=220,H=220,R=110;
+  canvas._wStrokes=0;canvas._wActivated=false;
+  let ripples=[];
+
+  function drawBase(){
+    ctx.clearRect(0,0,W,H);
+    const grad=ctx.createRadialGradient(R,R,10,R,R,R);
+    grad.addColorStop(0,'rgba(0,120,200,0.4)');
+    grad.addColorStop(0.55,'rgba(0,60,130,0.55)');
+    grad.addColorStop(1,'rgba(0,15,50,0.85)');
+    ctx.beginPath();ctx.arc(R,R,R,0,Math.PI*2);
+    ctx.fillStyle=grad;ctx.fill();
+    ctx.beginPath();ctx.arc(R,R,R-1,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,192,255,0.2)';ctx.lineWidth=1.5;ctx.stroke();
+  }
+
+  function spawnRipple(x,y){
+    ripples.push({x,y,r:2,maxR:28+Math.random()*18,alpha:0.7,speed:0.9+Math.random()*0.5});
+  }
+
+  function drawRipples(){
+    ripples=ripples.filter(rp=>rp.alpha>0.02);
+    ripples.forEach(rp=>{
+      ctx.beginPath();
+      ctx.arc(rp.x,rp.y,rp.r,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(0,210,255,${rp.alpha})`;
+      ctx.lineWidth=1.2;
+      ctx.stroke();
+      rp.r+=rp.speed;
+      rp.alpha*=0.88;
+    });
+  }
+
+  function animate(){
+    requestAnimationFrame(animate);
+    drawBase();
+    drawRipples();
+  }
+  animate();
+
+  function getPos(e){
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=W/rect.width,scaleY=H/rect.height;
+    if(e.touches)return{x:(e.touches[0].clientX-rect.left)*scaleX,y:(e.touches[0].clientY-rect.top)*scaleY};
+    return{x:(e.clientX-rect.left)*scaleX,y:(e.clientY-rect.top)*scaleY};
+  }
+  function inCircle(x,y){return Math.hypot(x-R,y-R)<R-4;}
+
+  let lastRippleTime=0;
+  function handleMove(e){
+    e.preventDefault();
+    const p=getPos(e);
+    if(!inCircle(p.x,p.y))return;
+    const now=Date.now();
+    if(now-lastRippleTime>80){
+      spawnRipple(p.x,p.y);
+      lastRippleTime=now;
+      canvas._wStrokes++;
+      if(canvas._wStrokes===3){const h=document.getElementById('waterHint');if(h)h.style.opacity='0';}
+      if(canvas._wStrokes>20&&!canvas._wActivated){
+        canvas._wActivated=true;
+        const btn=document.getElementById('waterGoBtn');if(btn)btn.disabled=false;
+        cToast('Su yüzeyinize niyetiniz yansıdı ✦');
+      }
+    }
+  }
+  function handleTap(e){
+    e.preventDefault();
+    const p=getPos(e);
+    if(!inCircle(p.x,p.y))return;
+    spawnRipple(p.x,p.y);
+    canvas._wStrokes++;
+    if(canvas._wStrokes===3){const h=document.getElementById('waterHint');if(h)h.style.opacity='0';}
+    if(canvas._wStrokes>20&&!canvas._wActivated){
+      canvas._wActivated=true;
+      const btn=document.getElementById('waterGoBtn');if(btn)btn.disabled=false;
+      cToast('Su yüzeyinize niyetiniz yansıdı ✦');
+    }
+  }
+
+  canvas.addEventListener('mousemove',handleMove);
+  canvas.addEventListener('click',handleTap);
+  canvas.addEventListener('touchmove',handleMove,{passive:false});
+  canvas.addEventListener('touchstart',handleTap,{passive:false});
+})();
+
+// ===== CRYSTAL CANVAS =====
+(()=>{
+  const canvas=document.getElementById('crystalCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=180,H=180,R=90;
+  let particles=[],dragging=false;
+  canvas._cMoves=0;canvas._cActivated=false;
+
+  function drawSphere(){
+    ctx.clearRect(0,0,W,H);
+    const g=ctx.createRadialGradient(R*0.65,R*0.55,5,R,R,R);
+    g.addColorStop(0,'rgba(255,255,255,0.55)');
+    g.addColorStop(0.25,'rgba(200,100,255,0.35)');
+    g.addColorStop(0.6,'rgba(100,0,200,0.4)');
+    g.addColorStop(1,'rgba(8,7,15,0.85)');
+    ctx.beginPath();ctx.arc(R,R,R,0,Math.PI*2);
+    ctx.fillStyle=g;ctx.fill();
+    ctx.beginPath();ctx.arc(R,R,R,0,Math.PI*2);
+    ctx.strokeStyle='rgba(204,0,255,0.2)';ctx.lineWidth=1;ctx.stroke();
+    particles=particles.filter(p=>p.life>0);
+    particles.forEach(p=>{
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${p.col},${p.life/p.maxLife})`;
+      ctx.fill();
+      p.x+=p.vx;p.y+=p.vy;p.life--;p.r*=0.97;
+    });
+  }
+  drawSphere();
+
+  function spawnParticles(x,y){
+    for(let i=0;i<6;i++){
+      const angle=Math.random()*Math.PI*2;
+      const speed=0.5+Math.random()*1.5;
+      particles.push({
+        x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,
+        r:1.5+Math.random()*3,life:40+Math.random()*30,maxLife:70,
+        col:Math.random()<0.5?'204,0,255':'180,140,255'
+      });
+    }
+  }
+
+  function animate(){requestAnimationFrame(animate);drawSphere();}
+  animate();
+
+  function getPos(e){
+    const rect=canvas.getBoundingClientRect();
+    const sx=W/rect.width,sy=H/rect.height;
+    if(e.touches)return{x:(e.touches[0].clientX-rect.left)*sx,y:(e.touches[0].clientY-rect.top)*sy};
+    return{x:(e.clientX-rect.left)*sx,y:(e.clientY-rect.top)*sy};
+  }
+
+  function start(e){e.preventDefault();dragging=true;}
+  function move(e){
+    e.preventDefault();if(!dragging)return;
+    const p=getPos(e);
+    spawnParticles(p.x,p.y);
+    canvas._cMoves++;
+    if(canvas._cMoves===1){const h=document.getElementById('crystalHint');if(h)h.style.opacity='0';}
+    if(canvas._cMoves>50&&!canvas._cActivated){
+      canvas._cActivated=true;
+      const btn=document.getElementById('crystalGoBtn');if(btn)btn.disabled=false;
+      cToast('Kristal uyandı… Derinleşiyor ✦');
+    }
+  }
+  function end(){dragging=false;}
+  canvas.addEventListener('mousedown',start);canvas.addEventListener('mousemove',move);
+  canvas.addEventListener('mouseup',end);canvas.addEventListener('mouseleave',end);
+  canvas.addEventListener('touchstart',start,{passive:false});
+  canvas.addEventListener('touchmove',move,{passive:false});
+  canvas.addEventListener('touchend',end);
+})();
+
+// ===== RESET FUNCTIONS =====
+function resetWaterCanvas(){
+  const canvas=document.getElementById('waterCanvas');
+  if(!canvas)return;
+  canvas._wStrokes=0;canvas._wActivated=false;
+  const hint=document.getElementById('waterHint');if(hint)hint.style.opacity='1';
+  const btn=document.getElementById('waterGoBtn');if(btn)btn.disabled=true;
+}
+
+function resetCrystalCanvas(){
+  const hint=document.getElementById('crystalHint');if(hint)hint.style.opacity='1';
+  const btn=document.getElementById('crystalGoBtn');if(btn)btn.disabled=true;
+  // The animate loop redraws continuously, just reset the flag on canvas
+  const canvas=document.getElementById('crystalCanvas');
+  if(canvas){canvas._cMoves=0;canvas._cActivated=false;}
+}
+
+function resetTarot(){
+  for(let i=0;i<3;i++){
+    tarotSlotData[i]=null;
+    const slot=document.getElementById('cs'+i);
+    if(slot){
+      slot.classList.remove('filled','drag-over');
+      slot.innerHTML=`<span class="cs-empty-txt">boş</span><span class="cs-label">${['GEÇMİŞ','ŞİMDİ','GELECEK'][i]}</span>`;
+    }
+  }
+  const btn=document.getElementById('cTarotBtn');if(btn)btn.disabled=true;
+  document.querySelectorAll('#cTarotDeck .c-tarot-card').forEach(c=>c.classList.remove('selected','dragging'));
+}
+
+function resetPalm(){
+  const camBtn=document.getElementById('palmCamBtn');
+  const fileBtn=document.getElementById('palmFileBtn');
+  const preview=document.getElementById('palmPreview');
+  const btn=document.getElementById('palmGoBtn');
+  if(camBtn){camBtn.style.borderColor='rgba(0,192,255,0.2)';camBtn.style.background='rgba(0,192,255,0.05)';}
+  if(fileBtn){fileBtn.style.borderColor='rgba(0,192,255,0.2)';fileBtn.style.background='rgba(0,192,255,0.05)';}
+  if(preview)preview.style.display='none';
+  if(btn)btn.disabled=true;
+}
+
+function resetAngel(){
+  const q=document.getElementById('angelQuestion');if(q)q.value='';
+  document.querySelectorAll('.c-angel-card').forEach(c=>c.classList.remove('sel'));
+  const btn=document.getElementById('angelGoBtn');if(btn)btn.disabled=true;
+}
+window.resetWaterCanvas=resetWaterCanvas;
+window.resetCrystalCanvas=resetCrystalCanvas;
+window.resetTarot=resetTarot;
+window.resetPalm=resetPalm;
+window.resetAngel=resetAngel;
+function cBuy(amt,price){
+  document.getElementById('cModalContent').innerHTML=`
+    <div style="text-align:center;">
+      <div style="font-size:40px;margin-bottom:16px;">🪙</div>
+      <div style="font-family:'Cormorant',serif;font-size:20px;font-style:italic;color:var(--gold);margin-bottom:8px;">${amt} Sikke Satın Al</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:300;color:var(--text3);letter-spacing:1px;margin-bottom:24px;">Fiyat: ${price}</div>
+      <button class="c-btn gold" style="width:100%;margin:0;" onclick="cFinishBuy(${amt})">SATIN AL</button>
+      <span class="sp8"></span>
+      <button class="c-btn ghost" style="width:100%;margin:0;" onclick="cModalClose()">İPTAL</button>
+    </div>`;
+  document.getElementById('cModal').classList.add('open');
+}
+function cFinishBuy(amt){
+  S.tokens+=amt;
+  document.getElementById('tokenDisplay').textContent=S.tokens;
+  document.getElementById('cShopTokens').textContent=S.tokens;
+  document.getElementById('drawerTokens').textContent=S.tokens;
+  cModalClose();
+  cToast(`${amt} sikke eklendi 🪙`);
+}
+function cModalClose(e){
+  if(!e||e.target===document.getElementById('cModal'))
+    document.getElementById('cModal').classList.remove('open');
+}
+window.cBuy=cBuy;window.cFinishBuy=cFinishBuy;window.cModalClose=cModalClose;
+
+// ===== TOAST =====
+function cToast(msg){
+  const t=document.getElementById('cToast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+// ===== ZODIAC DAILY MESSAGES =====
+const zodiacMessages = {
+  '♈':{name:'Koç',msgs:['Bugün cesaretin seni beklenmedik kapılara götürür.','Enerjin zirveye ulaşıyor — harekete geçme vakti.','Yeni bir başlangıç için mükemmel bir gün.']},
+  '♉':{name:'Boğa',msgs:['Sabır, bugün en büyük gücün olacak.','Toprağa basan adımlar, sağlam temeller kurar.','Güzellik ve bereket sana yaklaşıyor.']},
+  '♊':{name:'İkizler',msgs:['Zihnindeki fikirleri kelimelerle şekillendir.','İki yol arasında kalırsan, içini dinle.','Merak, bugün seni doğru yere götürür.']},
+  '♋':{name:'Yengeç',msgs:['Sevdiklerine açılan bir kapı bu gün.','Duygularını bastırma, onlar rehberin.','Ev ve yuva enerjisi güçlü bugün.']},
+  '♌':{name:'Aslan',msgs:['Işığın en parlak bugün — sahneye çık.','Liderliğini ön plana çıkarma vakti geldi.','Gönlünden gelenler seni doğru yöne taşır.']},
+  '♍':{name:'Başak',msgs:['Detaylara gösterdiğin özen bugün meyve verir.','Düzeni yeniden kur, zihin açıklığı gelir.','Hizmet ettiğinde kendin de büyürsün.']},
+  '♎':{name:'Terazi',msgs:['Denge, bugün her şeyin anahtarı.','Bir ilişkide dürüstlük zamanı geldi.','Güzellik ve uyum seni çevreliyor bugün.']},
+  '♏':{name:'Akrep',msgs:['Derinlere dalmaktan korkma, orada gerçek var.','Dönüşüm acı verse de seni özgür kılar.','Gizli bir şey bugün yüzeye çıkıyor.']},
+  '♐':{name:'Yay',msgs:['Ufkunu genişlet, dünya seninle konuşuyor.','Özgürlük arayışın bugün seni ileriye taşır.','Bir öğretiden ilham almaya hazır ol.']},
+  '♑':{name:'Oğlak',msgs:['Disiplinin, bugün en büyük armağanın.','Adım adım, sabırla — zirve yaklaşıyor.','Emek asla boşa gitmez, bunu hisset bugün.']},
+  '♒':{name:'Kova',msgs:['Farklılığın, bugün seni öne çıkarır.','İnsanlığa olan bağın bugün güçleniyor.','Yenilikçi bir fikir kapında bekliyor.']},
+  '♓':{name:'Balık',msgs:['Sezgine güven — ruh bilir, akıl yanılır.','Rüyaların bugün sana mesaj gönderiyor.','Merhamet, bugün sana geri dönecek.']},
+};
+
+let selectedZodiac = localStorage.getItem('nexlify_zodiac') || null;
+let zodiacPickerOpen = false;
+
+function getDailyIdx(){
+  const d=new Date();
+  return (d.getDate()+d.getMonth())%3;
+}
+
+function updateDailyPill(){
+  const pill=document.getElementById('dailyPill');
+  const label=document.getElementById('dailyPillLabel');
+  const text=document.getElementById('dailyPillText');
+  if(selectedZodiac && zodiacMessages[selectedZodiac]){
+    const z=zodiacMessages[selectedZodiac];
+    label.textContent=selectedZodiac+' '+z.name+' · Günün Mesajı';
+    text.textContent=z.msgs[getDailyIdx()];
+    pill.style.background='linear-gradient(135deg,rgba(119,51,255,0.2),rgba(0,192,255,0.12))';
+    pill.style.borderColor='rgba(255,255,255,0.2)';
+    // Mark selected item
+    document.querySelectorAll('.zp-item').forEach(el=>{
+      el.classList.toggle('sel', el.dataset.sign===selectedZodiac);
+    });
+  } else {
+    label.textContent='☽ Günün Mesajı';
+    text.textContent='Burcunu seç, günlük mesajını al ✦';
+    pill.style.background='';
+    pill.style.borderColor='';
+  }
+}
+
+function openZodiacPicker(){
+  const picker=document.getElementById('zodiacPicker');
+  zodiacPickerOpen=!zodiacPickerOpen;
+  picker.style.display=zodiacPickerOpen?'block':'none';
+  if(zodiacPickerOpen){
+    document.querySelectorAll('.zp-item').forEach(el=>{
+      el.classList.toggle('sel', el.dataset.sign===selectedZodiac);
+    });
+  }
+}
+
+function selectZodiac(el){
+  selectedZodiac=el.dataset.sign;
+  localStorage.setItem('nexlify_zodiac', selectedZodiac);
+  document.querySelectorAll('.zp-item').forEach(e=>e.classList.remove('sel'));
+  el.classList.add('sel');
+  updateDailyPill();
+  setTimeout(()=>{
+    document.getElementById('zodiacPicker').style.display='none';
+    zodiacPickerOpen=false;
+  },300);
+  cToast(el.dataset.name+' seçildi '+el.dataset.sign);
+}
+window.openZodiacPicker=openZodiacPicker;
+window.selectZodiac=selectZodiac;
+
+// Init on load
+updateDailyPill();
+</script>
+</body>
+</html>

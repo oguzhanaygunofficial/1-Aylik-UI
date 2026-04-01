@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibella - iPhone 16 Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@1,800&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* iPhone 16 Pro Frame - Natural Titanium */
+        .iphone-frame {
+            width: 402px;
+            height: 874px;
+            background: #000;
+            border-radius: 55px;
+            padding: 12px;
+            box-shadow: 
+                0 0 0 2px #3a3a3a,
+                0 0 0 4px #1a1a1a,
+                0 25px 80px rgba(0,0,0,0.6),
+                0 50px 120px rgba(0,0,0,0.4),
+                inset 0 0 30px rgba(255,255,255,0.03);
+            position: relative;
+        }
+
+        /* Titanium Frame Shine */
+        .iphone-frame::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 55px;
+            padding: 2px;
+            background: linear-gradient(135deg, 
+                rgba(255,255,255,0.4) 0%, 
+                rgba(255,255,255,0.1) 30%,
+                rgba(255,255,255,0.05) 50%,
+                rgba(255,255,255,0.1) 70%, 
+                rgba(255,255,255,0.3) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* Side Buttons */
+        .side-btn {
+            position: absolute;
+            background: linear-gradient(180deg, #4a4a4a 0%, #2a2a2a 100%);
+            border-radius: 2px;
+        }
+        .volume-up { width: 3px; height: 35px; left: -3px; top: 120px; }
+        .volume-down { width: 3px; height: 35px; left: -3px; top: 165px; }
+        .action-btn { width: 3px; height: 50px; left: -3px; top: 220px; }
+        .power-btn { width: 3px; height: 60px; right: -3px; top: 150px; }
+
+        /* Screen */
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            border-radius: 47px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 11px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #0a0a0a;
+            border-radius: 20px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.12);
+            box-shadow:
+                0 0 0 1.5px rgba(255,255,255,0.06),
+                0 4px 16px rgba(0,0,0,0.9),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        .island-cam {
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle at 35% 35%, #1c2a3a 0%, #050505 100%);
+            border-radius: 50%;
+            box-shadow: inset 0 0 3px rgba(255,255,255,0.25), 0 0 4px rgba(0,150,255,0.15);
+        }
+        .island-time {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* App Content - Fixed Layout */
+        .app {
+            width: 100%;
+            height: 100%;
+            background: #0a0a0f;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px; /* Space for Dynamic Island */
+            overflow: hidden; /* TAŞMAYI ENGELLE */
+            border-radius: 47px;
+        }
+
+        .app::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px; /* bottom nav'dan biraz fazla */
+    background: #0a0a0f; /* bottom nav ile aynı renk */
+    pointer-events: none; /* tıklamaya engel olma */
+    z-index: 999; /* content üstünde, bottom nav altında */
+    border-radius: 0 0 43px 43px; /* köşeler uysun */
+}
+
+        /* Fixed Header - Below Dynamic Island */
+        .header {
+            padding: 8px 16px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, #0f0f14 0%, #0a0a0f 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+            z-index: 100;
+        }
+
+        .discover-pill {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #000;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 6px 14px;
+        }
+
+        /* Montserrat Black for KEŞFET */
+        .discover-text {
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            font-style: italic;
+            transform: skewX(-6deg);
+            display: inline-block;
+            background: linear-gradient(90deg, #45D3D0 0%, #8E82E6 50%, #F07BB0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            filter: drop-shadow(0 0 8px rgba(142,130,230,0.5));
+        }
+
+        .header-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .h-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s;
+        }
+        .h-btn.plus-btn {
+    border: 1.5px solid rgba(255,255,255,0.25);
+    background: linear-gradient(135deg, #2d2d30 0%, #1c1c1e 100%);
+    width: 38px;
+    height: 38px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.h-btn.plus-btn:active { 
+    transform: scale(0.95); 
+}
+
+.h-btn.plus-btn i {
+    background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 16px;
+    filter: drop-shadow(0 0 6px rgba(168,85,247,0.5));
+}
+
+        /* Event Button */
+        .h-btn.event {
+            background: linear-gradient(135deg, #ff006e 0%, #8338ec 50%, #3a86ff 100%);
+            border: 1.5px solid rgba(255,255,255,0.4);
+            box-shadow: 
+                0 0 20px rgba(131,56,236,0.6), 
+                0 0 40px rgba(131,56,236,0.4),
+                inset 0 0 15px rgba(255,255,255,0.2);
+            position: relative;
+        }
+        .h-btn.event::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: inherit;
+            filter: blur(12px);
+            opacity: 0.7;
+            z-index: -1;
+            border-radius: 14px;
+            transform: scale(1.1);
+        }
+        .h-btn.event i {
+            color: #fff;
+            filter: drop-shadow(0 0 4px rgba(255,255,255,0.6));
+            animation: swing 3s ease-in-out infinite;
+        }
+        @keyframes swing {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        /* Message Button */
+        .h-btn.msg {
+            border: 1.5px solid rgba(255,255,255,0.25);
+            background: linear-gradient(135deg, #2d2d30 0%, #1c1c1e 100%);
+        }
+        .h-btn.msg i {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 50%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(59,130,246,0.8));
+        }
+
+        /* Notification Button */
+        .h-btn.notif {
+            border: 1.5px solid rgba(255,255,255,0.25);
+            background: linear-gradient(135deg, #2d2d30 0%, #1c1c1e 100%);
+            position: relative;
+        }
+        .h-btn.notif i {
+            background: linear-gradient(135deg, #f472b6 0%, #ec4899 50%, #db2777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 8px rgba(236,72,153,0.8));
+        }
+        .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ff375f;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #000;
+        }
+
+        /* Stories - Scrolls with content */
+        .stories-wrap {
+            background: linear-gradient(180deg, #0a0a0f 0%, #050508 100%);
+        }
+        .stories {
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+        }
+        .stories::-webkit-scrollbar { display: none; }
+
+        .story {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .story-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #6d28d9 100%);
+            padding: 2.5px;
+            position: relative;
+            cursor: pointer;
+        }
+        .story-avatar-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #000;
+            overflow: hidden;
+            position: relative;
+        }
+        .story-avatar-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Fixed add button - positioned outside */
+        .add-btn {
+            position: absolute;
+            bottom: -4px;
+            right: -4px;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2.5px solid #000;
+            color: #fff;
+            font-size: 12px;
+            z-index: 10;
+        }
+        .story span {
+            font-size: 13px;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        /* Scrollable Content Area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 0 100px;
+            background: #050508;
+        }
+        .content::-webkit-scrollbar { display: none; }
+        .content .stories-wrap {
+            padding: 0;
+            margin-bottom: 4px;
+        }
+        .content-posts {
+            padding: 0 16px;
+        }
+
+        /* Post */
+        .post {
+            background: linear-gradient(135deg, rgba(124,58,237,0.15) 0%, rgba(0,0,0,0) 50%, rgba(6,182,212,0.1) 100%);
+            padding: 1.5px;
+            border-radius: 24px;
+            margin-bottom: 20px;
+        }
+        .post-inner {
+            background: #0d0d12;
+            border-radius: 22.5px;
+            overflow: hidden;
+        }
+        .post-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .post-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .post-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #7c3aed;
+        }
+        .post-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .post-info h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+        .post-info p {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .post-menu {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #1c1c1e;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            cursor: pointer;
+        }
+        .post-tags {
+            padding: 0 16px 12px;
+            font-size: 15px;
+            color: #fff;
+        }
+        .post-img {
+            width: 100%;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+        .post-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+       /* Fixed Bottom Nav */
+.bottom-nav {
+    position: absolute;
+    bottom: -4px; /* ESKİ: 0 → YENİ: -2px (2 piksel aşağı) */
+    left: 0px;      /* SOL boşluk - yuvarlak köşeye girsin */
+    right: 0px;     /* SAĞ boşluk - yuvarlak köşeye girsin */
+    width: auto;    /* left+right ile genişlik */
+    background: rgba(10, 10, 15, 0.98);
+    padding: 8px 12px 30px;
+    height: 85px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 76px 1fr 1fr;
+    place-items: center;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0 0 39px 39px;;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    margin: 0;
+    box-sizing: border-box;
+}
+.nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+.nav-btn.active {
+    background: rgba(139,92,246,0.2);
+    box-shadow: 0 0 25px rgba(139,92,246,0.5);
+}
+
+/* Düzeltilmiş - daha spesifik seçici */
+.bottom-nav .nav-btn.play-btn.active {
+    background: rgba(139,92,246,0.2);
+    box-shadow: 0 0 25px rgba(139,92,246,0.5);
+    border-color: #a855f7;
+    border-radius: 50%;
+}
+
+.bottom-nav .nav-btn.play-btn.active i {
+    color: #a855f7;
+    filter: drop-shadow(0 0 8px rgba(168,85,247,0.8));
+}
+.nav-btn i {
+    font-size: 18px;
+    color: #9ca3af;
+}
+.nav-btn.active i {
+    color: #a855f7;
+    filter: drop-shadow(0 0 8px rgba(168,85,247,0.8));
+}
+.play-btn {
+    border: 2px solid #4b5563;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+}
+.play-btn i {
+    font-size: 12px;
+    margin-left: 2px;
+}
+
+        /* Center Button */
+        .center-btn-wrap {
+    position: relative;
+    margin-top: 0;  /* DÜZ HATTA */
+}
+        .center-btn {
+    width: 56px;      /* 76px'den 56px'ye düşür */
+    height: 56px;     /* 76px'den 56px'ye düşür */
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    overflow: visible;
+    position: relative;
+    display: flex;           /* EKLE */
+    align-items: center;      /* EKLE */
+    justify-content: center;  /* EKLE */
+}
+        .center-btn::before {
+            content: none;
+        }
+        .center-btn::after {
+            content: none;
+        }
+
+
+        
+        /* SVG ring */
+        .ring-svg {
+            position: absolute;
+            inset: 6px;
+            width: calc(100% - 12px);
+            height: calc(100% - 12px);
+            border-radius: 50%;
+            z-index: 2;
+            pointer-events: none;
+            overflow: visible;
+        }
+        .ring-svg circle {
+            fill: none;
+            stroke: rgba(255,255,255,0.95);
+            stroke-width: 1;
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.6));
+        }
+        @property --sweep {
+            syntax: '<angle>';
+            inherits: false;
+            initial-value: 0deg;
+        }
+        .center-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            position: relative;
+            z-index: 1;
+            display: block;
+        }
+
+        /* Post Actions Bar */
+        .post-actions {
+            padding: 12px 16px 16px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+        .post-date {
+            font-size: 12px;
+            color: #4b5563;
+            font-weight: 500;
+            margin-left: auto;
+            letter-spacing: 0.2px;
+        }
+        .action-btns {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            order: -1;
+        }
+        .act-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.15s;
+            position: relative;
+        }
+        .act-btn:active { transform: scale(0.88); }
+        .act-btn i {
+            font-size: 17px;
+            transition: color 0.2s, filter 0.2s;
+        }
+        .act-btn.like i {
+            color: #f43f5e;
+            filter: drop-shadow(0 0 5px rgba(244,63,94,0.65));
+        }
+        .act-btn.like.liked i {
+            color: #f43f5e;
+            filter: drop-shadow(0 0 8px rgba(244,63,94,0.9));
+        }
+        .act-btn.comment i {
+            color: #60a5fa;
+            filter: drop-shadow(0 0 5px rgba(96,165,250,0.65));
+        }
+        .act-btn.share i {
+            color: #34d399;
+            filter: drop-shadow(0 0 5px rgba(52,211,153,0.65));
+        }
+        .act-btn.save i {
+            color: #a855f7;
+            filter: drop-shadow(0 0 5px rgba(168,85,247,0.65));
+        }
+        .act-btn.save.saved i {
+            color: #a855f7;
+            filter: drop-shadow(0 0 8px rgba(168,85,247,0.9));
+        }
+        .act-count {
+            font-size: 11px;
+            color: #6b7280;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: left;
+            margin-left: -2px;
+            margin-right: 6px;
+        }
+
+/* ============================================
+   CREATE TAB MODAL - iPhone Frame İçinde
+   ============================================ */
+
+.create-tab-overlay {
+    position: absolute;      /* FIXED yerine ABSOLUTE - iPhone içinde */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    border-radius: 47px;     /* Screen ile aynı border-radius */
+    overflow: hidden;         /* iPhone köşelerine uysun */
+}
+
+.create-tab-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Blurlu Arka Plan - Mor/Turkuaz Tonları */
+.create-tab-backdrop {
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(69, 211, 208, 0.3) 0%, transparent 50%),
+        rgba(10, 10, 15, 0.85);
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+}
+
+/* Modal Container - iPhone Frame'e Uygun */
+.create-tab-modal {
+    position: relative;
+    width: 100%;
+    height: 85%;              /* Ekranın %85'i kadar */
+    max-height: 600px;
+    background: linear-gradient(180deg, 
+        rgba(26, 26, 46, 0.98) 0%, 
+        rgba(15, 15, 26, 0.98) 50%,
+        rgba(10, 10, 18, 0.98) 100%
+    );
+    border-radius: 32px 32px 0 0;
+    padding: 24px 20px 40px;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+    
+    /* Gradyan Border - Mor/Turkuaz */
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+}
+
+/* Gradyan Border Efekti */
+.create-tab-modal::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 32px 32px 0 0;
+    padding: 1px;
+    background: linear-gradient(180deg, 
+        rgba(139, 92, 246, 0.6) 0%, 
+        rgba(69, 211, 208, 0.4) 50%,
+        transparent 100%
+    );
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* İç Glow Efekti */
+.create-tab-modal::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%,
+        rgba(139, 92, 246, 0.8) 20%,
+        rgba(69, 211, 208, 0.8) 50%,
+        rgba(139, 92, 246, 0.8) 80%,
+        transparent 100%
+    );
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+}
+
+.create-tab-overlay.open .create-tab-modal {
+    transform: translateY(0);
+}
+
+/* Sürükleme Çubuğu - Turkuaz/Mor Gradyan */
+.create-tab-handle {
+    width: 100%;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    margin-bottom: 12px;
+}
+
+.create-tab-handle:active {
+    cursor: grabbing;
+}
+
+.handle-bar {
+    width: 48px;
+    height: 5px;
+    background: linear-gradient(90deg, 
+        rgba(139, 92, 246, 0.6) 0%,
+        rgba(69, 211, 208, 0.8) 50%,
+        rgba(139, 92, 246, 0.6) 100%
+    );
+    border-radius: 3px;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(69, 211, 208, 0.3);
+}
+
+.create-tab-handle:hover .handle-bar {
+    background: linear-gradient(90deg, 
+        rgba(139, 92, 246, 0.9) 0%,
+        rgba(69, 211, 208, 1) 50%,
+        rgba(139, 92, 246, 0.9) 100%
+    );
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+}
+
+/* Header */
+.create-tab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Gradyan Başlık - Mor/Turkuaz */
+.create-tab-title {
+    font-size: 26px;
+    font-weight: 800;
+    background: linear-gradient(135deg, 
+        #fff 0%, 
+        #a78bfa 30%,
+        #45D3D0 70%,
+        #fff 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+    text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+}
+
+/* Çarpı Butonu - Gradyan Border */
+.create-tab-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid transparent;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    overflow: hidden;
+}
+
+/* Gradyan Border */
+.create-tab-close::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 1px;
+    background: linear-gradient(135deg, 
+        rgba(139, 92, 246, 0.8) 0%, 
+        rgba(69, 211, 208, 0.8) 100%
+    );
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+.create-tab-close:hover {
+    background: rgba(139, 92, 246, 0.15);
+    transform: rotate(90deg) scale(1.05);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.create-tab-close i {
+    font-size: 16px;
+    background: linear-gradient(135deg, #a78bfa 0%, #45D3D0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Info - Turkuaz/Mor Glow */
+.create-tab-info {
+    font-size: 10px;
+    color: rgba(69, 211, 208, 0.7);
+    margin-bottom: 28px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(69, 211, 208, 0.3);
+}
+
+/* Grid */
+.create-tab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Tab Item - Gradyan Border Hover */
+.create-tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 28px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 24px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover'da Gradyan Border */
+.create-tab-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 1.5px;
+    background: linear-gradient(135deg, 
+        rgba(139, 92, 246, 0) 0%, 
+        rgba(69, 211, 208, 0) 100%
+    );
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: all 0.3s;
+}
+
+.create-tab-item:hover::before {
+    background: linear-gradient(135deg, 
+        rgba(139, 92, 246, 0.8) 0%, 
+        rgba(69, 211, 208, 0.8) 100%
+    );
+}
+
+/* İç Glow */
+.create-tab-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, 
+        rgba(139, 92, 246, 0.15) 0%, 
+        transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.create-tab-item:hover {
+    transform: translateY(-6px) scale(1.03);
+    background: rgba(255,255,255,0.06);
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.4),
+        0 0 30px rgba(139, 92, 246, 0.15);
+}
+
+.create-tab-item:hover::after {
+    opacity: 1;
+}
+
+/* Icon - Daha Büyük, Glow'lu */
+.create-tab-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 28px;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    transition: all 0.3s;
+}
+
+.create-tab-item:hover .create-tab-icon {
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+}
+
+/* Renkler - Mor/Turkuaz Vurgulu */
+.create-tab-icon.post {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+.create-tab-icon.live {
+    background: linear-gradient(135deg, #ec4899 0%, #f43f5e 50%, #ff006e 100%);
+    box-shadow: 0 8px 24px rgba(244, 63, 94, 0.4);
+}
+.create-tab-icon.reel {
+    background: linear-gradient(135deg, #10b981 0%, #34d399 50%, #45D3D0 100%);
+    box-shadow: 0 8px 24px rgba(69, 211, 208, 0.4);
+}
+.create-tab-icon.story {
+    background: linear-gradient(135deg, #45D3D0 0%, #6366f1 50%, #8b5cf6 100%);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+}
+
+/* Live Indicator - Animasyonlu */
+.live-indicator {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: linear-gradient(135deg, #ff006e 0%, #ec4899 100%);
+    color: #fff;
+    font-size: 8px;
+    font-weight: 900;
+    padding: 3px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 15px rgba(255, 0, 110, 0.6);
+    animation: pulseLive 1.5s infinite;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+@keyframes pulseLive {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 15px rgba(255, 0, 110, 0.6); }
+    50% { opacity: 0.85; transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 0, 110, 0.9); }
+}
+
+/* Label - Gradyan */
+.create-tab-label {
+    font-size: 15px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff 0%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 4px;
+}
+
+/* Description */
+.create-tab-desc {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    text-align: center;
+    line-height: 1.4;
+    max-width: 100px;
+}
+
+
+        /* Home Indicator */
+        .home-bar {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: #fff;
+            border-radius: 3px;
+            z-index: 101;
+        }
+
+        .live-camera-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff006e 0%, #8338ec 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border: 2px solid rgba(255,255,255,0.3);
+    box-shadow: 0 0 20px rgba(255,0,110,0.5), 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.live-camera-icon i {
+    font-size: 22px;
+    color: #fff;
+    filter: drop-shadow(0 0 4px rgba(255,255,255,0.6));
+}
+
+.live-badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: #ff006e;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 900;
+    padding: 2px 5px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(255,0,110,0.8);
+    animation: livePulse 1.5s infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+    </style>
+</head>
+<body>
+    <div class="iphone-frame">
+        <!-- Side Buttons -->
+        <div class="side-btn volume-up"></div>
+        <div class="side-btn volume-down"></div>
+        <div class="side-btn action-btn"></div>
+        <div class="side-btn power-btn"></div>
+
+        <div class="screen">
+            <!-- Dynamic Island -->
+            <div class="dynamic-island">
+                <div class="island-cam"></div>
+                <span class="island-time">9:41</span>
+            </div>
+
+            <!-- App -->
+            <div class="app">
+                <!-- Fixed Header - Below Dynamic Island -->
+                <div class="header">
+
+                 <button class="h-btn plus-btn" onclick="openCreateTab()">
+    <i class="fas fa-plus"></i>
+</button>
+                    <div class="discover-pill">
+                        <span class="discover-text">KEŞFET</span>
+                        <i class="fas fa-chevron-down" style="color: rgba(255,255,255,0.7); font-size: 11px;"></i>
+                    </div>
+                    <div class="header-btns">
+                        <button class="h-btn event">
+                            <i class="fas fa-theater-masks"></i>
+                        </button>
+                        <button class="h-btn msg">
+                            <i class="far fa-paper-plane"></i>
+                        </button>
+                        <button class="h-btn notif">
+                            <i class="far fa-bell"></i>
+                            <span class="badge">2</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="content">
+                    <!-- Stories - now scrolls with content -->
+                    <div class="stories-wrap">
+                        <div class="stories">
+                            <div class="story">
+                                <div class="story-avatar">
+                                    <div class="story-avatar-inner">
+                                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face" alt="You">
+                                    </div>
+                                    <div class="add-btn">
+                                        <i class="fas fa-plus"></i>
+                                    </div>
+                                </div>
+                                <span>You</span>
+                            </div>
+                            <div class="story">
+                                <div class="story-avatar">
+                                    <div class="story-avatar-inner">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="User1">
+                                    </div>
+                                </div>
+                                <span>Sarah</span>
+                            </div>
+                            <div class="story">
+                                <div class="story-avatar">
+                                    <div class="story-avatar-inner">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face" alt="User2">
+                                    </div>
+                                </div>
+                                <span>Mike</span>
+                            </div>
+                            <div class="story">
+                                <div class="story-avatar">
+                                    <div class="story-avatar-inner">
+                                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" alt="User3">
+                                    </div>
+                                </div>
+                                <span>Emma</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Posts -->
+                    <div class="content-posts">
+                    <!-- Post 1 -->
+                    <div class="post">
+                        <div class="post-inner">
+                            <div class="post-header">
+                                <div class="post-user">
+                                    <div class="post-avatar">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" alt="SiNeRJi">
+                                    </div>
+                                    <div class="post-info">
+                                        <h3>SiNeRJi</h3>
+                                        <p>@SiNeRJi</p>
+                                    </div>
+                                </div>
+                                <button class="post-menu">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                            </div>
+                            <div class="post-tags">#ramazan #omurdedigin #yenigelecek</div>
+                            <div class="post-img">
+                                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&h=800&fit=crop" alt="Post">
+                            </div>
+                            <div class="post-actions">
+                                <span class="post-date">2 saat önce</span>
+                                <div class="action-btns">
+                                    <button class="act-btn like" onclick="toggleLike(this)">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <span class="act-count">2,4B</span>
+                                    <button class="act-btn comment">
+                                        <i class="far fa-comment"></i>
+                                    </button>
+                                    <span class="act-count">318</span>
+                                    <button class="act-btn share">
+                                        <i class="fas fa-share-nodes"></i>
+                                    </button>
+                                    <button class="act-btn save" onclick="toggleSave(this)">
+                                        <i class="far fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Post 2 -->
+                    <div class="post">
+                        <div class="post-inner">
+                            <div class="post-header">
+                                <div class="post-user">
+                                    <div class="post-avatar">
+                                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="Sarah">
+                                    </div>
+                                    <div class="post-info">
+                                        <h3>Sarah Chen</h3>
+                                        <p>@sarahchen</p>
+                                    </div>
+                                </div>
+                                <button class="post-menu">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                            </div>
+                            <div class="post-tags">#travel #japan #tokyo #photography</div>
+                            <div class="post-img">
+                                <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&h=800&fit=crop" alt="Post 2">
+                            </div>
+                            <div class="post-actions">
+                                <span class="post-date">5 saat önce</span>
+                                <div class="action-btns">
+                                    <button class="act-btn like" onclick="toggleLike(this)">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <span class="act-count">1,1B</span>
+                                    <button class="act-btn comment">
+                                        <i class="far fa-comment"></i>
+                                    </button>
+                                    <span class="act-count">204</span>
+                                    <button class="act-btn share">
+                                        <i class="fas fa-share-nodes"></i>
+                                    </button>
+                                    <button class="act-btn save" onclick="toggleSave(this)">
+                                        <i class="far fa-bookmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div><!-- end content-posts -->
+                </div>
+
+                <!-- Fixed Bottom Nav -->
+
+<!-- Create Tab Modal (iPhone Frame İçinde) -->
+<div class="create-tab-overlay" id="createTabOverlay">
+    <div class="create-tab-backdrop" onclick="closeCreateTab()"></div>
+    
+    <div class="create-tab-modal" id="createTabModal">
+        <!-- Sürükleme Çubuğu -->
+        <div class="create-tab-handle" onmousedown="startDrag(event)" ontouchstart="startDrag(event)">
+            <div class="handle-bar"></div>
+        </div>
+        
+        <!-- Header -->
+        <div class="create-tab-header">
+            <h2 class="create-tab-title">Oluştur</h2>
+            <button class="create-tab-close" onclick="closeCreateTab()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- 4 Tab Grid -->
+        <div class="create-tab-grid">
+            <button class="create-tab-item">
+                <div class="create-tab-icon post">
+                    <i class="fas fa-plus-square"></i>
+                </div>
+                <span class="create-tab-label">Gönderi</span>
+                <span class="create-tab-desc">Fotoğraf paylaş</span>
+            </button>
+            
+            <button class="create-tab-item">
+                <div class="create-tab-icon live">
+                    <i class="fas fa-video"></i>
+                    <span class="live-indicator">CANLI</span>
+                </div>
+                <span class="create-tab-label">Canlı Yayın</span>
+                <span class="create-tab-desc">Anlık yayın yap</span>
+            </button>
+            
+            <button class="create-tab-item">
+                <div class="create-tab-icon reel">
+                    <i class="fas fa-film"></i>
+                </div>
+                <span class="create-tab-label">Reel</span>
+                <span class="create-tab-desc">Kısa video oluştur</span>
+            </button>
+            
+            <button class="create-tab-item">
+                <div class="create-tab-icon story">
+                    <i class="fas fa-circle-plus"></i>
+                </div>
+                <span class="create-tab-label">Hikaye</span>
+                <span class="create-tab-desc">24 saat görünür</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+                <div class="bottom-nav">
+    <button class="nav-btn active" onclick="setActiveNav(this)">
+        <i class="fas fa-home"></i>
+    </button>
+    <button class="nav-btn play-btn" onclick="setActiveNav(this)">
+        <i class="fas fa-play"></i>
+    </button>
+    <div class="center-btn-wrap">
+        <button class="center-btn">
+    <div class="live-camera-icon">
+        <i class="fas fa-video"></i>
+        <div class="live-badge">CANLI</div>
+    </div>
+    <div class="live-pulse-ring"></div>
+</button>
+    </div>
+    <button class="nav-btn" onclick="setActiveNav(this)">
+        <i class="fas fa-search"></i>
+    </button>
+    <button class="nav-btn" onclick="setActiveNav(this)">
+        <i class="far fa-user"></i>
+    </button>
+</div>
+
+                <!-- Home Bar -->
+                <div class="home-bar"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+
+function setActiveNav(clickedBtn) {
+    // Tüm nav butonlarından active class'ını kaldır
+    document.querySelectorAll('.bottom-nav .nav-btn, .bottom-nav .center-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Tıklanan butona active class'ı ekle
+    clickedBtn.classList.add('active');
+}
+
+// Create Tab Aç/Kapat
+function openCreateTab() {
+    const overlay = document.getElementById('createTabOverlay');
+    overlay.classList.add('open');
+}
+
+function closeCreateTab() {
+    const overlay = document.getElementById('createTabOverlay');
+    const modal = document.getElementById('createTabModal');
+    
+    overlay.classList.remove('open');
+    
+    // Modal pozisyonunu sıfırla
+    setTimeout(() => {
+        modal.style.transform = '';
+        modal.style.transition = '';
+    }, 300);
+}
+
+// Sürükleme (Swipe Down)
+let startY = 0;
+let currentY = 0;
+let isDragging = false;
+
+function startDrag(e) {
+    isDragging = true;
+    startY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+    
+    const modal = document.getElementById('createTabModal');
+    modal.style.transition = 'none';
+}
+
+function drag(e) {
+    if (!isDragging) return;
+    
+    currentY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+    const deltaY = currentY - startY;
+    
+    if (deltaY > 0) {
+        const modal = document.getElementById('createTabModal');
+        modal.style.transform = `translateY(${deltaY}px)`;
+    }
+}
+
+function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    
+    const modal = document.getElementById('createTabModal');
+    const deltaY = currentY - startY;
+    
+    modal.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1)';
+    
+    if (deltaY > 80) {
+        closeCreateTab();
+    } else {
+        modal.style.transform = '';
+    }
+}
+
+// Event Listeners
+document.addEventListener('mousemove', drag);
+document.addEventListener('touchmove', drag, { passive: false });
+document.addEventListener('mouseup', endDrag);
+document.addEventListener('touchend', endDrag);
+    
+    // Reset
+    svg.style.opacity = '1';
+    circle.style.filter = 'drop-shadow(0 0 2px rgba(255,255,255,0.6))';
+    circle.style.transition = 'none';
+    
+    function draw(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // easeInOut
+        const eased = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+        
+        if (reverse) {
+            // Ters: dolu çemberden boşa doğru (silme)
+            circle.style.strokeDashoffset = eased * circumference;
+        } else {
+            // Normal: boştan dolu çembere doğru (çizme)
+            circle.style.strokeDashoffset = circumference * (1 - eased);
+        }
+
+        if (progress < 1) {
+            requestAnimationFrame(draw);
+        } else {
+            if (!reverse) {
+                // Normal animasyonda parlama efekti
+                circle.style.strokeDashoffset = 0;
+                circle.style.filter = 'drop-shadow(0 0 4px white) drop-shadow(0 0 8px white) brightness(16)';
+                circle.style.transition = 'filter 0.15s ease-in';
+                setTimeout(() => {
+                    svg.style.transition = 'opacity 0.2s ease-out';
+                    svg.style.opacity = '0';
+                }, 180);
+            } else {
+                // Ters animasyonda sadece fadeout
+                circle.style.strokeDashoffset = circumference;
+                svg.style.transition = 'opacity 0.15s ease-out';
+                svg.style.opacity = '0';
+            }
+        }
+    }
+    requestAnimationFrame(draw);
+    
+</script>
+</html>

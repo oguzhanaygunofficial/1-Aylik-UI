@@ -1,0 +1,98 @@
+--------------------------------------------------------------------------------------
+
+1. BIGO LIVE (Asya-Pasifik'in Hakimi)
+
+Güçlü Yönleri:
+
+Üç-Katmanlı Para Birimi Sistemi: Diamonds → Gifts → Beans (210 Beans = $1) - bu psikolojik olarak harcama hissi azaltır 
+PK Battles: İki yayıncı arasında gerçek zamanlı hediye savaşı - kaybeden ceza alır (4.2 milyon dolarlık tek bir battle rekoru var!) 
+Multi-Guest Rooms: 12 kişiye kadar ekranda, "Mic Queue" sistemi ile söz hakkı yönetimi 
+XP Gamification: Hediye alma 3 XP, gönderme 1 XP (3:1 oran) - yayıncı olmayı teşvik eder 
+SVIP Üyelik: $500-$2,500/ay arası, %30 XP boost + indirimli Diamonds 
+Resmi Host Programı: Aylık garanti gelir + analitik panel 
+2026 AI Avatar Desteği: Yayıncılar fiziksel olarak ekranda olmadan kendi 3D avatarlarıyla 7/24 yayın yapabiliyor.
+
+Eksiklikleri:
+
+Aşırı "gamification" bağımlılık yaratıyor (Malezya'da çocuklar okuldan kaçıp para harcıyor) 
+Platform komisyonu %20-50 arası değişiyor (çok yüksek) 
+Çekim limitleri haftada bir, $5,000 maksimum 
+Yapay Zeka bot hesapların artışı gerçek kullanıcı etkileşimini gölgelemeye başladı.
+
+--------------------------------------------------------------------------------------
+
+2. Discord Stage Channels (Batı'nın Profesyoneli)
+
+Güçlü Yönleri:
+
+10,000 kişiye kadar kapasite (338 boost ile) 
+Rol Tabanlı Moderasyon: Konuşmacı/Moderatör/Dinleyici hiyerarşisi net 
+"Exit Quietly" Özelliği: Sessizce çıkma, sosyal baskı yaratmaz 
+Text Chat Entegrasyonu: Ses odasında aynı anda yazılı chat 
+Stream Together: 4 yayıncı birleşik ekran, birleşik chat 
+2026 "Activities" Entegrasyonu: Stage odalarında doğrudan Poker, Gartic Phone gibi oyunların oynatılabilmesi.
+
+Eksiklikleri:
+
+Para kazanma özellikleri zayıf - sadece Server Shop var 
+Aşırı teknik/karmaşık UI - sıradan kullanıcı için bariyer 
+Keşfedilebilirlik düşük - odalar "Hallway" mantığı yok 
+Mobil uygulamadaki yüksek batarya tüketimi sorunu (2026 güncellemelerine rağmen devam ediyor).
+
+--------------------------------------------------------------------------------------
+
+3. Clubhouse (Sosyal Sesin Öncüsü - Yeniden Doğuş)
+
+Güçlü Yönleri:
+
+"Hallway" Metaforu: Koridor mantığıyla keşif - arkadaşların hangi odada olduğunu görme 
+El Kaldırma Sistemi: Evrensel "konuşmak istiyorum" işareti 
+"Flashing Mics": Sessiz alkış kültürü (hızlı mute/unmute) 
+2026 Pivot'u: "Chats" - arkadaşlar arası sesli sohbet odaları 
+Backchannel: Oda içi özel mesajlaşma 
+AI Özetleyici: Kaçırılan odaların önemli anlarını 30 saniyelik sesli özet olarak sunan yeni özellik.
+
+Eksiklikleri:
+
+Monetizasyon GEÇ kaldı - ilk başta hiç yoktu 
+Ticketed Spaces sadece %97'e kadar veriyor ama $50K'dan sonra %80'e düşüyor 
+İçerik kayboluyordu, geç kayıt özelliği eklendi 
+Keşif algoritması hala niş kitlelere hitap ediyor, kitlesel yayılımda zorlanıyor.
+
+--------------------------------------------------------------------------------------
+
+4. TikTok LIVE (PK Battle'ın Mucidi)
+
+Güçlü Yönleri:
+
+PK Battles: Oyuncu düelloları, izleyiciler hediyelerle oy veriyor 
+"Emoji PK": Eşleştirme oyunları, puanlarla rekabet 
+Sanal Hediyeler: 1 Diamond'dan 29,999 Diamond'a kadar (Love Carriage = ~$585) 
+Anlık Efektler: Yüksek değerli hediyelerde görsel/animasyon şovları 
+Live Subscriptions: Aylık abonelik modeli ile özel emojiler ve sadece abonelere özel yayınlar.
+
+Eksiklikleri:
+
+Aşırı bağımlılık riski - Çin'de bir influencer ceza olarak içki içip öldü 
+Cezalar kontrolsüz: Çıplak yürüme, duşta yayın gibi uygunsuz cezalar 
+Sadece video odaklı, saf ses odası yok 
+Shadowban (Gölge Yasaklama): Algoritmanın şeffaf olmaması nedeniyle ani izleyici düşüşleri.
+
+--------------------------------------------------------------------------------------
+
+5. Yalla Group (MENA Bölgesi - Ses Odaları)
+
+Güçlü Yönleri:
+
+MENA odaklı: Ortadoğu ve Kuzey Afrika'da dominant 
+Ses odaları + Oyun entegrasyonu (Yalla Ludo birleşimi) 
+Yerel kültürel özellikler: Ramazan ve özel bayramlarda bölgeye özel temalı dijital hediyeler 
+Majlis Kültürü Simülasyonu: Geleneksel Arap meclis yapısını dijital odaya taşıyan oturma düzeni.
+
+Eksiklikleri:
+
+Bölgesel bağımlılık: MENA dışındaki pazarlarda (Avrupa/Amerika) varlık gösteremiyor 
+Yüksek giriş bariyeri: Kapalı devre topluluk yapısı yeni kullanıcıların girmesini zorlaştırıyor 
+Moderatör eksikliği: Bazı dillerde (yerel lehçeler) moderasyonun yetersiz kalması.
+
+--------------------------------------------------------------------------------------

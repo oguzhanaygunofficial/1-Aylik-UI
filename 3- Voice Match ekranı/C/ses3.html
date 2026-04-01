@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Nexlify</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;margin:0;padding:0;}
+html,body{overflow:hidden;background:#08050F;}
+body{font-family:'Cabinet Grotesk',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;}
+
+:root{
+  --c1:#00C0FF;--c2:#00B4FF;--c3:#0066FF;--c4:#3366FF;--c5:#6633FF;--c6:#9933FF;--c7:#CC00FF;--c8:#FF00CC;--c9:#FF33FF;--ca:#FF66FF;
+  --bg:#08050F;--bg2:#0F0A1C;--bg3:#160D28;
+  --s0:rgba(255,255,255,0.025);--s1:rgba(255,255,255,0.05);--s2:rgba(255,255,255,0.08);--s3:rgba(255,255,255,0.13);
+  --b0:rgba(255,255,255,0.06);--b1:rgba(255,255,255,0.10);--b2:rgba(255,255,255,0.16);
+  --tx:#F5F0FF;--tx2:rgba(245,240,255,0.5);--tx3:rgba(245,240,255,0.28);
+  --gold:#FFD26B;--grn:#00FFC2;--red:#FF3355;
+}
+body{background:var(--bg);}
+
+/* ── PHONE ── */
+.phone{
+  position:relative;width:390px;height:844px;
+  background:var(--bg);border-radius:54px;overflow:hidden;
+  box-shadow:0 0 0 10px #100820,0 0 0 12px #180B30,0 60px 120px rgba(0,0,0,0.98),0 0 100px rgba(102,51,255,0.08),inset 0 0 0 1px rgba(255,255,255,0.04);
+}
+.mesh{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.mesh::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 15% 10%,rgba(102,51,255,0.18) 0%,transparent 55%),radial-gradient(ellipse 55% 40% at 90% 85%,rgba(0,180,255,0.12) 0%,transparent 55%),radial-gradient(ellipse 45% 35% at 55% 45%,rgba(204,0,255,0.07) 0%,transparent 55%);}
+.mesh::after{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");background-size:200px 200px;opacity:.6;}
+
+/* ── ISLAND ── */
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:126px;height:36px;background:#000;border-radius:22px;z-index:70;display:flex;align-items:center;justify-content:center;gap:8px;}
+.island-dot{width:10px;height:10px;border-radius:50%;background:#1a1a1a;}
+
+/* ── STATUS ── */
+.status{position:absolute;top:15px;left:24px;right:24px;display:flex;justify-content:space-between;align-items:center;z-index:65;font-size:13px;font-weight:700;color:var(--tx);letter-spacing:.01em;}
+
+/* ── SCREENS ── */
+#app{position:absolute;inset:0;}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transform:translateY(18px);transition:opacity .42s cubic-bezier(.22,1,.36,1),transform .42s cubic-bezier(.22,1,.36,1);scrollbar-width:none;}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active{opacity:1;pointer-events:auto;transform:translateY(0);}
+.screen.exit{opacity:0;transform:translateY(-10px);}
+
+/* ── GLASS ── */
+.g0{background:var(--s0);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--b0);}
+.g1{background:var(--s1);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--b1);}
+.g2{background:var(--s2);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid var(--b2);}
+
+/* ── TOP TAB NAV ── */
+.top-nav{position:absolute;top:0;left:0;right:0;z-index:50;padding:58px 22px 0;display:flex;align-items:center;gap:0;background:linear-gradient(to bottom,rgba(8,5,15,0.9) 0%,transparent 100%);}
+.tn-tab{flex:1;display:flex;align-items:center;justify-content:center;padding-bottom:12px;border:none;background:none;cursor:pointer;position:relative;transition:all .25s;}
+.tn-tab svg{width:20px;height:20px;color:var(--tx3);transition:color .25s;}
+.tn-tab.active svg{color:var(--tx);}
+.tn-ink{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--c5),var(--c7));transition:width .3s cubic-bezier(.22,1,.36,1);box-shadow:0 0 8px rgba(204,0,255,0.6);}
+.tn-tab.active .tn-ink{width:20px;}
+.tn-badge{position:absolute;top:-2px;right:calc(50% - 18px);width:15px;height:15px;border-radius:50%;background:linear-gradient(135deg,var(--c7),var(--c5));color:white;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+
+/* ── TYPOGRAPHY ── */
+.serif{font-family:'Instrument Serif',serif;}
+.mono{font-family:'Geist Mono',monospace;}
+.grad-brand{background:linear-gradient(135deg,var(--c1) 0%,var(--c5) 40%,var(--c9) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.grad-warm{background:linear-gradient(135deg,var(--c7) 0%,var(--c5) 50%,var(--c1) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.gold-t{background:linear-gradient(135deg,var(--gold),#FF9A3C);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ── ANIMATIONS ── */
+@keyframes breathe{0%,100%{transform:scale(1);}60%{transform:scale(1.06);}}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes spinR{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
+@keyframes gPulse{0%,100%{opacity:.45;}50%{opacity:1;}}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
+@keyframes ripOut{0%{transform:scale(1);opacity:.7;}100%{transform:scale(1.6);opacity:0;}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes heartPop{0%,100%{transform:scale(1);}30%{transform:scale(1.15);}60%{transform:scale(.95);}}
+@keyframes shimmer{0%{background-position:-300% 0;}100%{background-position:300% 0;}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes waveEq{0%{transform:scaleY(.12);opacity:.4;}100%{transform:scaleY(1);opacity:1;}}
+@keyframes magnetPulse{0%,100%{opacity:.2;transform:scale(1);}50%{opacity:.55;transform:scale(1.08);}}
+@keyframes floatAvatar1{0%,100%{transform:translate(0px,0px);}33%{transform:translate(8px,-12px);}66%{transform:translate(-6px,8px);}}
+@keyframes floatAvatar2{0%,100%{transform:translate(0px,0px);}40%{transform:translate(-10px,6px);}75%{transform:translate(7px,-10px);}}
+@keyframes floatAvatar3{0%,100%{transform:translate(0px,0px);}25%{transform:translate(6px,10px);}70%{transform:translate(-8px,-7px);}}
+@keyframes magneticPull{0%{transform:translate(0,0) scale(1);}100%{transform:translate(var(--px),var(--py)) scale(0.6);opacity:0;}}
+@keyframes countPop{0%{transform:scale(1.3);}100%{transform:scale(1);}}
+
+/* ── FREQ BARS — very subtle movement ── */
+.fbar{border-radius:3px 3px 0 0;background:linear-gradient(to top,var(--c5),var(--c7),var(--ca));transform-origin:bottom;animation:fbarBreath var(--fd,3s) ease-in-out infinite var(--fdel,0s);}
+@keyframes fbarBreath{0%,100%{opacity:var(--fop,.7);transform:scaleY(var(--fsc,.5));}50%{opacity:1;transform:scaleY(calc(var(--fsc,.5) + 0.15));}}
+
+/* ── VOICE PULSE RING ── */
+.vring{position:absolute;border-radius:50%;border:1.5px solid;animation:ripOut 2.4s ease-out infinite;}
+
+/* ── MATCH CARD ── */
+.match-card{border-radius:24px;overflow:hidden;background:var(--s0);border:1px solid var(--b1);transition:transform .2s,box-shadow .2s;cursor:pointer;}
+.match-card:active{transform:scale(.97);}
+
+/* ── SHIMMER ── */
+.shimmer-bg{background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.06) 50%,transparent 100%);background-size:300% 100%;animation:shimmer 2s linear infinite;}
+
+/* ── MODAL — absolute inside phone ── */
+.modal{position:absolute;inset:0;z-index:200;opacity:0;pointer-events:none;background:rgba(0,0,0,0.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);transition:opacity .3s;display:flex;align-items:flex-end;justify-content:center;padding:16px;}
+.modal.active{opacity:1;pointer-events:auto;}
+.msheet{transform:translateY(24px) scale(.97);opacity:0;transition:transform .38s cubic-bezier(.22,1,.36,1),opacity .38s;width:100%;max-width:390px;background:var(--bg2);border-radius:30px;border:1px solid var(--b2);overflow:hidden;}
+.modal.active .msheet{transform:none;opacity:1;}
+
+/* ── PRESS ── */
+.press{transition:transform .17s cubic-bezier(.22,1,.36,1);cursor:pointer;}
+.press:active{transform:scale(.95);}
+
+/* ── RING DECOR ── */
+.ring-brand{background:conic-gradient(from 0deg,var(--c5),var(--c7),var(--c9),var(--c1),var(--c5));border-radius:50%;padding:2.5px;}
+.ring-gold{background:linear-gradient(45deg,var(--gold),#FF9A3C);border-radius:50%;padding:2px;}
+
+/* ── COMPAT BAR ── */
+.cbar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--c5),var(--c7),var(--c1));}
+
+/* ── BUTTONS ── */
+.btn-brand{background:linear-gradient(135deg,var(--c5),var(--c7));border:none;color:white;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(102,51,255,0.35);}
+.btn-ghost{background:var(--s1);border:1px solid var(--b2);color:var(--tx);font-family:'Cabinet Grotesk',sans-serif;cursor:pointer;}
+
+/* ── SCROLLABLE ── */
+.hs{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;}
+.hs::-webkit-scrollbar{display:none;}
+
+/* ── SOUND BARS (call, animated) ── */
+.sbar{width:3px;border-radius:2px;background:linear-gradient(to top,var(--c5),var(--c1));animation:waveEq var(--d,.5s) ease-in-out infinite alternate var(--delay,0s);}
+
+/* ── FRIENDS TAB UNDERLINE STYLE ── */
+.ftab-row{display:flex;border-bottom:1px solid var(--b0);margin-bottom:18px;gap:0;}
+.ftab{flex:1;padding:10px 2px;background:none;border:none;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;font-size:11px;font-weight:700;color:var(--tx2);position:relative;transition:color .2s;}
+.ftab.active{color:var(--tx);}
+.ftab::after{content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:0;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--c5),var(--c7));transition:width .3s cubic-bezier(.22,1,.36,1);box-shadow:0 0 6px rgba(153,51,255,0.5);}
+.ftab.active::after{width:60%;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="mesh"></div>
+  <div class="island"><div class="island-dot"></div><div class="island-dot" style="width:14px;height:14px;border-radius:4px;"></div></div>
+  <div class="status">
+    <span id="clock" class="mono" style="font-size:13px;font-weight:500;">09:41</span>
+    <div style="display:flex;align-items:center;gap:5px;">
+      <svg width="15" height="11" fill="white" viewBox="0 0 24 12"><rect x="0" y="3" width="4" height="6" rx=".5"/><rect x="5" y="2" width="4" height="8" rx=".5"/><rect x="10" y="1" width="4" height="10" rx=".5"/><rect x="15" y="0" width="4" height="12" rx=".5"/></svg>
+      <span style="font-size:11px;" class="mono">5G</span>
+      <svg width="24" height="12" viewBox="0 0 25 12"><rect x="0" y="1" width="21" height="10" rx="2" fill="none" stroke="white" stroke-width="1.2"/><rect x="22" y="3.5" width="2.5" height="5" rx="1" fill="white"/><rect x="1.5" y="2.5" width="16" height="7" rx="1" fill="white"/></svg>
+    </div>
+  </div>
+
+  <div id="app">
+
+<!-- ════ TOP NAV ════ -->
+<div class="top-nav" id="top-nav">
+  <button class="tn-tab active" id="tn-discover" onclick="switchTab('discover')">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/></svg>
+    <div class="tn-ink"></div>
+  </button>
+  <button class="tn-tab" id="tn-friends" onclick="switchTab('friends')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+    <div class="tn-ink"></div>
+  </button>
+
+  <!-- Center: Token display (not clickable tab) -->
+  <div style="flex:.8;display:flex;align-items:center;justify-content:center;padding-bottom:12px;">
+    <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:rgba(255,210,107,0.1);border:1px solid rgba(255,210,107,0.22);">
+      <svg width="11" height="11" fill="var(--gold)" viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/></svg>
+      <span class="gold-t mono" style="font-size:11px;font-weight:600;">2,450</span>
+    </div>
+  </div>
+
+  <!-- Store tab -->
+  <button class="tn-tab" id="tn-store" onclick="switchTab('store')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+    <div class="tn-ink"></div>
+  </button>
+  <button class="tn-tab" id="tn-profile" onclick="switchTab('profile')">
+    <div class="ring-brand" style="width:24px;height:24px;">
+      <img src="https://kimi-web-img.moonshot.cn/img/as2.ftcdn.net/fbc0a536e19ffcf94e4e8594d0dbf1b55b048086.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;background:var(--bg);">
+    </div>
+    <div class="tn-ink"></div>
+  </button>
+</div>
+
+<!-- ════ SCREEN — DISCOVER ════ -->
+<div id="s-discover" class="screen active">
+  <div style="padding:108px 22px 0;">
+
+    <!-- HERO SECTION -->
+    <div style="margin-bottom:18px;position:relative;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div>
+          <h1 style="color:var(--tx);font-size:24px;font-weight:900;line-height:1.05;">Ruh <span class="grad-warm serif" style="font-style:italic;font-size:26px;">Eşini</span> Bul</h1>
+        </div>
+        <!-- Online count (dot + number, no border) -->
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">
+          <div style="display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;background:rgba(0,255,194,0.06);">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--grn);box-shadow:0 0 8px rgba(0,255,194,.9);display:block;animation:gPulse 1.4s infinite;"></span>
+            <span style="color:var(--grn);font-size:10px;font-weight:600;" class="mono">1,247</span>
+          </div>
+          <span style="color:var(--tx3);font-size:10px;">online şu an</span>
+        </div>
+      </div>
+
+      <!-- THE VISUALIZER + BIG BUTTON -->
+      <div style="position:relative;border-radius:28px;overflow:hidden;padding:20px 18px 18px;background:linear-gradient(160deg,rgba(102,51,255,0.16),rgba(204,0,255,0.08),rgba(0,180,255,0.1));border:1px solid rgba(153,51,255,0.2);">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(102,51,255,0.25) 0%,transparent 70%);pointer-events:none;animation:breathe 4s ease-in-out infinite;"></div>
+
+        <!-- EQ Bars + Button Row — no avatars, taller -->
+        <div style="display:flex;align-items:flex-end;justify-content:center;gap:4px;height:80px;margin-bottom:14px;position:relative;z-index:1;">
+          <!-- Left bars -->
+          <div class="fbar" style="width:4px;height:80px;--fsc:.2;--fop:.4;--fd:2.8s;--fdel:0s;"></div>
+          <div class="fbar" style="width:4px;height:80px;--fsc:.45;--fop:.55;--fd:3.4s;--fdel:.3s;"></div>
+          <div class="fbar" style="width:4px;height:80px;--fsc:.7;--fop:.7;--fd:2.6s;--fdel:.6s;"></div>
+          <div class="fbar" style="width:4px;height:80px;--fsc:.35;--fop:.6;--fd:3.2s;--fdel:.2s;"></div>
+          <div class="fbar" style="width:5px;height:80px;--fsc:.85;--fop:.8;--fd:2.9s;--fdel:.5s;"></div>
+          <div class="fbar" style="width:4px;height:80px;--fsc:.55;--fop:.65;--fd:3.6s;--fdel:.1s;"></div>
+
+          <!-- CENTER BUTTON — 104px -->
+          <div style="position:relative;display:flex;align-items:center;justify-content:center;margin:0 14px;margin-bottom:-6px;">
+            <div class="vring" style="width:128px;height:128px;border-color:rgba(153,51,255,0.35);animation-duration:2.4s;"></div>
+            <div class="vring" style="width:128px;height:128px;border-color:rgba(0,180,255,0.2);animation-duration:2.4s;animation-delay:.8s;"></div>
+            <div class="vring" style="width:128px;height:128px;border-color:rgba(204,0,255,0.15);animation-duration:2.4s;animation-delay:1.6s;"></div>
+            <button onclick="navSearchMode('default')" class="press" style="position:relative;z-index:2;width:104px;height:104px;border-radius:50%;background:linear-gradient(145deg,var(--c5),var(--c7));border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 0 44px rgba(102,51,255,0.6),0 0 88px rgba(204,0,255,0.2);">
+              <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>
+              </svg>
+              <span style="color:rgba(255,255,255,.9);font-size:9px;font-weight:800;letter-spacing:.07em;" class="mono">EŞLEŞME ARA</span>
+            </button>
+          </div>
+
+          <!-- Right bars -->
+          <div class="fbar" style="width:4px;height:80px;--fsc:.5;--fop:.65;--fd:3.1s;--fdel:.4s;"></div>
+          <div class="fbar" style="width:5px;height:80px;--fsc:.8;--fop:.8;--fd:2.7s;--fdel:.7s;"></div>
+          <div class="fbar" style="width:4px;height:80px;--fsc:.38;--fop:.55;--fd:3.5s;--fdel:.15s;"></div>
+          <div class="fbar" style="width:4px;height:80px;--fsc:.62;--fop:.7;--fd:2.8s;--fdel:.55s;"></div>
+          <div class="fbar" style="width:4px;height:80px;--fsc:.28;--fop:.45;--fd:3.3s;--fdel:.35s;"></div>
+          <div class="fbar" style="width:4px;height:80px;--fsc:.72;--fop:.75;--fd:2.5s;--fdel:.8s;"></div>
+        </div>
+
+        <!-- Bottom row -->
+        <div style="display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1;">
+          <div>
+            <div style="display:flex;align-items:center;gap:5px;">
+              <div style="display:flex;gap:4px;">
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 7px rgba(0,255,194,.8);"></div>
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 7px rgba(0,255,194,.8);"></div>
+                <div style="width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 7px rgba(0,255,194,.8);"></div>
+              </div>
+              <span style="color:var(--tx3);font-size:10px;" class="mono">3/3 ücretsiz</span>
+            </div>
+          </div>
+          <span style="color:var(--tx3);font-size:10px;" class="mono">Şu an 1,247 aktif</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOD SEÇİMİ — Patron büyük, diğerleri küçük -->
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;">
+        <h2 style="color:var(--tx);font-size:16px;font-weight:800;">Mod Seç</h2>
+        <span style="color:var(--tx3);font-size:11px;" class="mono">6 aktif</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+
+        <!-- 👑 Patron — tall/big (en değerli) -->
+        <div class="match-card press" onclick="nav('s-filters')" style="padding:14px 12px;grid-row:span 2;background:linear-gradient(160deg,rgba(255,210,107,0.1),rgba(102,51,255,0.15));border:1px solid rgba(255,210,107,0.28);">
+          <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--gold),#FF9A3C);display:flex;align-items:center;justify-content:center;margin-bottom:14px;box-shadow:0 6px 20px rgba(255,210,107,0.35);">
+            <svg width="22" height="22" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+          </div>
+          <h3 style="color:var(--tx);font-size:14px;font-weight:800;margin-bottom:5px;">👑 Patron<br>Modu</h3>
+          <p style="color:var(--tx2);font-size:11px;line-height:1.5;margin-bottom:16px;">Tüm filtreler açık. Yaş, şehir, MBTI ile tam istediğin kişiyi bul.</p>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:14px;">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:var(--gold);font-size:10px;">✓</span><span style="color:var(--tx2);font-size:11px;">Gelişmiş filtreler</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:var(--gold);font-size:10px;">✓</span><span style="color:var(--tx2);font-size:11px;">Öncelikli eşleşme</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span style="color:var(--gold);font-size:10px;">✓</span><span style="color:var(--tx2);font-size:11px;">%90+ uyum garantisi</span>
+            </div>
+          </div>
+          <span style="display:inline-block;padding:5px 12px;border-radius:20px;background:rgba(255,210,107,0.18);color:var(--gold);font-size:11px;font-weight:700;border:1px solid rgba(255,210,107,0.3);" class="mono">100 NT</span>
+        </div>
+
+        <!-- Anonim — short -->
+        <div class="match-card press" onclick="navSearchMode('anon')" style="padding:12px;background:linear-gradient(145deg,rgba(102,51,255,0.12),rgba(204,0,255,0.06));border:1px solid rgba(153,51,255,0.22);">
+          <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--c5),var(--c7));display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 4px 14px rgba(102,51,255,0.4);">
+            <svg width="19" height="19" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+          </div>
+          <h3 style="color:var(--tx);font-size:13px;font-weight:800;margin-bottom:3px;">Anonim</h3>
+          <p style="color:var(--tx2);font-size:10px;">Kimliksiz bağlantı</p>
+          <span style="display:inline-block;margin-top:8px;padding:3px 9px;border-radius:14px;background:rgba(102,51,255,0.18);color:#C4B5FD;font-size:10px;font-weight:700;" class="mono">Ücretsiz</span>
+        </div>
+
+        <!-- Hızlı — short -->
+        <div class="match-card press" onclick="navSearchMode('hizli')" style="padding:12px;background:linear-gradient(145deg,rgba(0,192,255,0.1),rgba(0,102,255,0.05));border:1px solid rgba(0,192,255,0.2);">
+          <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--c1),var(--c3));display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 4px 14px rgba(0,192,255,0.3);">
+            <svg width="19" height="19" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 style="color:var(--tx);font-size:13px;font-weight:800;margin-bottom:3px;">Hızlı</h3>
+          <p style="color:var(--tx2);font-size:10px;">%70+ uyum</p>
+          <span style="display:inline-block;margin-top:8px;padding:3px 9px;border-radius:14px;background:rgba(0,180,255,0.12);color:var(--c1);font-size:10px;font-weight:700;" class="mono">30 NT</span>
+        </div>
+
+        <!-- Zıt Çekim — short -->
+        <div class="match-card press" onclick="navSearchMode('zit')" style="padding:12px;background:linear-gradient(145deg,rgba(236,72,153,0.1),rgba(244,63,94,0.05));border:1px solid rgba(236,72,153,0.22);">
+          <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#EC4899,#F43F5E);display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 4px 14px rgba(236,72,153,0.3);">
+            <svg width="19" height="19" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          </div>
+          <h3 style="color:var(--tx);font-size:13px;font-weight:800;margin-bottom:3px;">Zıt Çekim</h3>
+          <p style="color:var(--tx2);font-size:10px;">Zıtlar çeker</p>
+          <span style="display:inline-block;margin-top:8px;padding:3px 9px;border-radius:14px;background:rgba(236,72,153,0.14);color:#F472B6;font-size:10px;font-weight:700;" class="mono">25 NT</span>
+        </div>
+
+        <!-- Şehir — short -->
+        <div class="match-card press" onclick="nav('s-city')" style="padding:12px;background:linear-gradient(145deg,rgba(16,185,129,0.1),rgba(5,150,105,0.05));border:1px solid rgba(16,185,129,0.2);">
+          <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#10B981,#059669);display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 4px 14px rgba(16,185,129,0.3);">
+            <svg width="19" height="19" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <h3 style="color:var(--tx);font-size:13px;font-weight:800;margin-bottom:3px;">Şehir</h3>
+          <p style="color:var(--tx2);font-size:10px;">Yakınındakiler</p>
+          <span style="display:inline-block;margin-top:8px;padding:3px 9px;border-radius:14px;background:rgba(16,185,129,0.12);color:#34D399;font-size:10px;font-weight:700;" class="mono">75 NT</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="height:30px;"></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN — SEARCHING ════ -->
+<div id="s-searching" class="screen">
+  <div style="padding:52px 22px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+    <button class="g0 press" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;" onclick="stopSearching()">
+      <svg width="16" height="16" fill="none" stroke="var(--tx)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <!-- Timer pill -->
+    <div style="display:flex;align-items:center;gap:8px;padding:6px 16px;border-radius:20px;background:rgba(0,255,194,0.07);border:1px solid rgba(0,255,194,0.18);">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--grn);box-shadow:0 0 8px rgba(0,255,194,.9);display:block;animation:gPulse 1.4s infinite;"></span>
+      <span id="search-timer" class="mono grad-brand" style="font-size:17px;font-weight:800;">0:42</span>
+    </div>
+    <div style="width:40px;"></div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;padding:0 22px;">
+
+    <!-- Colorful short title -->
+    <h2 style="font-size:18px;font-weight:900;margin-bottom:18px;text-align:center;background:linear-gradient(135deg,var(--c1),var(--c5),var(--c7));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Senin için arıyoruz</h2>
+
+    <!-- MAGNET AREA — 8 avatars + moving emoji magnet, NO rings -->
+    <div id="magnet-area" style="position:relative;width:280px;height:260px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+
+      <!-- 8 floating avatars -->
+      <div class="s-avatar" id="av1" style="position:absolute;top:10px;left:50%;transform:translateX(-50%);width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid rgba(102,51,255,0.6);box-shadow:0 0 14px rgba(102,51,255,0.3);animation:floatAvatar1 4s ease-in-out infinite;">
+        <img src="https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/bae177dfad10608ef944578c4ae57e42b8ab3d9b.jpg" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="s-avatar" id="av2" style="position:absolute;top:35px;right:15px;width:38px;height:38px;border-radius:50%;overflow:hidden;border:2px solid rgba(0,180,255,0.6);box-shadow:0 0 12px rgba(0,180,255,0.3);animation:floatAvatar2 5s ease-in-out infinite .3s;">
+        <img src="https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="s-avatar" id="av3" style="position:absolute;bottom:35px;right:12px;width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,51,255,0.5);box-shadow:0 0 12px rgba(255,51,255,0.25);animation:floatAvatar3 4.5s ease-in-out infinite .6s;">
+        <img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="s-avatar" id="av4" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:38px;height:38px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,210,107,0.6);box-shadow:0 0 10px rgba(255,210,107,0.3);animation:floatAvatar1 3.8s ease-in-out infinite 1s;">
+        <img src="https://kimi-web-img.moonshot.cn/img/as2.ftcdn.net/fbc0a536e19ffcf94e4e8594d0dbf1b55b048086.jpg" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <div class="s-avatar" id="av5" style="position:absolute;bottom:35px;left:12px;width:40px;height:40px;border-radius:50%;overflow:hidden;border:2px solid rgba(0,255,194,0.5);box-shadow:0 0 10px rgba(0,255,194,0.2);animation:floatAvatar2 4.2s ease-in-out infinite .9s;">
+        <img src="https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/bae177dfad10608ef944578c4ae57e42b8ab3d9b.jpg" style="width:100%;height:100%;object-fit:cover;filter:hue-rotate(30deg);">
+      </div>
+      <div class="s-avatar" id="av6" style="position:absolute;top:35px;left:15px;width:36px;height:36px;border-radius:50%;overflow:hidden;border:2px solid rgba(204,0,255,0.5);box-shadow:0 0 10px rgba(204,0,255,0.25);animation:floatAvatar3 5.2s ease-in-out infinite 1.4s;">
+        <img src="https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg" style="width:100%;height:100%;object-fit:cover;filter:hue-rotate(60deg);">
+      </div>
+      <div class="s-avatar" id="av7" style="position:absolute;top:80px;right:4px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--c5),var(--c7));border:2px solid rgba(102,51,255,0.5);display:flex;align-items:center;justify-content:center;animation:floatAvatar1 4.8s ease-in-out infinite 0.5s;">
+        <span style="color:white;font-size:10px;font-weight:700;">A</span>
+      </div>
+      <div class="s-avatar" id="av8" style="position:absolute;top:80px;left:4px;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c3));border:2px solid rgba(0,192,255,0.5);display:flex;align-items:center;justify-content:center;animation:floatAvatar2 3.6s ease-in-out infinite 1.8s;">
+        <span style="color:white;font-size:10px;font-weight:700;">K</span>
+      </div>
+
+      <!-- Moving magnet — JS controlled -->
+      <div id="magnet-mover" style="position:absolute;z-index:10;width:72px;height:72px;display:flex;align-items:center;justify-content:center;transition:left .8s cubic-bezier(.45,0,.55,1),top .8s cubic-bezier(.45,0,.55,1);left:104px;top:94px;">
+        <div style="position:absolute;inset:-6px;border-radius:50%;background:radial-gradient(circle,rgba(102,51,255,0.4),rgba(204,0,255,0.2),transparent 75%);animation:breathe 2s ease-in-out infinite;"></div>
+        <span id="magnet-emoji" style="font-size:40px;position:relative;z-index:2;filter:drop-shadow(0 0 14px rgba(153,51,255,1));display:block;">🧲</span>
+      </div>
+    </div>
+
+    <!-- Subtle metrics — inline small -->
+    <div style="display:flex;gap:14px;width:100%;margin-bottom:16px;justify-content:center;">
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span class="mono" style="color:var(--c1);font-size:13px;font-weight:700;">1,247</span>
+        <span style="color:var(--tx3);font-size:11px;">aktif</span>
+      </div>
+      <span style="color:var(--b1);">·</span>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span class="mono" style="color:var(--c6);font-size:13px;font-weight:700;">42</span>
+        <span style="color:var(--tx3);font-size:11px;">eşleşme/dk</span>
+      </div>
+      <span style="color:var(--b1);">·</span>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <span class="mono gold-t" style="font-size:13px;font-weight:700;">%94</span>
+        <span style="color:var(--tx3);font-size:11px;">başarı</span>
+      </div>
+    </div>
+
+    <!-- BOOST OPTIONS — more prominent -->
+    <div style="width:100%;margin-bottom:16px;margin-top:8px;">
+      <p style="color:var(--tx);font-size:13px;font-weight:800;margin-bottom:10px;">⚡ Boost ile hızlandır</p>
+      <div style="display:flex;flex-direction:column;gap:9px;">
+        <div class="press" style="border-radius:18px;padding:13px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;background:linear-gradient(135deg,rgba(255,154,60,0.14),rgba(255,107,0,0.07));border:1px solid rgba(255,154,60,0.35);" onclick="applyBoost(this,'speed')">
+          <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#FF9A3C,#FF6B00);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(255,154,60,0.4);">
+            <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <div style="flex:1;"><p style="color:var(--tx);font-size:13px;font-weight:700;">Hız Bostu</p><p style="color:var(--tx2);font-size:11px;">Beklemeyi %60 kısalt</p></div>
+          <span class="mono" style="color:#FF9A3C;font-size:13px;font-weight:800;flex-shrink:0;">20 NT</span>
+        </div>
+        <div class="press" style="border-radius:18px;padding:13px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;background:linear-gradient(135deg,rgba(102,51,255,0.18),rgba(204,0,255,0.08));border:1px solid rgba(153,51,255,0.38);" onclick="applyBoost(this,'compat')">
+          <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--c5),var(--c7));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(102,51,255,0.45);">
+            <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          </div>
+          <div style="flex:1;"><p style="color:var(--tx);font-size:13px;font-weight:700;">Uyum Garantisi</p><p style="color:var(--tx2);font-size:11px;">Sadece %90+ uyumlular</p></div>
+          <span class="mono" style="color:var(--ca);font-size:13px;font-weight:800;flex-shrink:0;">35 NT</span>
+        </div>
+        <div class="press" style="border-radius:18px;padding:13px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;background:linear-gradient(135deg,rgba(255,210,107,0.14),rgba(255,154,60,0.06));border:1px solid rgba(255,210,107,0.35);" onclick="applyBoost(this,'spotlight')">
+          <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--gold),#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(255,210,107,0.4);">
+            <svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+          </div>
+          <div style="flex:1;"><p style="color:var(--tx);font-size:13px;font-weight:700;">Spotlight</p><p style="color:var(--tx2);font-size:11px;">Profilini ön sıraya taşı</p></div>
+          <span class="mono gold-t" style="font-size:13px;font-weight:800;flex-shrink:0;">50 NT</span>
+        </div>
+      </div>
+    </div>
+    <div style="height:20px;"></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN — MATCH FOUND ════ -->
+<div id="s-match-found" class="screen" style="background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(102,51,255,0.28),transparent 60%),var(--bg);">
+  <div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:50px 26px 60px;text-align:center;">
+
+    <!-- TOP LABEL — no magnets -->
+    <div style="margin-bottom:20px;animation:slideUp .4s ease-out;">
+      <p class="mono" style="color:var(--c7);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;">✦ Eşleşme Bulundu ✦</p>
+    </div>
+
+    <!-- SLIDING PROFILE CARDS — both use left:px, symmetric, no crossing -->
+    <div id="match-profiles" style="position:relative;width:100%;height:128px;margin-bottom:22px;animation:slideUp .5s ease-out .1s both;">
+
+      <!-- Compat badge — fades out -->
+      <div id="mp-center" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;transition:opacity 0.36s;z-index:2;">
+        <span class="mono grad-brand" style="font-size:16px;font-weight:900;">%82</span>
+        <span style="color:var(--tx3);font-size:9px;" class="mono">UYUM</span>
+      </div>
+
+      <!-- You — starts left:18px, moves right to center -->
+      <div id="mp-you" style="position:absolute;left:18px;top:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:1;transition:left 0.4s cubic-bezier(.4,0,.2,1);">
+        <div style="width:96px;height:96px;border-radius:26px;overflow:hidden;box-shadow:0 0 0 3px rgba(102,51,255,.7),0 0 30px rgba(102,51,255,.4);position:relative;">
+          <img src="https://kimi-web-img.moonshot.cn/img/as2.ftcdn.net/fbc0a536e19ffcf94e4e8594d0dbf1b55b048086.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:5px;background:linear-gradient(transparent,rgba(80,20,200,0.85));text-align:center;">
+            <span style="color:white;font-size:11px;font-weight:700;">Sen</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:2px;height:14px;align-items:flex-end;">
+          <div style="width:2px;height:14px;border-radius:1px;background:var(--c5);transform:scaleY(.4);"></div>
+          <div style="width:2px;height:14px;border-radius:1px;background:var(--c7);transform:scaleY(.8);"></div>
+          <div style="width:2px;height:14px;border-radius:1px;background:var(--c9);"></div>
+        </div>
+      </div>
+
+      <!-- Them — starts left:232px, moves left to center, on top (z-index:3) -->
+      <div id="mp-them" style="position:absolute;left:232px;top:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:3;transition:left 0.4s cubic-bezier(.4,0,.2,1);">
+        <div style="width:96px;height:96px;border-radius:26px;overflow:hidden;box-shadow:0 0 0 3px rgba(0,180,255,.7),0 0 30px rgba(0,180,255,.4);position:relative;">
+          <img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;object-fit:cover;">
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:5px;background:linear-gradient(transparent,rgba(0,80,180,0.85));text-align:center;">
+            <span class="card-name-label" style="color:white;font-size:11px;font-weight:700;">Önder</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:2px;height:14px;align-items:flex-end;">
+          <div style="width:2px;height:14px;border-radius:1px;background:var(--c1);transform:scaleY(.3);"></div>
+          <div style="width:2px;height:14px;border-radius:1px;background:var(--c2);transform:scaleY(.7);"></div>
+          <div style="width:2px;height:14px;border-radius:1px;background:var(--c1);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Name & info -->
+    <h2 style="color:var(--tx);font-size:24px;font-weight:900;margin-bottom:4px;animation:slideUp .5s ease-out .15s both;">Önder ile eşleştin! 🎉</h2>
+    <p class="match-info-line" style="color:var(--tx2);font-size:13px;margin-bottom:16px;animation:slideUp .5s ease-out .2s both;">35 yaşında • İstanbul • ENFP</p>
+
+    <!-- Trait pills -->
+    <div style="display:flex;gap:6px;margin-bottom:18px;justify-content:center;flex-wrap:wrap;animation:slideUp .5s ease-out .22s both;">
+      <span style="padding:5px 12px;border-radius:20px;background:rgba(102,51,255,0.15);color:#C4B5FD;font-size:11px;font-weight:600;border:1px solid rgba(102,51,255,0.25);">Macera</span>
+      <span style="padding:5px 12px;border-radius:20px;background:rgba(0,180,255,0.1);color:var(--c1);font-size:11px;font-weight:600;border:1px solid rgba(0,180,255,0.2);">Yaratıcı</span>
+      <span style="padding:5px 12px;border-radius:20px;background:rgba(0,255,194,0.08);color:var(--grn);font-size:11px;font-weight:600;border:1px solid rgba(0,255,194,0.2);">Empati</span>
+    </div>
+
+    <!-- Compat bar -->
+    <div style="width:100%;margin-bottom:22px;animation:slideUp .5s ease-out .25s both;">
+      <div style="height:8px;border-radius:6px;background:rgba(255,255,255,0.06);overflow:hidden;">
+        <div class="cbar" style="width:82%;height:100%;border-radius:6px;box-shadow:0 0 12px rgba(204,0,255,0.5);"></div>
+      </div>
+    </div>
+
+    <!-- 5 Second Countdown -->
+    <div style="animation:slideUp .5s ease-out .3s both;width:100%;text-align:center;">
+      <div style="border-radius:20px;padding:16px 20px;background:linear-gradient(135deg,rgba(102,51,255,0.15),rgba(204,0,255,0.08));border:1px solid rgba(153,51,255,0.3);display:flex;align-items:center;justify-content:center;gap:14px;">
+        <div style="position:relative;width:52px;height:52px;flex-shrink:0;">
+          <svg width="52" height="52" style="transform:rotate(-90deg);position:absolute;inset:0;">
+            <circle cx="26" cy="26" r="22" stroke="rgba(255,255,255,0.06)" stroke-width="3" fill="none"/>
+            <circle id="countdown-ring" cx="26" cy="26" r="22" stroke="url(#cr1)" stroke-width="3" fill="none" stroke-dasharray="138" stroke-dashoffset="0" stroke-linecap="round"/>
+            <defs><linearGradient id="cr1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="var(--c5)"/><stop offset="100%" stop-color="var(--c7)"/></linearGradient></defs>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+            <span id="match-countdown" class="mono" style="color:var(--tx);font-size:20px;font-weight:800;animation:countPop .5s ease-out;">5</span>
+          </div>
+        </div>
+        <div style="text-align:left;">
+          <p style="color:var(--tx);font-size:15px;font-weight:800;">Görüşme başlıyor</p>
+          <p style="color:var(--tx3);font-size:11px;margin-top:2px;" class="mono">Her iki taraf da hazırlanıyor...</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ SCREEN — CALL ════ -->
+<div id="s-call" class="screen" style="background:linear-gradient(180deg,rgba(51,20,100,0.2) 0%,var(--bg) 60%);">
+  <div style="padding:58px 22px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <button class="g0 press" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;" onclick="nav('s-call-ended')">
+      <svg width="16" height="16" fill="none" stroke="var(--tx)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <div class="g0" style="border-radius:24px;padding:7px 16px;display:flex;align-items:center;gap:8px;">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 8px rgba(0,255,194,.9);"></span>
+      <span class="mono" style="color:var(--tx);font-size:12px;font-weight:600;">Bağlandı</span>
+    </div>
+    <button class="g0 press" style="width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+      <svg width="16" height="16" fill="none" stroke="var(--tx)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+    </button>
+  </div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;padding:0 24px;">
+    <!-- Timer ring -->
+    <div style="position:relative;margin-bottom:16px;">
+      <svg width="150" height="150" style="transform:rotate(-90deg);">
+        <circle cx="75" cy="75" r="67" stroke="rgba(255,255,255,0.06)" stroke-width="3" fill="none"/>
+        <circle cx="75" cy="75" r="67" stroke="url(#cg1)" stroke-width="3" fill="none" stroke-dasharray="421" stroke-dashoffset="70" stroke-linecap="round"/>
+        <defs><linearGradient id="cg1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="var(--c5)"/><stop offset="100%" stop-color="var(--c1)"/></linearGradient></defs>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+        <div style="width:68px;height:68px;border-radius:18px;overflow:hidden;box-shadow:0 0 0 2px rgba(102,51,255,.5);">
+          <img id="call-timer-img" src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <span id="ctimer" class="mono" style="color:var(--tx);font-size:20px;font-weight:600;">02:00</span>
+      </div>
+    </div>
+
+    <h2 id="call-person-name" style="color:var(--tx);font-size:19px;font-weight:800;margin-bottom:3px;">Önder</h2>
+    <p id="call-person-sub" style="color:var(--tx2);font-size:12px;margin-bottom:8px;">35 yaşında • İstanbul</p>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <span class="mono" style="padding:4px 10px;border-radius:20px;background:rgba(102,51,255,0.12);color:#C4B5FD;font-size:10px;border:1px solid rgba(102,51,255,0.2);">%82 Uyum</span>
+      <span class="mono" style="padding:4px 10px;border-radius:20px;background:rgba(0,255,194,0.07);color:var(--grn);font-size:10px;border:1px solid rgba(0,255,194,0.18);">ENFP</span>
+    </div>
+
+    <!-- SPEAKER + BARS — speaker left, bars right, centered -->
+    <div style="width:100%;padding:12px 20px;background:rgba(102,51,255,0.06);border:1px solid rgba(102,51,255,0.14);border-radius:18px;margin-bottom:16px;display:flex;align-items:center;gap:14px;">
+      <!-- Speaker info (LEFT) -->
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;padding-right:10px;border-right:1px solid var(--b0);">
+        <div style="width:30px;height:30px;border-radius:50%;overflow:hidden;border:1.5px solid rgba(102,51,255,0.5);">
+          <img id="speaker-avatar" src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <div>
+          <span id="speaker-name" style="color:var(--tx);font-size:11px;font-weight:700;display:block;white-space:nowrap;">Önder</span>
+          <div style="display:flex;align-items:center;gap:4px;margin-top:1px;">
+            <span style="width:5px;height:5px;border-radius:50%;background:var(--grn);box-shadow:0 0 5px rgba(0,255,194,.8);display:block;animation:gPulse 1.5s infinite;"></span>
+            <span style="color:var(--grn);font-size:9px;" class="mono">konuşuyor</span>
+          </div>
+        </div>
+      </div>
+      <!-- Sound bars (RIGHT, flex-1) -->
+      <div style="display:flex;align-items:flex-end;gap:2.5px;height:34px;flex:1;">
+        <div class="sbar" style="height:34px;--d:.7s;--delay:0s;opacity:.6;"></div>
+        <div class="sbar" style="height:34px;--d:.5s;--delay:.04s;opacity:.8;"></div>
+        <div class="sbar" style="height:34px;--d:.9s;--delay:.08s;"></div>
+        <div class="sbar" style="height:34px;--d:.6s;--delay:.12s;opacity:.9;"></div>
+        <div class="sbar" style="height:34px;--d:.75s;--delay:.16s;"></div>
+        <div class="sbar" style="height:34px;--d:.55s;--delay:.2s;opacity:.7;"></div>
+        <div class="sbar" style="height:34px;--d:.8s;--delay:.24s;opacity:.8;"></div>
+        <div class="sbar" style="height:34px;--d:.65s;--delay:.28s;"></div>
+        <div class="sbar" style="height:34px;--d:.7s;--delay:.32s;opacity:.6;"></div>
+        <div class="sbar" style="height:34px;--d:.5s;--delay:.36s;opacity:.9;"></div>
+        <div class="sbar" style="height:34px;--d:.85s;--delay:.4s;"></div>
+        <div class="sbar" style="height:34px;--d:.6s;--delay:.44s;opacity:.7;"></div>
+        <div class="sbar" style="height:34px;--d:.7s;--delay:.48s;opacity:.8;"></div>
+        <div class="sbar" style="height:34px;--d:.9s;--delay:.52s;"></div>
+        <div class="sbar" style="height:34px;--d:.55s;--delay:.56s;opacity:.6;"></div>
+      </div>
+    </div>
+
+    <!-- Ice breaker -->
+    <div class="g0" style="border-radius:16px;padding:13px 16px;width:100%;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">
+        <svg width="14" height="14" fill="none" stroke="var(--c1)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span style="color:var(--tx);font-size:12px;font-weight:700;">Buz Kırıcı</span>
+        <button style="margin-left:auto;color:var(--c1);font-size:10px;background:none;border:none;cursor:pointer;" class="mono">yeni ↻</button>
+      </div>
+      <p style="color:var(--tx2);font-size:12px;line-height:1.55;font-style:italic;">"Hayatında seni en çok heyecanlandıran şey nedir?"</p>
+    </div>
+
+    <!-- Actions -->
+    <div style="display:flex;justify-content:center;gap:20px;margin-bottom:12px;">
+      <button class="press" style="display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
+        <div class="g1" style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" fill="none" stroke="var(--gold)" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <span style="color:var(--tx3);font-size:10px;" class="mono">Uzat</span>
+      </button>
+      <button class="press" style="display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
+        <div class="g1" style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" fill="none" stroke="var(--ca)" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>
+        </div>
+        <span style="color:var(--tx3);font-size:10px;" class="mono">Hediye</span>
+      </button>
+      <button class="press" style="display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;">
+        <div class="g1" style="width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" fill="none" stroke="var(--c1)" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+        </div>
+        <span style="color:var(--tx3);font-size:10px;" class="mono">Profil</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Call controls -->
+  <div style="position:absolute;bottom:28px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:16px;">
+    <button class="g1 press" style="width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;">
+      <svg width="24" height="24" fill="none" stroke="var(--tx)" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+    </button>
+    <button onclick="nav('s-call-ended')" class="press" style="width:74px;height:74px;border-radius:22px;background:linear-gradient(135deg,#EF4444,#DC2626);border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(239,68,68,0.4);cursor:pointer;">
+      <svg width="28" height="28" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 8l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M5 3a2 2 0 00-2 2v1c0 8.284 6.716 15 15 15h1a2 2 0 002-2v-3.28a1 1 0 00-.684-.948l-4.493-1.498a1 1 0 00-1.21.502l-1.13 2.257a11.042 11.042 0 01-5.516-5.517l2.257-1.128a1 1 0 00.502-1.21L9.228 3.683A1 1 0 008.279 3H5z"/></svg>
+    </button>
+    <button class="g1 press" style="width:58px;height:58px;border-radius:16px;display:flex;align-items:center;justify-content:center;">
+      <svg width="24" height="24" fill="none" stroke="var(--tx)" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ════ SCREEN — CALL ENDED ════ -->
+<div id="s-call-ended" class="screen">
+  <div style="padding:58px 22px 0;display:flex;justify-content:center;margin-bottom:20px;">
+    <div class="g0" style="border-radius:24px;padding:7px 18px;display:flex;align-items:center;gap:8px;">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--tx3);display:block;"></span>
+      <span class="mono" style="color:var(--tx2);font-size:12px;">Görüşme Bitti</span>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;padding:0 24px;">
+    <div style="position:relative;margin-bottom:18px;">
+      <svg width="150" height="150" style="transform:rotate(-90deg);">
+        <circle cx="75" cy="75" r="67" stroke="rgba(255,255,255,0.05)" stroke-width="3" fill="none"/>
+        <circle cx="75" cy="75" r="67" stroke="url(#eg1)" stroke-width="3" fill="none" stroke-dasharray="421" stroke-linecap="round"/>
+        <defs><linearGradient id="eg1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="var(--c5)"/><stop offset="100%" stop-color="var(--c1)"/></linearGradient></defs>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+        <div style="width:68px;height:68px;border-radius:18px;overflow:hidden;box-shadow:0 0 0 2px rgba(102,51,255,.4);">
+          <img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <span class="mono" style="color:var(--tx);font-size:20px;font-weight:600;">02:00</span>
+      </div>
+    </div>
+    <h2 style="color:var(--tx);font-size:19px;font-weight:800;margin-bottom:4px;">Görüşme Sona Erdi</h2>
+    <p style="color:var(--tx2);font-size:12px;margin-bottom:8px;">Önder ile geçirilen süre</p>
+    <div style="display:flex;gap:8px;margin-bottom:20px;">
+      <span class="mono" style="padding:4px 10px;border-radius:20px;background:rgba(102,51,255,0.12);color:#C4B5FD;font-size:10px;border:1px solid rgba(102,51,255,0.2);">%82 Uyum</span>
+      <span class="mono" style="padding:4px 10px;border-radius:20px;background:rgba(0,255,194,0.07);color:var(--grn);font-size:10px;border:1px solid rgba(0,255,194,0.18);">ENFP</span>
+    </div>
+    <div style="display:flex;gap:10px;width:100%;margin-bottom:20px;">
+      <div style="flex:1;border-radius:16px;padding:13px;text-align:center;background:rgba(102,51,255,0.06);border:1px solid rgba(102,51,255,0.12);">
+        <p class="mono" style="color:var(--tx);font-size:17px;font-weight:700;">%82</p>
+        <p style="color:var(--tx3);font-size:10px;margin-top:2px;">Uyum</p>
+      </div>
+      <div style="flex:1;border-radius:16px;padding:13px;text-align:center;background:rgba(0,180,255,0.05);border:1px solid rgba(0,180,255,0.1);">
+        <p class="mono" style="color:var(--tx);font-size:17px;font-weight:700;">02:00</p>
+        <p style="color:var(--tx3);font-size:10px;margin-top:2px;">Süre</p>
+      </div>
+      <div style="flex:1;border-radius:16px;padding:13px;text-align:center;background:rgba(255,210,107,0.05);border:1px solid rgba(255,210,107,0.1);">
+        <p class="mono" style="color:var(--tx);font-size:17px;font-weight:700;">0</p>
+        <p style="color:var(--tx3);font-size:10px;margin-top:2px;">Hediye</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:20px;margin-bottom:20px;">
+      <button class="press" style="display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:none;cursor:pointer;">
+        <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--c5),var(--c7));display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(102,51,255,0.4);">
+          <svg width="26" height="26" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+        </div>
+        <span style="color:var(--tx);font-size:12px;">Arkadaş Ekle</span>
+        <span class="mono" style="color:var(--c6);font-size:10px;font-weight:700;">15 NT</span>
+      </button>
+      <button class="press" onclick="nav('s-call')" style="display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:none;cursor:pointer;">
+        <div style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--c1),var(--c3));display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,180,255,0.35);">
+          <svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+        </div>
+        <span style="color:var(--tx);font-size:12px;">Tekrar Ara</span>
+        <span class="mono" style="color:var(--c1);font-size:10px;font-weight:700;">25 NT</span>
+      </button>
+    </div>
+    <button onclick="nav('s-discover');switchTab('discover')" class="btn-ghost press" style="width:100%;padding:15px;border-radius:20px;font-size:14px;margin-bottom:8px;">↩ Yeni Eşleşme</button>
+  </div>
+</div>
+
+<!-- ════ SCREEN — FRIENDS ════ -->
+<div id="s-friends" class="screen">
+  <div style="padding:112px 22px 0;padding-bottom:100px;">
+    <!-- Header with notifications bell -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <h1 style="color:var(--tx);font-size:22px;font-weight:900;">Arkadaşlarım</h1>
+      <button class="g0 press" onclick="showM('m-notif')" style="width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;">
+        <svg width="18" height="18" fill="none" stroke="var(--tx)" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <span style="position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--c7);border:1.5px solid var(--bg);display:block;"></span>
+      </button>
+    </div>
+
+    <!-- Underline tabs -->
+    <div class="ftab-row">
+      <button class="ftab active" id="ft-all" onclick="switchFTab('all')">Arkadaşlar</button>
+      <button class="ftab" id="ft-recent" onclick="switchFTab('recent')">Eşleşmeler</button>
+      <button class="ftab" id="ft-fav" onclick="switchFTab('fav')">Favoriler</button>
+      <button class="ftab" id="ft-blocked" onclick="switchFTab('blocked')">Engellenenler</button>
+    </div>
+
+    <!-- TAB CONTENT: All Friends -->
+    <div id="fc-all">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="g0 press" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;" onclick="openProfileModal({name:'Önder',age:35,city:'İstanbul',mbti:'ENFP',compat:82,img:'https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg',isFriend:true,id:'onder'})">
+          <div class="ring-gold" style="width:54px;height:54px;flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Önder</span>
+              <span class="mono" style="padding:2px 7px;border-radius:10px;background:rgba(255,210,107,0.12);color:var(--gold);font-size:10px;border:1px solid rgba(255,210,107,0.2);">%82</span>
+              <span style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 6px rgba(0,255,194,.8);display:block;"></span>
+            </div>
+            <p style="color:var(--tx2);font-size:12px;">ENFP • İstanbul</p>
+            <div style="margin-top:5px;height:3px;border-radius:3px;background:rgba(255,255,255,0.06);width:90px;overflow:hidden;"><div class="cbar" style="width:82%;"></div></div>
+          </div>
+          <div class="g1 press" style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();nav('s-call')">
+            <svg width="16" height="16" fill="var(--c5)" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+          </div>
+        </div>
+        <div class="g0 press" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;" onclick="openProfileModal({name:'Ayşe',age:28,city:'Ankara',mbti:'INFJ',compat:78,img:'https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/bae177dfad10608ef944578c4ae57e42b8ab3d9b.jpg',isFriend:true,id:'ayse'})">
+          <div class="ring-brand" style="width:54px;height:54px;flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/bae177dfad10608ef944578c4ae57e42b8ab3d9b.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Ayşe</span>
+              <span class="mono" style="padding:2px 7px;border-radius:10px;background:rgba(0,180,255,0.1);color:var(--c1);font-size:10px;border:1px solid rgba(0,180,255,0.2);">%78</span>
+            </div>
+            <p style="color:var(--tx2);font-size:12px;">INFJ • Ankara</p>
+            <div style="margin-top:5px;height:3px;border-radius:3px;background:rgba(255,255,255,0.06);width:90px;overflow:hidden;"><div class="cbar" style="width:78%;"></div></div>
+          </div>
+          <div class="g1 press" style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();nav('s-call')">
+            <svg width="16" height="16" fill="var(--c1)" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+          </div>
+        </div>
+        <div class="g0 press" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;" onclick="openProfileModal({name:'Mehmet',age:30,city:'İzmir',mbti:'ENTP',compat:91,img:'https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg',isFriend:true,id:'mehmet'})">
+          <div class="ring-gold" style="width:54px;height:54px;flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Mehmet</span>
+              <span class="mono" style="padding:2px 7px;border-radius:10px;background:rgba(255,210,107,0.12);color:var(--gold);font-size:10px;border:1px solid rgba(255,210,107,0.2);">%91</span>
+              <span style="margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--grn);box-shadow:0 0 6px rgba(0,255,194,.8);display:block;"></span>
+            </div>
+            <p style="color:var(--tx2);font-size:12px;">ENTP • İzmir</p>
+            <div style="margin-top:5px;height:3px;border-radius:3px;background:rgba(255,255,255,0.06);width:90px;overflow:hidden;"><div class="cbar" style="width:91%;"></div></div>
+          </div>
+          <div class="g1 press" style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();nav('s-call')">
+            <svg width="16" height="16" fill="var(--gold)" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: Son Eşleşmeler -->
+    <div id="fc-recent" style="display:none;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="g0 press" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:12px;" onclick="openProfileModal({name:'Zeynep',age:24,city:'İstanbul',mbti:'ISFP',compat:74,img:'https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/bae177dfad10608ef944578c4ae57e42b8ab3d9b.jpg',isFriend:false,id:'zeynep'})">
+          <div class="ring-brand" style="width:50px;height:50px;flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/bae177dfad10608ef944578c4ae57e42b8ab3d9b.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Zeynep</span>
+              <span class="mono" style="padding:2px 6px;border-radius:10px;background:rgba(102,51,255,0.12);color:#C4B5FD;font-size:10px;border:1px solid rgba(102,51,255,0.2);">%74</span>
+            </div>
+            <p style="color:var(--tx2);font-size:12px;">ISFP • İstanbul</p>
+            <p style="color:var(--tx3);font-size:11px;margin-top:2px;" class="mono">2 saat önce</p>
+          </div>
+          <button id="req-zeynep" onclick="event.stopPropagation();sendRequest('req-zeynep','Zeynep','https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/bae177dfad10608ef944578c4ae57e42b8ab3d9b.jpg','ISFP','İstanbul')" class="press" style="padding:8px 12px;border-radius:14px;background:linear-gradient(135deg,var(--c5),var(--c7));border:none;color:white;font-size:11px;font-weight:700;font-family:'Cabinet Grotesk',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">+ İstek</button>
+        </div>
+        <div class="g0 press" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:12px;" onclick="openProfileModal({name:'Kerem',age:31,city:'Bursa',mbti:'INTJ',compat:68,img:'https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg',isFriend:false,id:'kerem'})">
+          <div style="width:50px;height:50px;border-radius:50%;overflow:hidden;border:2px solid var(--b1);flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg" style="width:100%;height:100%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Kerem</span>
+              <span class="mono" style="padding:2px 6px;border-radius:10px;background:rgba(0,180,255,0.1);color:var(--c1);font-size:10px;border:1px solid rgba(0,180,255,0.2);">%68</span>
+            </div>
+            <p style="color:var(--tx2);font-size:12px;">INTJ • Bursa</p>
+            <p style="color:var(--tx3);font-size:11px;margin-top:2px;" class="mono">Dün</p>
+          </div>
+          <button id="req-kerem" onclick="event.stopPropagation();sendRequest('req-kerem','Kerem','https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg','INTJ','Bursa')" class="press" style="padding:8px 12px;border-radius:14px;background:linear-gradient(135deg,var(--c5),var(--c7));border:none;color:white;font-size:11px;font-weight:700;font-family:'Cabinet Grotesk',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">+ İstek</button>
+        </div>
+        <div class="g0 press" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:12px;" onclick="openProfileModal({name:'Selin',age:26,city:'Ankara',mbti:'ENFJ',compat:79,img:'https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg',isFriend:false,id:'selin'})">
+          <div style="width:50px;height:50px;border-radius:50%;overflow:hidden;border:2px solid var(--b1);flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;min-width:0;">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Selin</span>
+              <span class="mono" style="padding:2px 6px;border-radius:10px;background:rgba(0,255,194,0.1);color:var(--grn);font-size:10px;border:1px solid rgba(0,255,194,0.2);">%79</span>
+            </div>
+            <p style="color:var(--tx2);font-size:12px;">ENFJ • Ankara</p>
+            <p style="color:var(--tx3);font-size:11px;margin-top:2px;" class="mono">2 gün önce</p>
+          </div>
+          <button id="req-selin" onclick="event.stopPropagation();sendRequest('req-selin','Selin','https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg','ENFJ','Ankara')" class="press" style="padding:8px 12px;border-radius:14px;background:linear-gradient(135deg,var(--c5),var(--c7));border:none;color:white;font-size:11px;font-weight:700;font-family:'Cabinet Grotesk',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">+ İstek</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: Favoriler -->
+    <div id="fc-fav" style="display:none;">
+      <div id="fav-list" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="g0 press" id="fav-onder" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;" onclick="openProfileModal({name:'Önder',age:35,city:'İstanbul',mbti:'ENFP',compat:82,img:'https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg',isFriend:true,id:'onder'})">
+          <div class="ring-gold" style="width:54px;height:54px;flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Önder</span>
+              <span style="font-size:14px;">⭐</span>
+            </div>
+            <p style="color:var(--tx2);font-size:12px;">ENFP • İstanbul</p>
+          </div>
+          <button onclick="event.stopPropagation();removeFav('fav-onder')" class="g1 press" style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" fill="none" stroke="var(--tx3)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="g0 press" id="fav-mehmet" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;" onclick="openProfileModal({name:'Mehmet',age:30,city:'İzmir',mbti:'ENTP',compat:91,img:'https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg',isFriend:true,id:'mehmet'})">
+          <div class="ring-gold" style="width:54px;height:54px;flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Mehmet</span>
+              <span style="font-size:14px;">⭐</span>
+            </div>
+            <p style="color:var(--tx2);font-size:12px;">ENTP • İzmir</p>
+          </div>
+          <button onclick="event.stopPropagation();removeFav('fav-mehmet')" class="g1 press" style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" fill="none" stroke="var(--tx3)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: Engellenenler -->
+    <div id="fc-blocked" style="display:none;">
+      <div id="blocked-list" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="g0" id="blk-can" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;opacity:.6;">
+          <div style="width:54px;height:54px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,51,85,0.3);flex-shrink:0;filter:grayscale(1);"><img src="https://kimi-web-img.moonshot.cn/img/media.istockphoto.com/931fe7fe4c12d16b6eff1d46fb35eab953769494.jpg" style="width:100%;height:100%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Can</span>
+              <span class="mono" style="padding:2px 7px;border-radius:10px;background:rgba(255,51,85,0.1);color:var(--red);font-size:10px;border:1px solid rgba(255,51,85,0.2);">🚫 Engellendi</span>
+            </div>
+            <p style="color:var(--tx3);font-size:12px;">Engel kaldırılabilir</p>
+          </div>
+          <button onclick="unblock('blk-can')" class="press" style="padding:7px 12px;border-radius:12px;background:rgba(255,51,85,0.1);border:1px solid rgba(255,51,85,0.25);color:var(--red);font-size:11px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;cursor:pointer;flex-shrink:0;">Kaldır</button>
+        </div>
+        <div class="g0" id="blk-ali" style="border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;opacity:.6;">
+          <div style="width:54px;height:54px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,51,85,0.3);flex-shrink:0;filter:grayscale(1);"><img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;object-fit:cover;background:var(--bg);"></div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+              <span style="color:var(--tx);font-size:14px;font-weight:800;">Ali</span>
+              <span class="mono" style="padding:2px 7px;border-radius:10px;background:rgba(255,51,85,0.1);color:var(--red);font-size:10px;border:1px solid rgba(255,51,85,0.2);">🚫 Engellendi</span>
+            </div>
+            <p style="color:var(--tx3);font-size:12px;">Engel kaldırılabilir</p>
+          </div>
+          <button onclick="unblock('blk-ali')" class="press" style="padding:7px 12px;border-radius:12px;background:rgba(255,51,85,0.1);border:1px solid rgba(255,51,85,0.25);color:var(--red);font-size:11px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;cursor:pointer;flex-shrink:0;">Kaldır</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ SCREEN — PROFILE ════ -->
+<div id="s-profile" class="screen">
+  <div style="padding:112px 22px 0;padding-bottom:100px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <h1 style="color:var(--tx);font-size:22px;font-weight:900;">Profilim</h1>
+      <button class="g0 press" style="width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;">
+        <svg width="18" height="18" fill="none" stroke="var(--tx)" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </button>
+    </div>
+
+    <!-- Profile hero -->
+    <div style="border-radius:24px;overflow:hidden;border:1px solid rgba(102,51,255,0.2);margin-bottom:14px;background:linear-gradient(145deg,rgba(102,51,255,0.08),transparent,rgba(0,180,255,0.05));">
+      <div style="height:80px;background:linear-gradient(135deg,rgba(102,51,255,0.5),rgba(204,0,255,0.3),rgba(0,180,255,0.2));position:relative;">
+        <!-- Static freq bars decoration on banner -->
+        <div style="position:absolute;bottom:0;left:0;right:0;display:flex;align-items:flex-end;gap:2px;height:30px;opacity:.25;padding:0 14px;">
+          <div style="flex:1;background:linear-gradient(to top,var(--c5),var(--c7));border-radius:1px 1px 0 0;height:40%;"></div>
+          <div style="flex:1;background:linear-gradient(to top,var(--c5),var(--c7));border-radius:1px 1px 0 0;height:70%;"></div>
+          <div style="flex:1;background:linear-gradient(to top,var(--c5),var(--c7));border-radius:1px 1px 0 0;height:100%;"></div>
+          <div style="flex:1;background:linear-gradient(to top,var(--c5),var(--c7));border-radius:1px 1px 0 0;height:55%;"></div>
+          <div style="flex:1;background:linear-gradient(to top,var(--c5),var(--c7));border-radius:1px 1px 0 0;height:80%;"></div>
+          <div style="flex:1;background:linear-gradient(to top,var(--c5),var(--c7));border-radius:1px 1px 0 0;height:45%;"></div>
+          <div style="flex:1;background:linear-gradient(to top,var(--c5),var(--c7));border-radius:1px 1px 0 0;height:90%;"></div>
+          <div style="flex:1;background:linear-gradient(to top,var(--c5),var(--c7));border-radius:1px 1px 0 0;height:60%;"></div>
+        </div>
+      </div>
+      <div style="padding:0 20px 20px;margin-top:-26px;">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px;">
+          <div class="ring-brand" style="width:60px;height:60px;">
+            <img src="https://kimi-web-img.moonshot.cn/img/as2.ftcdn.net/fbc0a536e19ffcf94e4e8594d0dbf1b55b048086.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);">
+          </div>
+          <div style="display:flex;gap:6px;">
+            <span class="mono" style="padding:4px 10px;border-radius:10px;background:rgba(102,51,255,0.15);color:#C4B5FD;font-size:10px;font-weight:700;border:1px solid rgba(102,51,255,0.22);">Premium</span>
+            <span class="mono" style="padding:4px 10px;border-radius:10px;background:rgba(0,255,194,0.08);color:var(--grn);font-size:10px;font-weight:700;border:1px solid rgba(0,255,194,0.16);">✓ Doğrulandı</span>
+          </div>
+        </div>
+        <h2 style="color:var(--tx);font-size:21px;font-weight:900;margin-bottom:2px;">Alex</h2>
+        <p style="color:var(--tx2);font-size:13px;margin-bottom:16px;">28 yaşında • İstanbul</p>
+        <div style="display:flex;gap:10px;margin-bottom:16px;">
+          <div style="flex:1;text-align:center;padding:11px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid var(--b0);"><p class="mono" style="color:var(--tx);font-size:19px;font-weight:700;">23</p><p style="color:var(--tx3);font-size:10px;margin-top:2px;">Eşleşme</p></div>
+          <div style="flex:1;text-align:center;padding:11px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid var(--b0);"><p class="mono" style="color:var(--tx);font-size:19px;font-weight:700;">4.8</p><p style="color:var(--tx3);font-size:10px;margin-top:2px;">Puan</p></div>
+          <div style="flex:1;text-align:center;padding:11px;border-radius:16px;background:rgba(255,255,255,0.03);border:1px solid var(--b0);"><p class="mono gold-t" style="font-size:19px;font-weight:700;">2450</p><p style="color:var(--tx3);font-size:10px;margin-top:2px;">NT</p></div>
+        </div>
+
+        <!-- Biography (replaces kişilik frekansı) -->
+        <div style="margin-bottom:14px;">
+          <span style="color:var(--tx3);font-size:10px;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:8px;" class="mono">Biyografi</span>
+          <p style="color:var(--tx2);font-size:13px;line-height:1.65;">İstanbul'da yaşayan müzisyen ve gezgin. Yeni insanlarla tanışmayı, derin sohbetler etmeyi ve doğanın sessizliğinde kaybolmayı seviyorum.</p>
+        </div>
+
+        <div>
+          <span style="color:var(--tx3);font-size:10px;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:9px;" class="mono">İlgi Alanları</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="padding:6px 14px;border-radius:20px;background:rgba(102,51,255,0.1);border:1px solid rgba(102,51,255,0.2);color:var(--tx);font-size:12px;">🎵 Müzik</span>
+            <span style="padding:6px 14px;border-radius:20px;background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.15);color:var(--tx);font-size:12px;">✈️ Seyahat</span>
+            <span style="padding:6px 14px;border-radius:20px;background:rgba(204,0,255,0.07);border:1px solid rgba(204,0,255,0.15);color:var(--tx);font-size:12px;">📚 Kitap</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Token -->
+    <div onclick="showM('m-token')" class="press" style="border-radius:20px;padding:16px 20px;background:linear-gradient(135deg,rgba(255,210,107,0.1),rgba(255,154,60,0.06));border:1px solid rgba(255,210,107,0.25);display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+      <div><p class="mono gold-t" style="font-size:22px;font-weight:700;">2,450 NT</p><p style="color:var(--tx2);font-size:12px;margin-top:2px;">Mevcut bakiye</p></div>
+      <button class="press" style="padding:10px 20px;border-radius:16px;background:linear-gradient(135deg,var(--gold),#FF9A3C);border:none;color:#1a0a00;font-weight:800;font-size:13px;cursor:pointer;">Yükle</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN — STORE ════ -->
+<div id="s-store" class="screen">
+  <div style="padding:112px 22px 0;padding-bottom:100px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <h1 style="color:var(--tx);font-size:22px;font-weight:900;">Mağaza</h1>
+      <div style="display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;background:rgba(255,210,107,0.1);border:1px solid rgba(255,210,107,0.22);">
+        <svg width="11" height="11" fill="var(--gold)" viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/></svg>
+        <span class="gold-t mono" style="font-size:12px;font-weight:700;">2,450 NT</span>
+      </div>
+    </div>
+    <p style="color:var(--tx3);font-size:12px;margin-bottom:24px;">Eşleşmelerini güçlendir, öne çık</p>
+
+    <!-- BOOSTLAR -->
+    <p style="color:var(--tx3);font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;" class="mono">⚡ Boost & Güçlendirmeler</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+
+      <!-- Hız Bostu -->
+      <div class="press" onclick="buyItem(this,'Hız Bostu',20)" style="border-radius:20px;padding:16px;background:linear-gradient(135deg,rgba(255,154,60,0.12),rgba(255,106,0,0.06));border:1px solid rgba(255,154,60,0.25);display:flex;align-items:center;gap:14px;cursor:pointer;">
+        <div style="width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,#FF9A3C,#FF6B00);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(255,154,60,0.4);">
+          <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
+        <div style="flex:1;">
+          <p style="color:var(--tx);font-size:14px;font-weight:800;margin-bottom:3px;">Hız Bostu</p>
+          <p style="color:var(--tx2);font-size:12px;">Bekleme süresini %60 kısalt. 30 dk aktif.</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <p class="mono" style="color:#FF9A3C;font-size:15px;font-weight:800;">20 NT</p>
+          <p style="color:var(--tx3);font-size:10px;">≈ ₺1.20</p>
+        </div>
+      </div>
+
+      <!-- Spotlight -->
+      <div class="press" onclick="buyItem(this,'Spotlight',50)" style="border-radius:20px;padding:16px;background:linear-gradient(135deg,rgba(255,210,107,0.12),rgba(255,154,60,0.06));border:1px solid rgba(255,210,107,0.3);display:flex;align-items:center;gap:14px;cursor:pointer;">
+        <div style="width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,var(--gold),#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(255,210,107,0.4);">
+          <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+        </div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+            <p style="color:var(--tx);font-size:14px;font-weight:800;">Spotlight</p>
+            <span class="mono" style="padding:2px 7px;border-radius:8px;background:rgba(255,210,107,0.2);color:var(--gold);font-size:9px;font-weight:700;">POPÜLER</span>
+          </div>
+          <p style="color:var(--tx2);font-size:12px;">Profilini ön sıraya taşı. 1 saat boyunca.</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <p class="mono gold-t" style="font-size:15px;font-weight:800;">50 NT</p>
+          <p style="color:var(--tx3);font-size:10px;">≈ ₺3.00</p>
+        </div>
+      </div>
+
+      <!-- Uyum Garantisi -->
+      <div class="press" onclick="buyItem(this,'Uyum Garantisi',35)" style="border-radius:20px;padding:16px;background:linear-gradient(135deg,rgba(102,51,255,0.14),rgba(204,0,255,0.07));border:1px solid rgba(153,51,255,0.28);display:flex;align-items:center;gap:14px;cursor:pointer;">
+        <div style="width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,var(--c5),var(--c7));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(102,51,255,0.4);">
+          <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+        </div>
+        <div style="flex:1;">
+          <p style="color:var(--tx);font-size:14px;font-weight:800;margin-bottom:3px;">Uyum Garantisi</p>
+          <p style="color:var(--tx2);font-size:12px;">Yalnızca %90+ uyumlularla eşleş.</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <p class="mono" style="color:var(--ca);font-size:15px;font-weight:800;">35 NT</p>
+          <p style="color:var(--tx3);font-size:10px;">≈ ₺2.10</p>
+        </div>
+      </div>
+
+      <!-- Görünmezlik Zırhı -->
+      <div class="press" onclick="buyItem(this,'Görünmezlik Zırhı',45)" style="border-radius:20px;padding:16px;background:linear-gradient(135deg,rgba(0,192,255,0.1),rgba(0,102,255,0.06));border:1px solid rgba(0,192,255,0.2);display:flex;align-items:center;gap:14px;cursor:pointer;">
+        <div style="width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,var(--c1),var(--c3));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(0,192,255,0.35);">
+          <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+        </div>
+        <div style="flex:1;">
+          <p style="color:var(--tx);font-size:14px;font-weight:800;margin-bottom:3px;">Görünmezlik Zırhı</p>
+          <p style="color:var(--tx2);font-size:12px;">Anonim kal, profil fotoğrafın gizlensin.</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <p class="mono" style="color:var(--c1);font-size:15px;font-weight:800;">45 NT</p>
+          <p style="color:var(--tx3);font-size:10px;">≈ ₺2.70</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MOD PAKETLER -->
+    <p style="color:var(--tx3);font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;" class="mono">🎮 Mod Paketleri</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+
+      <!-- Patron Günlük -->
+      <div class="press" onclick="buyItem(this,'Patron Günlük',100)" style="border-radius:20px;padding:16px;background:linear-gradient(135deg,rgba(255,210,107,0.14),rgba(102,51,255,0.1));border:1px solid rgba(255,210,107,0.32);display:flex;align-items:center;gap:14px;cursor:pointer;">
+        <div style="width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,var(--gold),#FF9A3C);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 6px 18px rgba(255,210,107,0.4);">👑</div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+            <p style="color:var(--tx);font-size:14px;font-weight:800;">Patron Modu</p>
+            <span class="mono" style="padding:2px 7px;border-radius:8px;background:rgba(255,210,107,0.2);color:var(--gold);font-size:9px;font-weight:700;">24 SAAT</span>
+          </div>
+          <p style="color:var(--tx2);font-size:12px;">Tüm filtreler + öncelikli sıra + %90 garanti</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <p class="mono gold-t" style="font-size:15px;font-weight:800;">100 NT</p>
+          <p style="color:var(--tx3);font-size:10px;">≈ ₺6.00</p>
+        </div>
+      </div>
+
+      <!-- Zıt Çekim Paketi -->
+      <div class="press" onclick="buyItem(this,'Zıt Çekim',25)" style="border-radius:20px;padding:16px;background:linear-gradient(135deg,rgba(236,72,153,0.12),rgba(244,63,94,0.06));border:1px solid rgba(236,72,153,0.25);display:flex;align-items:center;gap:14px;cursor:pointer;">
+        <div style="width:50px;height:50px;border-radius:15px;background:linear-gradient(135deg,#EC4899,#F43F5E);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 18px rgba(236,72,153,0.35);">
+          <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+        </div>
+        <div style="flex:1;">
+          <p style="color:var(--tx);font-size:14px;font-weight:800;margin-bottom:3px;">Zıt Çekim Modu</p>
+          <p style="color:var(--tx2);font-size:12px;">Karakter olarak zıt kişiliklerle eşleş.</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <p class="mono" style="color:#F472B6;font-size:15px;font-weight:800;">25 NT</p>
+          <p style="color:var(--tx3);font-size:10px;">≈ ₺1.50</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TOKEN YÜKLE -->
+    <p style="color:var(--tx3);font-size:10px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;" class="mono">💰 Token Yükle</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div class="press" onclick="buyToken(500,29.99)" style="border-radius:18px;padding:16px;background:rgba(255,210,107,0.08);border:1px solid rgba(255,210,107,0.22);text-align:center;cursor:pointer;">
+        <p class="mono gold-t" style="font-size:20px;font-weight:800;">500 NT</p><p style="color:var(--tx2);font-size:12px;margin-top:4px;">₺29.99</p>
+      </div>
+      <div class="press" onclick="buyToken(1500,69.99)" style="border-radius:18px;padding:16px;background:rgba(102,51,255,0.12);border:1px solid rgba(102,51,255,0.3);text-align:center;cursor:pointer;">
+        <p class="mono grad-brand" style="font-size:20px;font-weight:800;">1,500 NT</p><p style="color:var(--tx2);font-size:12px;margin-top:4px;">₺69.99</p>
+      </div>
+      <div class="press" onclick="buyToken(3000,119.99)" style="border-radius:18px;padding:16px;background:rgba(0,180,255,0.07);border:1px solid rgba(0,180,255,0.2);text-align:center;cursor:pointer;">
+        <p class="mono" style="color:var(--c1);font-size:20px;font-weight:800;">3,000 NT</p><p style="color:var(--tx2);font-size:12px;margin-top:4px;">₺119.99</p>
+      </div>
+      <div class="press" onclick="buyToken(10000,299.99)" style="border-radius:18px;padding:16px;background:rgba(255,154,60,0.08);border:1px solid rgba(255,154,60,0.2);text-align:center;cursor:pointer;">
+        <p class="mono" style="color:#FF9A3C;font-size:20px;font-weight:800;">10,000 NT</p><p style="color:var(--tx2);font-size:12px;margin-top:4px;">₺299.99</p>
+        <span class="mono" style="display:inline-block;margin-top:4px;padding:2px 8px;border-radius:10px;background:rgba(255,154,60,0.14);color:#FF9A3C;font-size:9px;font-weight:700;">En İyi</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ SCREEN — CITY ════ -->
+<div id="s-city" class="screen">
+  <div style="padding:110px 22px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <button class="g0 press" style="width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;" onclick="nav('s-discover');switchTab('discover')">
+      <svg width="16" height="16" fill="none" stroke="var(--tx)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <h1 style="color:var(--tx);font-size:18px;font-weight:800;">🏙️ Şehir Modu</h1>
+    <div style="width:40px;"></div>
+  </div>
+  <div style="padding:0 22px;padding-bottom:40px;">
+    <input type="text" placeholder="Şehir ara..." style="width:100%;padding:14px 18px;border-radius:18px;background:rgba(255,255,255,0.04);border:1px solid var(--b1);color:var(--tx);font-size:14px;outline:none;font-family:'Cabinet Grotesk',sans-serif;margin-bottom:14px;" onfocus="this.style.borderColor='rgba(102,51,255,.5)'" onblur="this.style.borderColor='var(--b1)'" oninput="filterCities(this.value)">
+
+    <p style="color:var(--tx3);font-size:11px;margin-bottom:10px;" class="mono">Büyükşehirler</p>
+    <div id="city-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+      <button onclick="selectCity(this,'İstanbul')" class="city-btn press" style="padding:14px 18px;border-radius:16px;background:rgba(102,51,255,0.12);border:1px solid rgba(102,51,255,0.28);display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+        <span style="color:var(--tx);font-size:14px;font-weight:700;">İstanbul</span><span class="mono" style="color:var(--tx3);font-size:12px;">15M+</span>
+      </button>
+      <button onclick="selectCity(this,'Ankara')" class="city-btn g0 press" style="padding:14px 18px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid var(--b0);">
+        <span style="color:var(--tx);font-size:14px;">Ankara</span><span class="mono" style="color:var(--tx3);font-size:12px;">5.7M</span>
+      </button>
+      <button onclick="selectCity(this,'İzmir')" class="city-btn g0 press" style="padding:14px 18px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid var(--b0);">
+        <span style="color:var(--tx);font-size:14px;">İzmir</span><span class="mono" style="color:var(--tx3);font-size:12px;">4.4M</span>
+      </button>
+      <button onclick="selectCity(this,'Bursa')" class="city-btn g0 press" style="padding:14px 18px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid var(--b0);">
+        <span style="color:var(--tx);font-size:14px;">Bursa</span><span class="mono" style="color:var(--tx3);font-size:12px;">3.1M</span>
+      </button>
+    </div>
+
+    <!-- District selector — shown after city selected -->
+    <div id="district-section" style="display:none;margin-bottom:18px;">
+      <p style="color:var(--tx3);font-size:11px;margin-bottom:10px;" class="mono">İlçe Seç (isteğe bağlı)</p>
+      <div id="district-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+    </div>
+
+    <button id="city-go-btn" onclick="navSearchMode('sehir')" class="btn-brand press" style="width:100%;padding:16px;border-radius:20px;font-size:15px;opacity:.5;pointer-events:none;">Şehir Seç →</button>
+  </div>
+</div>
+
+<!-- ════ SCREEN — FILTERS (PATRON) ════ -->
+<div id="s-filters" class="screen">
+  <div style="padding:0;overflow-y:auto;">
+  <div style="padding:112px 22px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <button class="g0 press" style="width:40px;height:40px;border-radius:14px;display:flex;align-items:center;justify-content:center;" onclick="nav('s-discover');switchTab('discover')">
+      <svg width="16" height="16" fill="none" stroke="var(--tx)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <div>
+      <h1 style="color:var(--tx);font-size:18px;font-weight:800;text-align:center;">👑 Patron Modu</h1>
+      <p style="color:var(--tx3);font-size:10px;text-align:center;margin-top:2px;" class="mono">100 NT · Gelişmiş Filtreler</p>
+    </div>
+    <div style="width:40px;"></div>
+  </div>
+
+  <div style="padding:0 22px;padding-bottom:100px;">
+
+    <!-- YAŞ ARALIĞI -->
+    <div style="margin-bottom:20px;padding:16px;border-radius:20px;background:var(--s0);border:1px solid var(--b0);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <p style="color:var(--tx);font-size:14px;font-weight:700;">Yaş Aralığı</p>
+        <span class="mono grad-brand" style="font-size:14px;font-weight:700;" id="age-label">18 — 35</span>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
+        <div style="flex:1;position:relative;">
+          <p style="color:var(--tx3);font-size:10px;margin-bottom:5px;" class="mono">MİN</p>
+          <input type="number" id="age-min-inp" min="18" max="60" value="18"
+            oninput="syncAge()"
+            style="width:100%;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,0.05);border:1px solid var(--b1);color:var(--tx);font-family:'Geist Mono',monospace;font-size:20px;font-weight:700;text-align:center;outline:none;">
+        </div>
+        <span style="color:var(--tx3);font-size:20px;padding-top:18px;flex-shrink:0;">—</span>
+        <div style="flex:1;">
+          <p style="color:var(--tx3);font-size:10px;margin-bottom:5px;" class="mono">MAK</p>
+          <input type="number" id="age-max-inp" min="18" max="60" value="35"
+            oninput="syncAge()"
+            style="width:100%;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,0.05);border:1px solid var(--b1);color:var(--tx);font-family:'Geist Mono',monospace;font-size:20px;font-weight:700;text-align:center;outline:none;">
+        </div>
+      </div>
+      <!-- Range sliders for quick adjustment -->
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <input type="range" id="age-min-sl" min="18" max="60" value="18" oninput="sliderAge('min',this.value)" style="width:100%;accent-color:var(--c5);cursor:pointer;">
+        <input type="range" id="age-max-sl" min="18" max="60" value="35" oninput="sliderAge('max',this.value)" style="width:100%;accent-color:var(--c7);cursor:pointer;">
+      </div>
+      <p id="age-error" style="color:var(--red);font-size:11px;margin-top:6px;display:none;">⚠ Min yaş max yaştan büyük olamaz</p>
+    </div>
+
+    <!-- CİNSİYET -->
+    <div style="margin-bottom:20px;padding:16px;border-radius:20px;background:var(--s0);border:1px solid var(--b0);">
+      <p style="color:var(--tx);font-size:14px;font-weight:700;margin-bottom:12px;">Cinsiyet</p>
+      <div style="display:flex;gap:8px;">
+        <button id="g-all" onclick="selectGender('all')" class="press" style="flex:1;padding:11px;border-radius:14px;background:rgba(102,51,255,0.22);border:1px solid rgba(102,51,255,0.4);color:var(--tx);font-size:13px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;">Tümü</button>
+        <button id="g-f" onclick="selectGender('f')" class="g0 press" style="flex:1;padding:11px;border-radius:14px;color:var(--tx2);font-size:13px;border:1px solid var(--b1);cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;">Kadın</button>
+        <button id="g-m" onclick="selectGender('m')" class="g0 press" style="flex:1;padding:11px;border-radius:14px;color:var(--tx2);font-size:13px;border:1px solid var(--b1);cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;">Erkek</button>
+      </div>
+    </div>
+
+    <!-- ŞEHİR FİLTRESİ -->
+    <div style="margin-bottom:20px;padding:16px;border-radius:20px;background:var(--s0);border:1px solid var(--b0);">
+      <p style="color:var(--tx);font-size:14px;font-weight:700;margin-bottom:10px;">Şehir</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;" id="filter-cities">
+        <button onclick="toggleFilterCity(this,'Tümü')" class="press fcity-btn" style="padding:8px 14px;border-radius:20px;background:rgba(102,51,255,0.2);border:1px solid rgba(102,51,255,0.4);color:#C4B5FD;font-size:12px;font-weight:700;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;">Tümü</button>
+        <button onclick="toggleFilterCity(this,'İstanbul')" class="press fcity-btn g0" style="padding:8px 14px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">İstanbul</button>
+        <button onclick="toggleFilterCity(this,'Ankara')" class="press fcity-btn g0" style="padding:8px 14px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">Ankara</button>
+        <button onclick="toggleFilterCity(this,'İzmir')" class="press fcity-btn g0" style="padding:8px 14px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">İzmir</button>
+        <button onclick="toggleFilterCity(this,'Bursa')" class="press fcity-btn g0" style="padding:8px 14px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">Bursa</button>
+        <button onclick="toggleFilterCity(this,'Antalya')" class="press fcity-btn g0" style="padding:8px 14px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">Antalya</button>
+      </div>
+    </div>
+
+    <!-- MİN UYUM SLIDER -->
+    <div style="margin-bottom:20px;padding:16px;border-radius:20px;background:var(--s0);border:1px solid var(--b0);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <p style="color:var(--tx);font-size:14px;font-weight:700;">Min. Uyum</p>
+        <span id="compat-val" class="mono grad-brand" style="font-size:20px;font-weight:800;">%70</span>
+      </div>
+      <input type="range" id="compat-slider" min="50" max="95" value="70" oninput="document.getElementById('compat-val').textContent='%'+this.value" style="width:100%;accent-color:var(--c5);height:6px;border-radius:4px;outline:none;cursor:pointer;">
+      <div style="display:flex;justify-content:space-between;margin-top:6px;">
+        <span style="color:var(--tx3);font-size:10px;" class="mono">%50</span>
+        <span style="color:var(--tx3);font-size:10px;" class="mono">%95</span>
+      </div>
+    </div>
+
+    <!-- MBTI -->
+    <div style="margin-bottom:20px;padding:16px;border-radius:20px;background:var(--s0);border:1px solid var(--b0);">
+      <p style="color:var(--tx);font-size:14px;font-weight:700;margin-bottom:12px;">MBTI Tipi</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span onclick="selectAllMbti(this)" class="press mono mbti-all-btn" style="padding:7px 13px;border-radius:20px;background:rgba(102,51,255,0.2);border:1px solid rgba(102,51,255,0.4);color:#C4B5FD;font-size:11px;font-weight:700;cursor:pointer;">Tümü</span>
+        <span onclick="toggleMbti(this)" class="press mono mbti-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:11px;cursor:pointer;border:1px solid var(--b1);">ENFP</span>
+        <span onclick="toggleMbti(this)" class="press mono mbti-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:11px;cursor:pointer;border:1px solid var(--b1);">INFJ</span>
+        <span onclick="toggleMbti(this)" class="press mono mbti-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:11px;cursor:pointer;border:1px solid var(--b1);">ENTP</span>
+        <span onclick="toggleMbti(this)" class="press mono mbti-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:11px;cursor:pointer;border:1px solid var(--b1);">INTJ</span>
+        <span onclick="toggleMbti(this)" class="press mono mbti-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:11px;cursor:pointer;border:1px solid var(--b1);">ISFP</span>
+        <span onclick="toggleMbti(this)" class="press mono mbti-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:11px;cursor:pointer;border:1px solid var(--b1);">ESFJ</span>
+        <span onclick="toggleMbti(this)" class="press mono mbti-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:11px;cursor:pointer;border:1px solid var(--b1);">INTP</span>
+        <span onclick="toggleMbti(this)" class="press mono mbti-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:11px;cursor:pointer;border:1px solid var(--b1);">ENFJ</span>
+      </div>
+    </div>
+
+    <!-- İLGİ ALANLARI -->
+    <div style="margin-bottom:20px;padding:16px;border-radius:20px;background:var(--s0);border:1px solid var(--b0);">
+      <p style="color:var(--tx);font-size:14px;font-weight:700;margin-bottom:12px;">Ortak İlgi Alanları</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span onclick="selectAllInterest(this)" class="press interest-all-btn" style="padding:7px 13px;border-radius:20px;background:rgba(0,180,255,0.12);border:1px solid rgba(0,180,255,0.25);color:var(--c1);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;">Tümü</span>
+        <span onclick="toggleInterest(this)" class="press interest-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">🎵 Müzik</span>
+        <span onclick="toggleInterest(this)" class="press interest-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">✈️ Seyahat</span>
+        <span onclick="toggleInterest(this)" class="press interest-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">📚 Kitap</span>
+        <span onclick="toggleInterest(this)" class="press interest-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">🏃 Spor</span>
+        <span onclick="toggleInterest(this)" class="press interest-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">🎮 Oyun</span>
+        <span onclick="toggleInterest(this)" class="press interest-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">🍳 Yemek</span>
+        <span onclick="toggleInterest(this)" class="press interest-btn g0" style="padding:7px 13px;border-radius:20px;color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;border:1px solid var(--b1);">🎨 Sanat</span>
+      </div>
+    </div>
+
+    <!-- ANONİMLİK SEÇENEĞİ -->
+    <div style="margin-bottom:24px;padding:16px;border-radius:20px;background:var(--s0);border:1px solid var(--b0);display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <p style="color:var(--tx);font-size:14px;font-weight:700;">Anonim Başlat</p>
+        <p style="color:var(--tx3);font-size:11px;margin-top:2px;">İsim ve fotoğraf gizlenir</p>
+      </div>
+      <div id="anon-toggle" onclick="toggleAnon()" style="width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid var(--b1);position:relative;cursor:pointer;transition:background .25s;">
+        <div id="anon-thumb" style="position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--tx3);transition:left .25s,background .25s;"></div>
+      </div>
+    </div>
+
+    <button onclick="navSearchMode('patron')" class="btn-brand press" style="width:100%;padding:16px;border-radius:20px;font-size:15px;">Uygula — 100 NT →</button>
+  </div>
+  </div>
+</div>
+
+<!-- ════ MODALS (inside .phone, position:absolute) ════ -->
+
+<!-- Token / Store Modal -->
+<div id="m-token" class="modal" onclick="hideM('m-token')">
+  <div class="msheet" onclick="event.stopPropagation()">
+    <div style="padding:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+        <h2 style="color:var(--tx);font-size:19px;font-weight:900;">🏪 Mağaza</h2>
+        <button onclick="hideM('m-token')" class="g0 press" style="width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="12" height="12" fill="none" stroke="var(--tx2)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <p style="color:var(--tx3);font-size:11px;margin-bottom:14px;" class="mono">NEXLIFY TOKEN (NT)</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+        <div class="press" style="border-radius:18px;padding:16px;background:rgba(255,210,107,0.08);border:1px solid rgba(255,210,107,0.22);text-align:center;cursor:pointer;">
+          <p class="mono gold-t" style="font-size:20px;font-weight:800;">500 NT</p><p style="color:var(--tx2);font-size:12px;margin-top:4px;">₺29.99</p>
+        </div>
+        <div class="press" style="border-radius:18px;padding:16px;background:rgba(102,51,255,0.12);border:1px solid rgba(102,51,255,0.3);text-align:center;cursor:pointer;">
+          <p class="mono grad-brand" style="font-size:20px;font-weight:800;">1,500 NT</p><p style="color:var(--tx2);font-size:12px;margin-top:4px;">₺69.99</p>
+        </div>
+        <div class="press" style="border-radius:18px;padding:16px;background:rgba(0,180,255,0.07);border:1px solid rgba(0,180,255,0.2);text-align:center;cursor:pointer;">
+          <p class="mono" style="color:var(--c1);font-size:20px;font-weight:800;">3,000 NT</p><p style="color:var(--tx2);font-size:12px;margin-top:4px;">₺119.99</p>
+        </div>
+        <div class="press" style="border-radius:18px;padding:16px;background:rgba(255,154,60,0.08);border:1px solid rgba(255,154,60,0.2);text-align:center;cursor:pointer;">
+          <p class="mono" style="color:#FF9A3C;font-size:20px;font-weight:800;">10,000 NT</p><p style="color:var(--tx2);font-size:12px;margin-top:4px;">₺299.99</p>
+          <span class="mono" style="display:inline-block;margin-top:4px;padding:2px 8px;border-radius:10px;background:rgba(255,154,60,0.14);color:#FF9A3C;font-size:9px;font-weight:700;">En İyi</span>
+        </div>
+      </div>
+      <button class="btn-brand press" style="width:100%;padding:16px;border-radius:20px;font-size:15px;" onclick="hideM('m-token')">Satın Al</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notifications Modal -->
+<div id="m-notif" class="modal" onclick="hideM('m-notif')">
+  <div class="msheet" onclick="event.stopPropagation()">
+    <div style="padding:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <h2 style="color:var(--tx);font-size:19px;font-weight:900;">Bildirimler</h2>
+        <button onclick="hideM('m-notif')" class="g0 press" style="width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="12" height="12" fill="none" stroke="var(--tx2)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="g0" style="border-radius:16px;padding:13px;display:flex;align-items:center;gap:12px;">
+          <div class="ring-gold" style="width:42px;height:42px;flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div>
+          <div><p style="color:var(--tx);font-size:13px;font-weight:700;">Önder seni beğendi!</p><p class="mono" style="color:var(--tx3);font-size:11px;margin-top:2px;">2 dk önce</p></div>
+        </div>
+        <div class="g0" style="border-radius:16px;padding:13px;display:flex;align-items:center;gap:12px;">
+          <div class="ring-brand" style="width:42px;height:42px;flex-shrink:0;"><img src="https://kimi-web-img.moonshot.cn/img/www.shutterstock.com/bae177dfad10608ef944578c4ae57e42b8ab3d9b.jpg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div>
+          <div><p style="color:var(--tx);font-size:13px;font-weight:700;">Ayşe ile eşleştin!</p><p class="mono" style="color:var(--tx3);font-size:11px;margin-top:2px;">1 saat önce</p></div>
+        </div>
+        <div class="g0" style="border-radius:16px;padding:13px;display:flex;align-items:center;gap:12px;">
+          <div style="width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--gold),#FF9A3C);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6-4.8-6 4.8 2.4-7.2-6-4.8h7.6z"/></svg></div>
+          <div><p style="color:var(--tx);font-size:13px;font-weight:700;">500 NT hediye kazandın!</p><p class="mono" style="color:var(--tx3);font-size:11px;margin-top:2px;">Dün</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Profile Card Modal (friend/match profile view) -->
+<div id="m-profile" class="modal" onclick="hideM('m-profile')">
+  <div class="msheet" onclick="event.stopPropagation()">
+    <div style="padding:24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <h2 id="mp-name" style="color:var(--tx);font-size:19px;font-weight:900;">Profil</h2>
+        <button onclick="hideM('m-profile')" class="g0 press" style="width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;">
+          <svg width="12" height="12" fill="none" stroke="var(--tx2)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <!-- Profile info -->
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+        <div id="mp-ring" class="ring-brand" style="width:64px;height:64px;flex-shrink:0;">
+          <img id="mp-img" src="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);">
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span id="mp-name2" style="color:var(--tx);font-size:18px;font-weight:800;"></span>
+            <span id="mp-compat" class="mono" style="padding:2px 8px;border-radius:10px;background:rgba(102,51,255,0.12);color:#C4B5FD;font-size:11px;border:1px solid rgba(102,51,255,0.2);"></span>
+          </div>
+          <p id="mp-info" style="color:var(--tx2);font-size:12px;"></p>
+        </div>
+      </div>
+      <!-- Bio -->
+      <p style="color:var(--tx2);font-size:13px;line-height:1.6;margin-bottom:18px;padding:12px;background:rgba(255,255,255,0.03);border-radius:14px;border:1px solid var(--b0);" id="mp-bio"></p>
+      <!-- Action buttons — change based on isFriend -->
+      <div id="mp-actions-friend" style="display:none;flex-direction:column;gap:8px;">
+        <button onclick="event.stopPropagation();nav('s-call');hideM('m-profile')" class="btn-brand press" style="width:100%;padding:13px;border-radius:16px;font-size:14px;">📞 Ara</button>
+        <div style="display:flex;gap:8px;">
+          <button onclick="addFavFromModal()" class="g0 press" style="flex:1;padding:11px;border-radius:14px;color:var(--gold);font-size:13px;font-weight:700;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;">⭐ Favori</button>
+          <button onclick="blockFromModal()" class="g0 press" style="flex:1;padding:11px;border-radius:14px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;">🚫 Engelle</button>
+          <button onclick="removeFriendModal()" class="g0 press" style="flex:1;padding:11px;border-radius:14px;color:var(--tx2);font-size:13px;font-weight:700;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;">✂️ Sil</button>
+        </div>
+      </div>
+      <div id="mp-actions-notfriend" style="display:none;flex-direction:column;gap:8px;">
+        <button onclick="followFromModal()" class="btn-brand press" style="width:100%;padding:13px;border-radius:16px;font-size:14px;">+ Takip Et</button>
+        <div style="display:flex;gap:8px;">
+          <button onclick="addFavFromModal()" class="g0 press" style="flex:1;padding:11px;border-radius:14px;color:var(--gold);font-size:13px;font-weight:700;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;">⭐ Favori</button>
+          <button onclick="blockFromModal()" class="g0 press" style="flex:1;padding:11px;border-radius:14px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;font-family:'Cabinet Grotesk',sans-serif;">🚫 Engelle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /app -->
+</div><!-- /phone -->
+
+<script>
+// Clock
+function updateClock(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+updateClock();setInterval(updateClock,60000);
+
+// Navigation
+const FULLSCREEN=['s-searching','s-call','s-match-found','s-call-ended','s-city','s-filters'];
+function nav(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const t=document.getElementById(id);
+  if(t){t.classList.add('active');t.scrollTop=0;}
+  const tn=document.getElementById('top-nav');
+  const hide=['s-call','s-match-found','s-searching','s-call-ended'];
+  if(hide.includes(id)){tn.style.opacity='0';tn.style.pointerEvents='none';}
+  else{tn.style.opacity='1';tn.style.pointerEvents='auto';}
+  if(id==='s-call')startTimer();
+  if(id==='s-match-found')startMatchCountdown();
+  if(id==='s-searching')startSearchTimer();
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tn-tab').forEach(t=>t.classList.remove('active'));
+  const map={discover:'tn-discover',friends:'tn-friends',store:'tn-store',profile:'tn-profile'};
+  if(map[tab]){const el=document.getElementById(map[tab]);if(el)el.classList.add('active');}
+  const smap={discover:'s-discover',friends:'s-friends',store:'s-store',profile:'s-profile'};
+  if(smap[tab])nav(smap[tab]);
+}
+
+// Modals
+function showM(id){document.getElementById(id).classList.add('active');}
+function hideM(id){document.getElementById(id).classList.remove('active');}
+
+// Call timer
+let cs=120,ci=null;
+function startTimer(){
+  cs=120;clearInterval(ci);
+  ci=setInterval(()=>{
+    cs--;if(cs<=0){clearInterval(ci);return;}
+    const el=document.getElementById('ctimer');
+    if(el)el.textContent=Math.floor(cs/60).toString().padStart(2,'0')+':'+String(cs%60).padStart(2,'0');
+  },1000);
+}
+
+// Match countdown — pixel-based left for BOTH cards, symmetric, no crossing
+// Container content = 346px, card = 96px.
+// "You": start left=18, end left=125 → step=(125-18)/4=26.75
+// "Them": start left=232, end left=125 → step=(232-125)/4=26.75
+// At every intermediate step: them.left > you.left → no crossing!
+let mc=5,mci=null;
+function startMatchCountdown(){
+  mc=5;clearInterval(mci);
+
+  const cdEl=document.getElementById('match-countdown');
+  if(cdEl){cdEl.textContent='5';cdEl.style.animation='none';}
+  const ring=document.getElementById('countdown-ring');
+  if(ring)ring.style.strokeDashoffset='138';
+
+  const you=document.getElementById('mp-you');
+  const them=document.getElementById('mp-them');
+  const center=document.getElementById('mp-center');
+
+  // Reset to start positions
+  const ease='left 0.4s cubic-bezier(.4,0,.2,1)';
+  if(you){you.style.transition='none';you.style.left='18px';}
+  if(them){them.style.transition='none';them.style.left='232px';}
+  if(center)center.style.opacity='1';
+
+  // You: 18 → 44.75 → 71.5 → 98.25 → 125
+  // Them: 232 → 205.25 → 178.5 → 151.75 → 125
+  const youSteps=[18, 45, 72, 99, 125];
+  const themSteps=[232, 205, 178, 151, 125];
+
+  // Apply transition after one frame so reset doesn't animate
+  requestAnimationFrame(()=>{
+    if(you)you.style.transition=ease;
+    if(them)them.style.transition=ease;
+  });
+
+  mci=setInterval(()=>{
+    mc--;
+    const cdEl=document.getElementById('match-countdown');
+    if(cdEl){cdEl.textContent=mc>0?String(mc):'✓';cdEl.style.animation='none';cdEl.offsetHeight;cdEl.style.animation='countPop .4s ease-out';}
+    const ring=document.getElementById('countdown-ring');
+    if(ring)ring.style.strokeDashoffset=String(138*(mc/5));
+
+    const you=document.getElementById('mp-you');
+    const them=document.getElementById('mp-them');
+    const center=document.getElementById('mp-center');
+
+    if(mc>=1){
+      const idx=5-mc; // 1=mc4, 2=mc3, 3=mc2, 4=mc1
+      if(you)you.style.left=youSteps[idx]+'px';
+      if(them)them.style.left=themSteps[idx]+'px';
+      const fade=Math.max(0,1-(idx/3.5));
+      if(center)center.style.opacity=String(fade);
+    } else {
+      // mc=0: cards fully overlapping at 125px — navigate
+      clearInterval(mci);
+      setTimeout(()=>nav('s-call'),160);
+    }
+  },1000);
+}
+
+// Search auto timer + magnet roaming
+let st=42,sti=null,matchTriggered=false;
+let magnetX=104,magnetY=94; // current magnet position within 280x260 area
+
+function startSearchTimer(){
+  matchTriggered=false;st=42;clearInterval(sti);
+  const el=document.getElementById('search-timer');
+  if(el)el.textContent='0:42';
+  // Reset all avatars
+  ['av1','av2','av3','av4','av5','av6','av7','av8'].forEach(id=>{
+    const av=document.getElementById(id);
+    if(av){av.style.opacity='1';av.style.transition='';}
+  });
+  magnetX=104;magnetY=94;
+  moveMagnet(); // start roaming
+  sti=setInterval(()=>{
+    st--;
+    const el=document.getElementById('search-timer');
+    if(el)el.textContent='0:'+String(st).padStart(2,'0');
+    if(st===35)triggerMatchAnim();
+    if(st<=0)clearInterval(sti);
+  },1000);
+}
+
+// Roam magnet randomly every ~1.4s
+let magnetRoamTimer=null;
+function moveMagnet(){
+  clearTimeout(magnetRoamTimer);
+  if(!document.getElementById('s-searching').classList.contains('active'))return;
+  const mover=document.getElementById('magnet-mover');
+  if(!mover)return;
+  // Random position within safe bounds (area is 280x260, magnet is 72px)
+  const minX=10,maxX=198,minY=10,maxY=178;
+  magnetX=minX+Math.random()*(maxX-minX);
+  magnetY=minY+Math.random()*(maxY-minY);
+  mover.style.left=magnetX+'px';
+  mover.style.top=magnetY+'px';
+  // Rotate emoji to "face" direction of movement
+  const em=document.getElementById('magnet-emoji');
+  if(em){
+    const angle=Math.random()*360;
+    em.style.transform=`rotate(${angle}deg)`;
+  }
+  const delay=1000+Math.random()*1200;
+  magnetRoamTimer=setTimeout(()=>{
+    if(document.getElementById('s-searching').classList.contains('active'))moveMagnet();
+  },delay);
+}
+
+function triggerMatchAnim(){
+  if(matchTriggered)return;matchTriggered=true;
+  clearInterval(sti);clearTimeout(magnetRoamTimer);
+  // Find which avatar is closest to magnet's current position
+  const areaEl=document.getElementById('magnet-area');
+  if(!areaEl)return;
+  const areaRect=areaEl.getBoundingClientRect();
+  const mCx=magnetX+36; // center of magnet (36 = half of 72)
+  const mCy=magnetY+36;
+  const avIds=['av1','av2','av3','av4','av5','av6','av7','av8'];
+  let closest=null,closestDist=Infinity;
+  avIds.forEach(id=>{
+    const av=document.getElementById(id);
+    if(!av)return;
+    const r=av.getBoundingClientRect();
+    const avCx=r.left-areaRect.left+r.width/2;
+    const avCy=r.top-areaRect.top+r.height/2;
+    const dist=Math.hypot(avCx-mCx,avCy-mCy);
+    if(dist<closestDist){closestDist=dist;closest={id,cx:avCx,cy:avCy};}
+  });
+  if(closest){
+    const av=document.getElementById(closest.id);
+    if(av){
+      av.style.transition='all 0.7s cubic-bezier(.6,0,.4,1)';
+      // Pull avatar toward magnet center
+      const dx=mCx-closest.cx;
+      const dy=mCy-closest.cy;
+      av.style.transform=`translate(${dx}px,${dy}px) scale(0)`;
+      av.style.opacity='0';
+    }
+  }
+  setTimeout(()=>{matchTriggered=false;nav('s-match-found');},900);
+}
+
+function stopSearching(){matchTriggered=false;clearInterval(sti);clearTimeout(magnetRoamTimer);nav('s-discover');switchTab('discover');}
+function triggerMatch(){triggerMatchAnim();}
+
+// Boost apply
+function applyBoost(el,type){
+  el.style.background='rgba(102,51,255,0.18)';
+  el.style.border='1px solid rgba(102,51,255,0.4)';
+}
+
+// Friends tab switching
+function switchFTab(tab){
+  ['all','recent','fav','blocked'].forEach(t=>{
+    document.getElementById('fc-'+t).style.display='none';
+    document.getElementById('ft-'+t).classList.remove('active');
+  });
+  document.getElementById('fc-'+tab).style.display='block';
+  document.getElementById('ft-'+tab).classList.add('active');
+}
+
+// Send friend request
+function sendRequest(btnId,name,img,mbti,city){
+  const btn=document.getElementById(btnId);
+  if(!btn||btn.dataset.sent)return;
+  btn.dataset.sent='1';
+  btn.textContent='✓ Gönderildi';
+  btn.style.background='rgba(0,255,194,0.12)';
+  btn.style.border='1px solid rgba(0,255,194,0.3)';
+  btn.style.color='var(--grn)';
+  setTimeout(()=>{
+    btn.textContent='🤝 Arkadaş!';
+    btn.style.background='rgba(102,51,255,0.15)';
+    btn.style.border='1px solid rgba(102,51,255,0.3)';
+    btn.style.color='#C4B5FD';
+    const list=document.querySelector('#fc-all > div');
+    if(list){
+      const div=document.createElement('div');
+      div.className='g0 press';
+      div.style.cssText='border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;animation:slideUp .4s ease-out;';
+      div.setAttribute('onclick',`openProfileModal({name:'${name}',age:25,city:'${city}',mbti:'${mbti}',compat:76,img:'${img}',isFriend:true,id:'${btnId}'})`);
+      div.innerHTML=`
+        <div class="ring-brand" style="width:54px;height:54px;flex-shrink:0;"><img src="${img}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+            <span style="color:var(--tx);font-size:14px;font-weight:800;">${name}</span>
+            <span class="mono" style="padding:2px 7px;border-radius:10px;background:rgba(0,255,194,0.1);color:var(--grn);font-size:10px;border:1px solid rgba(0,255,194,0.2);">Yeni ✓</span>
+          </div>
+          <p style="color:var(--tx2);font-size:12px;">${mbti} • ${city}</p>
+          <div style="margin-top:5px;height:3px;border-radius:3px;background:rgba(255,255,255,0.06);width:90px;overflow:hidden;"><div class="cbar" style="width:76%;"></div></div>
+        </div>
+        <div class="g1 press" style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;" onclick="event.stopPropagation();nav('s-call')">
+          <svg width="16" height="16" fill="var(--c5)" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+        </div>`;
+      list.appendChild(div);
+    }
+    showToast('🎉 '+name+' arkadaş listene eklendi!');
+  },2000);
+}
+
+// Store buy functions
+function buyItem(el,name,cost){
+  el.style.transform='scale(.97)';el.style.opacity='.7';
+  setTimeout(()=>{el.style.transform='';el.style.opacity='';showToast('✓ '+name+' satın alındı! (−'+cost+' NT)');},200);
+}
+function buyToken(amount,price){showToast('✓ '+amount+' NT yüklendi!');}
+
+function showToast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:absolute;bottom:110px;left:50%;transform:translateX(-50%);background:rgba(15,10,28,0.95);border:1px solid rgba(0,255,194,0.3);color:var(--grn);padding:10px 18px;border-radius:20px;font-size:12px;font-weight:700;white-space:nowrap;z-index:300;transition:opacity .3s;font-family:"Cabinet Grotesk",sans-serif;box-shadow:0 4px 20px rgba(0,0,0,0.5);';document.querySelector('.phone').appendChild(t);}
+  t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._to);t._to=setTimeout(()=>{t.style.opacity='0';},2500);
+}
+
+// Remove from favorites
+function removeFav(id){
+  const el=document.getElementById(id);
+  if(el){el.style.opacity='0';el.style.transform='translateX(30px)';el.style.transition='all .3s';setTimeout(()=>el.remove(),300);}
+}
+
+// Unblock user
+function unblock(id){
+  const el=document.getElementById(id);
+  if(el){el.style.opacity='0';el.style.transform='translateX(30px)';el.style.transition='all .3s';setTimeout(()=>el.remove(),300);}
+}
+
+// Profile modal
+let currentProfile = null;
+const bios = {
+  'onder':'Müzik prodüksiyonuyla ilgileniyorum, İstanbul\'un gece hayatını ve indie konserleri seviyorum. Derin sohbetler benim için en değerli şey.',
+  'ayse':'Psikolog adayı, kitap kurdu. Sessiz kafelerde çay içmek ve insanların hikayelerini dinlemekten keyif alıyorum.',
+  'mehmet':'Girişimci, spor meraklısı. Sabah koşuları ve akşam satranç partileri benim ritimim.',
+  'zeynep':'Fotoğrafçı ve seyyah. 20 ülke gezdi, 20 daha var. Anın güzelliğini yakalamayı seviyorum.',
+  'kerem':'Yazılım mühendisi, gece yarısı kod yazarım. Bilim kurgu kitapları ve dağ yürüyüşleri dengemi sağlıyor.',
+  'selin':'Dans öğretmeni ve yoga pratisyeni. Bedeni ve zihni birlikte büyütmeye inanıyorum.',
+};
+
+function openProfileModal(p){
+  currentProfile = p;
+  document.getElementById('mp-name').textContent=p.name;
+  document.getElementById('mp-name2').textContent=p.name;
+  document.getElementById('mp-img').src=p.img;
+  document.getElementById('mp-compat').textContent='%'+p.compat;
+  document.getElementById('mp-info').textContent=p.age+' yaşında • '+p.city+' • '+p.mbti;
+  document.getElementById('mp-bio').textContent=bios[p.id]||'Henüz biyografi eklenmemiş.';
+  const fa=document.getElementById('mp-actions-friend');
+  const nfa=document.getElementById('mp-actions-notfriend');
+  if(p.isFriend){fa.style.display='flex';nfa.style.display='none';}
+  else{fa.style.display='none';nfa.style.display='flex';}
+  showM('m-profile');
+}
+
+function followFromModal(){
+  if(!currentProfile)return;
+  const btn=document.querySelector('#mp-actions-notfriend .btn-brand');
+  if(btn){btn.textContent='✓ Takip Edildi';btn.style.background='rgba(0,255,194,0.15)';btn.style.boxShadow='none';btn.style.color='var(--grn)';btn.style.border='1px solid rgba(0,255,194,0.3)';}
+}
+
+function addFavFromModal(){
+  if(!currentProfile)return;
+  const id='fav-modal-'+currentProfile.id;
+  if(!document.getElementById(id)){
+    const list=document.getElementById('fav-list');
+    const div=document.createElement('div');
+    div.id=id;div.className='g0 press';
+    div.style.cssText='border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;';
+    div.innerHTML=`<div class="ring-gold" style="width:54px;height:54px;flex-shrink:0;"><img src="${currentProfile.img}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg);"></div><div style="flex:1;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;"><span style="color:var(--tx);font-size:14px;font-weight:800;">${currentProfile.name}</span><span style="font-size:14px;">⭐</span></div><p style="color:var(--tx2);font-size:12px;">${currentProfile.mbti} • ${currentProfile.city}</p></div><button onclick="event.stopPropagation();removeFav('${id}')" class="g1 press" style="width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="14" height="14" fill="none" stroke="var(--tx3)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>`;
+    list.appendChild(div);
+  }
+  showToast('⭐ Favorilere eklendi!');
+}
+
+function blockFromModal(){
+  if(!currentProfile)return;
+  const list=document.getElementById('blocked-list');
+  const id='blk-modal-'+currentProfile.id;
+  if(!document.getElementById(id)){
+    const div=document.createElement('div');
+    div.id=id;div.className='g0';
+    div.style.cssText='border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:14px;opacity:.6;';
+    div.innerHTML=`<div style="width:54px;height:54px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,51,85,0.3);flex-shrink:0;filter:grayscale(1);"><img src="${currentProfile.img}" style="width:100%;height:100%;object-fit:cover;background:var(--bg);"></div><div style="flex:1;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;"><span style="color:var(--tx);font-size:14px;font-weight:800;">${currentProfile.name}</span><span class="mono" style="padding:2px 7px;border-radius:10px;background:rgba(255,51,85,0.1);color:var(--red);font-size:10px;border:1px solid rgba(255,51,85,0.2);">🚫 Engellendi</span></div><p style="color:var(--tx3);font-size:12px;">Engel kaldırılabilir</p></div><button onclick="unblock('${id}')" class="press" style="padding:7px 12px;border-radius:12px;background:rgba(255,51,85,0.1);border:1px solid rgba(255,51,85,0.25);color:var(--red);font-size:11px;font-family:'Cabinet Grotesk',sans-serif;font-weight:700;cursor:pointer;flex-shrink:0;">Kaldır</button>`;
+    list.appendChild(div);
+  }
+  hideM('m-profile');
+  showToast('🚫 Kullanıcı engellendi');
+}
+
+function removeFriendModal(){hideM('m-profile');}
+
+// Speaker cycling — shows name + avatar on right side
+const speakers=[
+  {name:'Önder',img:'https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg'},
+  {name:'Sen',img:'https://kimi-web-img.moonshot.cn/img/as2.ftcdn.net/fbc0a536e19ffcf94e4e8594d0dbf1b55b048086.jpg'},
+];
+let spIdx=0;
+function toggleSpeaker(){
+  spIdx=(spIdx+1)%2;
+  const nm=document.getElementById('speaker-name');
+  const av=document.getElementById('speaker-avatar');
+  if(nm)nm.textContent=speakers[spIdx].name;
+  if(av)av.src=speakers[spIdx].img;
+}
+setInterval(()=>{
+  if(document.getElementById('s-call').classList.contains('active'))toggleSpeaker();
+},4000);
+
+// ── SEARCH MODE SYSTEM ──
+// Modes: 'default'|'anon'|'hizli'|'zit'|'sehir'|'patron'
+let currentSearchMode='default';
+const modeColors={
+  default:{bg:'rgba(102,51,255,0.18)',border:'rgba(153,51,255,0.25)',title:'Senin için arıyoruz',titleGrad:'linear-gradient(135deg,var(--c1),var(--c5),var(--c7))'},
+  anon:{bg:'rgba(90,50,140,0.38)',border:'rgba(255,255,255,0.1)',title:'Anonim tarama başladı',titleGrad:'linear-gradient(135deg,#aaa,#ddd,#aaa)'},
+  hizli:{bg:'rgba(0,192,255,0.14)',border:'rgba(0,192,255,0.28)',title:'Hızlı eşleşme aranıyor',titleGrad:'linear-gradient(135deg,var(--c1),var(--c3))'},
+  zit:{bg:'rgba(236,72,153,0.14)',border:'rgba(236,72,153,0.28)',title:'Zıt karakter aranıyor',titleGrad:'linear-gradient(135deg,#EC4899,#F43F5E)'},
+  sehir:{bg:'rgba(16,185,129,0.14)',border:'rgba(16,185,129,0.26)',title:'Şehirde taranıyor',titleGrad:'linear-gradient(135deg,#10B981,#059669)'},
+  patron:{bg:'rgba(255,210,107,0.12)',border:'rgba(255,210,107,0.3)',title:'Patron filtresi aktif',titleGrad:'linear-gradient(135deg,var(--gold),#FF9A3C)'},
+};
+
+function navSearchMode(mode){
+  currentSearchMode=mode;
+  const mc=modeColors[mode]||modeColors.default;
+  // Apply ambient mode color to searching screen — top, sides and bottom glow
+  const sc=document.getElementById('s-searching');
+  if(sc){
+    const c=mc.bg;
+    // Boost all opacities for richer glow
+    const boost=(s)=>s.replace(/0\.(\d+)/g,(m,d)=>{
+      const v=parseFloat('0.'+d);
+      return String(Math.min(0.65,v*1.45).toFixed(2));
+    });
+    const c2=(mode==='default')?'rgba(102,51,255,0.22)':boost(c);
+    const cSide=boost(c.replace('0.22','0.11').replace('0.14','0.09').replace('0.18','0.11').replace('0.12','0.08').replace('0.7','0.18'));
+    const cBot=boost(c.replace('0.22','0.14').replace('0.14','0.11').replace('0.18','0.13').replace('0.12','0.09').replace('0.7','0.18'));
+    sc.style.background=`
+      radial-gradient(ellipse 105% 42% at 50% 0%,${c2},transparent 52%),
+      radial-gradient(ellipse 60% 20% at 50% 100%,${cBot},transparent 48%),
+      var(--bg)`;
+  }
+  // Update title text + gradient
+  const titleEl=document.querySelector('#s-searching h2');
+  if(titleEl){titleEl.textContent=mc.title;titleEl.style.backgroundImage=mc.titleGrad;}
+  // Anon mode — hide name/photo on call and match screens
+  const anonMode=mode==='anon';
+  applyAnonMode(anonMode);
+  nav('s-searching');
+}
+
+function applyAnonMode(on){
+  const anonImg='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"%3E%3Crect width="96" height="96" fill="%23160D28"/%3E%3Ccircle cx="48" cy="36" r="20" fill="%23333"/%3E%3Cellipse cx="48" cy="80" rx="30" ry="22" fill="%23333"/%3E%3C/svg%3E';
+  const anonId='Anonim_'+(Math.floor(Math.random()*900)+100);
+  // ── Match found screen ──
+  const themImg=document.querySelector('#mp-them img');
+  if(themImg){themImg.src=on?anonImg:'https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg';}
+  // "Önder" label inside them card
+  const themLabel=document.querySelector('#mp-them .card-name-label');
+  if(themLabel){themLabel.textContent=on?'???':'Önder';}
+  // h2 heading
+  const h2mf=document.querySelector('#s-match-found h2');
+  if(h2mf){h2mf.textContent=on?anonId+' ile eşleştin! 🎉':'Önder ile eşleştin! 🎉';}
+  // info line
+  const pmf=document.querySelector('#s-match-found .match-info-line');
+  if(pmf){pmf.textContent=on?'Kimlik gizli • Anonim Bağlantı':'35 yaşında • İstanbul • ENFP';}
+  // ── Call screen ──
+  const callNameEl=document.getElementById('call-person-name');
+  if(callNameEl){callNameEl.textContent=on?anonId:'Önder';}
+  const callSubEl=document.getElementById('call-person-sub');
+  if(callSubEl){callSubEl.textContent=on?'Kimlik gizli':'35 yaşında • İstanbul';}
+  const timerImgEl=document.getElementById('call-timer-img');
+  if(timerImgEl){timerImgEl.src=on?anonImg:'https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg';}
+  // Speaker
+  speakers[0]={name:on?'???':'Önder',img:on?anonImg:'https://kimi-web-img.moonshot.cn/img/img.freepik.com/0961b56466125412398315be02162b435f900b53.jpg'};
+}
+
+// ── PATRON FILTER FUNCTIONS ──
+let ageMin=18,ageMax=35;
+function changeAge(which,delta){} // legacy, replaced by syncAge/sliderAge
+
+function syncAge(){
+  const minI=document.getElementById('age-min-inp');
+  const maxI=document.getElementById('age-max-inp');
+  if(!minI||!maxI)return;
+  ageMin=Math.max(18,Math.min(parseInt(minI.value)||18,60));
+  ageMax=Math.max(18,Math.min(parseInt(maxI.value)||60,60));
+  minI.value=ageMin;maxI.value=ageMax;
+  // Sync sliders
+  const minS=document.getElementById('age-min-sl');
+  const maxS=document.getElementById('age-max-sl');
+  if(minS)minS.value=ageMin;
+  if(maxS)maxS.value=ageMax;
+  const lbl=document.getElementById('age-label');
+  if(lbl)lbl.textContent=ageMin+' — '+ageMax;
+  const err=document.getElementById('age-error');
+  if(err)err.style.display=ageMin>ageMax?'block':'none';
+}
+
+function sliderAge(which,val){
+  const v=parseInt(val);
+  if(which==='min'){
+    ageMin=v;
+    const inp=document.getElementById('age-min-inp');
+    if(inp)inp.value=v;
+  } else {
+    ageMax=v;
+    const inp=document.getElementById('age-max-inp');
+    if(inp)inp.value=v;
+  }
+  const lbl=document.getElementById('age-label');
+  if(lbl)lbl.textContent=ageMin+' — '+ageMax;
+  const err=document.getElementById('age-error');
+  if(err)err.style.display=ageMin>ageMax?'block':'none';
+}
+
+function selectGender(g){
+  ['all','f','m'].forEach(id=>{
+    const b=document.getElementById('g-'+id);
+    if(!b)return;
+    const active=id===g;
+    b.style.background=active?'rgba(102,51,255,0.22)':'rgba(255,255,255,0.025)';
+    b.style.border=active?'1px solid rgba(102,51,255,0.4)':'1px solid var(--b1)';
+    b.style.color=active?'var(--tx)':'var(--tx2)';
+    b.style.fontWeight=active?'700':'400';
+  });
+}
+
+function toggleMbti(el){
+  const active=el.dataset.active==='1';
+  el.dataset.active=active?'':'1';
+  el.style.background=active?'rgba(255,255,255,0.025)':'rgba(102,51,255,0.2)';
+  el.style.border=active?'1px solid var(--b1)':'1px solid rgba(102,51,255,0.4)';
+  el.style.color=active?'var(--tx2)':'#C4B5FD';
+  el.style.fontWeight=active?'400':'700';
+  // Deactivate all-btn
+  const allBtn=document.querySelector('.mbti-all-btn');
+  if(allBtn&&allBtn.dataset.active==='1'){allBtn.style.background='rgba(255,255,255,0.025)';allBtn.style.border='1px solid var(--b1)';allBtn.style.color='var(--tx2)';allBtn.style.fontWeight='400';allBtn.dataset.active='';}
+}
+function selectAllMbti(el){
+  document.querySelectorAll('.mbti-btn').forEach(b=>{b.style.background='rgba(255,255,255,0.025)';b.style.border='1px solid var(--b1)';b.style.color='var(--tx2)';b.style.fontWeight='400';b.dataset.active='';});
+  el.dataset.active='1';el.style.background='rgba(102,51,255,0.2)';el.style.border='1px solid rgba(102,51,255,0.4)';el.style.color='#C4B5FD';el.style.fontWeight='700';
+}
+
+function toggleInterest(el){
+  const active=el.dataset.active==='1';
+  el.dataset.active=active?'':'1';
+  el.style.background=active?'rgba(255,255,255,0.025)':'rgba(0,180,255,0.12)';
+  el.style.border=active?'1px solid var(--b1)':'1px solid rgba(0,180,255,0.25)';
+  el.style.color=active?'var(--tx2)':'var(--c1)';
+  const allBtn=document.querySelector('.interest-all-btn');
+  if(allBtn&&allBtn.dataset.active==='1'){allBtn.style.background='rgba(255,255,255,0.025)';allBtn.style.border='1px solid var(--b1)';allBtn.style.color='var(--tx2)';allBtn.dataset.active='';}
+}
+function selectAllInterest(el){
+  document.querySelectorAll('.interest-btn').forEach(b=>{b.style.background='rgba(255,255,255,0.025)';b.style.border='1px solid var(--b1)';b.style.color='var(--tx2)';b.dataset.active='';});
+  el.dataset.active='1';el.style.background='rgba(0,180,255,0.12)';el.style.border='1px solid rgba(0,180,255,0.25)';el.style.color='var(--c1)';
+}
+
+function toggleFilterCity(el,city){
+  const inactive='rgba(255,255,255,0.025)';
+  if(city==='Tümü'){
+    document.querySelectorAll('.fcity-btn').forEach(b=>{
+      b.style.background=inactive;b.style.border='1px solid var(--b1)';b.style.color='var(--tx2)';b.style.fontWeight='400';b.dataset.active='';
+    });
+    el.style.background='rgba(102,51,255,0.2)';el.style.border='1px solid rgba(102,51,255,0.4)';el.style.color='#C4B5FD';el.style.fontWeight='700';el.dataset.active='1';
+    return;
+  }
+  const active=el.dataset.active==='1';
+  el.dataset.active=active?'':'1';
+  el.style.background=active?inactive:'rgba(102,51,255,0.15)';
+  el.style.border=active?'1px solid var(--b1)':'1px solid rgba(102,51,255,0.35)';
+  el.style.color=active?'var(--tx2)':'#C4B5FD';
+  el.style.fontWeight=active?'400':'700';
+  // Deactivate "Tümü"
+  const allBtn=document.querySelector('#filter-cities .fcity-btn');
+  if(allBtn&&allBtn.dataset.active==='1'&&city!=='Tümü'){allBtn.style.background=inactive;allBtn.style.border='1px solid var(--b1)';allBtn.style.color='var(--tx2)';allBtn.style.fontWeight='400';allBtn.dataset.active='';}
+}
+
+let anonEnabled=false;
+function toggleAnon(){
+  anonEnabled=!anonEnabled;
+  const t=document.getElementById('anon-toggle');
+  const th=document.getElementById('anon-thumb');
+  if(t)t.style.background=anonEnabled?'rgba(102,51,255,0.5)':'rgba(255,255,255,0.1)';
+  if(th){th.style.left=anonEnabled?'20px':'3px';th.style.background=anonEnabled?'var(--c5)':'var(--tx3)';}
+}
+
+// ── CITY SELECTION ──
+const cityDistricts={
+  'İstanbul':['Beşiktaş','Kadıköy','Şişli','Üsküdar','Beyoğlu','Sarıyer','Bakırköy','Maltepe','Ataşehir','Pendik'],
+  'Ankara':['Çankaya','Keçiören','Yenimahalle','Mamak','Sincan','Etimesgut','Altındağ'],
+  'İzmir':['Konak','Bornova','Karşıyaka','Buca','Bayraklı','Çiğli','Balçova'],
+  'Bursa':['Osmangazi','Nilüfer','Yıldırım','Görükle','Mudanya'],
+};
+let selectedCityName='';
+
+function selectCity(btn,city){
+  selectedCityName=city;
+  document.querySelectorAll('.city-btn').forEach(b=>{
+    b.style.background='rgba(255,255,255,0.025)';
+    b.style.border='1px solid var(--b0)';
+    b.style.color='var(--tx)';
+    b.style.fontWeight='400';
+  });
+  btn.style.background='rgba(102,51,255,0.18)';
+  btn.style.border='1px solid rgba(102,51,255,0.4)';
+  // Show districts
+  const ds=cityDistricts[city]||[];
+  const dsection=document.getElementById('district-section');
+  const dlist=document.getElementById('district-list');
+  if(dsection&&dlist){
+    dlist.innerHTML='';
+    ds.forEach(d=>{
+      const span=document.createElement('span');
+      span.textContent=d;
+      span.className='press';
+      span.style.cssText='padding:7px 13px;border-radius:20px;background:var(--s0);border:1px solid var(--b1);color:var(--tx2);font-size:12px;cursor:pointer;font-family:"Cabinet Grotesk",sans-serif;transition:all .2s;';
+      span.onclick=()=>{
+        const sel=span.dataset.sel==='1';
+        span.dataset.sel=sel?'':'1';
+        span.style.background=sel?'var(--s0)':'rgba(102,51,255,0.18)';
+        span.style.border=sel?'1px solid var(--b1)':'1px solid rgba(102,51,255,0.4)';
+        span.style.color=sel?'var(--tx2)':'#C4B5FD';
+      };
+      dlist.appendChild(span);
+    });
+    dsection.style.display='block';
+  }
+  // Enable go button
+  const goBtn=document.getElementById('city-go-btn');
+  if(goBtn){goBtn.style.opacity='1';goBtn.style.pointerEvents='auto';goBtn.textContent=city+' — Eşleşmeye Başla →';}
+}
+
+function filterCities(q){
+  document.querySelectorAll('.city-btn').forEach(b=>{
+    const nm=b.querySelector('span').textContent.toLowerCase();
+    b.style.display=nm.includes(q.toLowerCase())||q===''?'flex':'none';
+  });
+}
+
+</script>
+</body>
+</html>

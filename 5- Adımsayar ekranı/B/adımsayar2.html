@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexlify — Adım Sayar</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Syne+Mono&family=Epilogue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --cyan: #00B4FF;
+    --cyan-dark: #0066FF;
+    --purple: #9933FF;
+    --purple-dark: #6633FF;
+    --magenta: #CC00FF;
+    --pink: #FF33FF;
+    --bg: #05080F;
+    --bg2: #080D18;
+    --glass: rgba(0,180,255,0.05);
+    --glass-border: rgba(0,180,255,0.12);
+    --text: #EEF4FF;
+    --text-dim: #4A6480;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;}
+
+body{
+    background:#000;
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Epilogue',sans-serif;
+    overflow:hidden;
+}
+
+.frame{
+    width:390px;height:844px;
+    border-radius:50px;
+    overflow:hidden;
+    position:relative;
+    background:var(--bg);
+    box-shadow:
+        0 0 0 12px #111,
+        0 0 0 14px #1f1f1f,
+        0 40px 100px -10px rgba(0,0,0,0.95),
+        0 0 150px rgba(0,100,255,0.08);
+}
+
+/* Dynamic island */
+.di{
+    position:absolute;top:11px;left:50%;transform:translateX(-50%);
+    width:126px;height:37px;background:#000;border-radius:20px;
+    z-index:1000;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.di-clock{font-family:'Syne Mono',monospace;font-size:12px;color:var(--text-dim);letter-spacing:.04em;}
+.di-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan);}
+
+/* Background mesh */
+.mesh{
+    position:absolute;inset:0;pointer-events:none;overflow:hidden;
+}
+.mesh-blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.4;}
+.mesh-blob.cyan{width:280px;height:280px;top:-80px;right:-60px;background:var(--cyan);animation:float1 12s ease-in-out infinite alternate;}
+.mesh-blob.purple{width:240px;height:240px;bottom:100px;left:-60px;background:var(--purple);animation:float2 14s ease-in-out infinite alternate;}
+.mesh-blob.magenta{width:180px;height:180px;top:35%;left:45%;background:var(--magenta);opacity:0.25;animation:float3 10s ease-in-out infinite alternate;}
+@keyframes float1{from{transform:translate(0,0)}to{transform:translate(30px,40px)}}
+@keyframes float2{from{transform:translate(0,0)}to{transform:translate(-25px,-30px)}}
+@keyframes float3{from{transform:translate(-50%,-50%)}to{transform:translate(-50%,-50%) translate(15px,-15px)}}
+
+/* LEFT SIDE NAVIGATION - STATIC (NO FLOATING ANIMATION) */
+.nav-sidebar{
+    position:absolute;
+    left:12px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    z-index:100;
+}
+
+.nav-orb{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    backdrop-filter:blur(10px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+    position:relative;
+}
+
+.nav-orb:hover{
+    background:rgba(255,255,255,0.06);
+    border-color:rgba(255,255,255,0.15);
+    transform:scale(1.05);
+}
+
+.nav-orb.active{
+    background:rgba(0,180,255,0.15);
+    border-color:var(--cyan);
+    box-shadow:0 0 20px rgba(0,180,255,0.4), inset 0 0 10px rgba(0,180,255,0.1);
+    transform:scale(1.15);
+}
+
+.nav-orb svg{
+    width:18px;
+    height:18px;
+    stroke:var(--text-dim);
+    stroke-width:1.8;
+    fill:none;
+    transition:all 0.3s;
+}
+
+.nav-orb.active svg{
+    stroke:var(--cyan);
+    filter:drop-shadow(0 0 4px var(--cyan));
+}
+
+/* Active indicator line - positioned to right of nav buttons */
+.active-line{
+    position:absolute;
+    left:62px;
+    width:3px;
+    height:36px;
+    background:linear-gradient(to bottom, transparent, var(--cyan), transparent);
+    box-shadow:0 0 15px var(--cyan), 0 0 30px rgba(0,180,255,0.5);
+    transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
+    z-index:99;
+    border-radius:2px;
+    margin-top:-18px; /* Offset to center on button */
+}
+
+/* Content area */
+.content{
+    position:absolute;
+    left:70px;
+    right:0;
+    top:0;
+    bottom:0;
+    overflow:hidden;
+    padding:80px 16px 20px 8px;
+}
+.screen{
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+
+/* Screens */
+.screen{
+    opacity:0;
+    pointer-events:none;
+    transform:translateX(15px);
+    transition:all 0.35s ease;
+    position:absolute;
+    width:calc(100% - 24px);
+    height:100%;
+    display:flex;
+    flex-direction:column;
+}
+.screen.active{
+    opacity:1;
+    pointer-events:all;
+    transform:translateX(0);
+    position:relative;
+}
+
+/* Typography */
+.title-lg{
+    font-family:'Syne',sans-serif;
+    font-size:22px;
+    font-weight:800;
+    color:var(--text);
+    letter-spacing:-0.02em;
+}
+
+.title-md{
+    font-family:'Syne',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    color:var(--text);
+}
+
+.label{
+    font-size:10px;
+    color:var(--text-dim);
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    font-weight:500;
+}
+
+.number-display{
+    font-family:'Syne Mono',monospace;
+    font-weight:700;
+}
+
+/* Cards - Balanced sizing */
+.card{
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    border-radius:20px;
+    backdrop-filter:blur(20px);
+    position:relative;
+    overflow:hidden;
+}
+
+.card-highlight{
+    background:linear-gradient(135deg, rgba(0,180,255,0.1), rgba(153,51,255,0.08));
+    border-color:rgba(0,180,255,0.25);
+}
+
+/* Home Screen Specifics */
+.hero-section{
+    text-align:center;
+    padding:20px 0 16px;
+    position:relative;
+}
+
+.step-ring{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:200px;
+    height:200px;
+    pointer-events:none;
+}
+
+.step-ring svg{
+    width:100%;
+    height:100%;
+    transform:rotate(-90deg);
+}
+
+.step-ring circle{
+    fill:none;
+    stroke-width:2;
+}
+
+.step-ring .bg{stroke:rgba(255,255,255,0.05);}
+.step-ring .progress{
+    stroke:url(#ringGradient);
+    stroke-linecap:round;
+    stroke-dasharray:565;
+    stroke-dashoffset:calc(565 - (565 * 84.3) / 100);
+    filter:drop-shadow(0 0 6px var(--cyan));
+}
+
+.main-step-count{
+    font-family:'Syne',sans-serif;
+    font-size:56px;
+    font-weight:800;
+    color:var(--text);
+    line-height:1;
+    position:relative;
+    z-index:2;
+    text-shadow:0 0 40px rgba(0,180,255,0.3);
+}
+
+.progress-bar{
+    height:4px;
+    background:rgba(255,255,255,0.06);
+    border-radius:2px;
+    overflow:hidden;
+    margin-top:12px;
+}
+
+.progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--purple-dark), var(--cyan));
+    border-radius:2px;
+    box-shadow:0 0 10px rgba(0,180,255,0.5);
+    width:84.3%;
+    position:relative;
+}
+
+.progress-fill::after{
+    content:'';
+    position:absolute;
+    right:0;
+    top:50%;
+    transform:translateY(-50%);
+    width:8px;
+    height:8px;
+    background:var(--cyan);
+    border-radius:50%;
+    box-shadow:0 0 10px var(--cyan);
+}
+
+/* Stats grid - balanced */
+.stats-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin-top:12px;
+}
+
+.stat-pill{
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    border-radius:14px;
+    padding:12px 8px;
+    text-align:center;
+}
+
+.stat-pill .value{
+    font-family:'Syne Mono',monospace;
+    font-size:18px;
+    font-weight:700;
+    color:var(--text);
+}
+
+.stat-pill .unit{
+    font-size:9px;
+    color:var(--cyan);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin-top:2px;
+}
+
+
+
+
+
+
+
+
+
+/* Stats Screen */
+.chart-container{
+    height:140px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:8px;
+    padding:16px 0;
+}
+
+.chart-bar{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+}
+
+.bar-fill{
+    width:100%;
+    border-radius:4px 4px 0 0;
+    background:linear-gradient(to top, var(--purple-dark), var(--purple));
+    opacity:0.7;
+    transition:all 0.3s;
+}
+
+.bar-fill.active{
+    background:linear-gradient(to top, var(--cyan-dark), var(--cyan));
+    opacity:1;
+    box-shadow:0 0 15px rgba(0,180,255,0.4);
+}
+
+.bar-label{
+    font-size:9px;
+    color:var(--text-dim);
+    text-transform:uppercase;
+}
+
+/* Achievement row */
+.achieve-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    margin-top:10px;
+}
+
+.achieve-icon{
+    width:44px;
+    height:44px;
+    border-radius:12px;
+    background:rgba(0,180,255,0.1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.achieve-progress{
+    flex:1;
+    height:3px;
+    background:rgba(255,255,255,0.06);
+    border-radius:2px;
+    overflow:hidden;
+}
+
+.achieve-bar{
+    height:100%;
+    background:linear-gradient(90deg, var(--cyan), var(--magenta));
+    border-radius:2px;
+}
+
+/* Market Screen */
+.premium-card{
+    padding:20px;
+    text-align:center;
+    background:linear-gradient(135deg, rgba(153,51,255,0.15), rgba(0,100,255,0.1));
+    border-color:rgba(153,51,255,0.3);
+}
+
+.premium-icon{
+    width:64px;
+    height:64px;
+    border-radius:20px;
+    background:linear-gradient(135deg, var(--magenta), var(--pink), var(--purple));
+    margin:0 auto 16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+    box-shadow:0 0 25px rgba(204,0,255,0.4);
+}
+
+.market-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px;
+    margin-top:10px;
+}
+
+.market-icon{
+    width:48px;
+    height:48px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    flex-shrink:0;
+}
+
+.buy-btn{
+    padding:8px 16px;
+    border-radius:10px;
+    border:none;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    font-family:'Epilogue',sans-serif;
+}
+
+.buy-btn.primary{
+    background:linear-gradient(135deg, var(--cyan), var(--cyan-dark));
+    color:var(--bg);
+    box-shadow:0 4px 15px rgba(0,180,255,0.3);
+}
+
+.buy-btn.secondary{
+    background:rgba(255,255,255,0.08);
+    color:var(--text);
+    border:1px solid var(--glass-border);
+}
+
+/* Profile Screen */
+.profile-header{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    padding:8px 0 20px;
+}
+
+.avatar-ring{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    padding:3px;
+    background:linear-gradient(135deg, var(--cyan), var(--magenta));
+    flex-shrink:0;
+}
+
+.avatar-inner{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:var(--bg2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:28px;
+}
+
+.badge{
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:600;
+    letter-spacing:0.04em;
+}
+
+.badge-cyan{
+    background:rgba(0,180,255,0.12);
+    color:var(--cyan);
+    border:1px solid rgba(0,180,255,0.25);
+}
+
+.badge-purple{
+    background:rgba(153,51,255,0.12);
+    color:var(--purple);
+    border:1px solid rgba(153,51,255,0.25);
+}
+
+/* Leaderboard */
+.podium{
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    gap:12px;
+    padding:16px 0;
+}
+
+.podium-item{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+}
+
+.podium-avatar{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    border:2px solid transparent;
+}
+
+.podium-avatar.gold{
+    border-color:#FFD700;
+    box-shadow:0 0 15px rgba(255,215,0,0.3);
+    width:56px;
+    height:56px;
+    font-size:22px;
+}
+
+.podium-avatar.silver{border-color:#C0C0C0;}
+.podium-avatar.bronze{border-color:#CD7F32;}
+
+.lb-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 12px;
+    border-radius:12px;
+    margin-top:6px;
+    background:rgba(255,255,255,0.02);
+}
+
+.lb-row.you{
+    background:rgba(153,51,255,0.1);
+    border:1px solid rgba(153,51,255,0.2);
+}
+
+/* Toggle */
+.toggle{
+    width:44px;
+    height:26px;
+    border-radius:13px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid var(--glass-border);
+    position:relative;
+    cursor:pointer;
+    transition:all 0.3s;
+}
+
+.toggle.on{
+    background:var(--cyan);
+    border-color:var(--cyan);
+    box-shadow:0 0 12px rgba(0,180,255,0.3);
+}
+
+.toggle::after{
+    content:'';
+    position:absolute;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:white;
+    top:2px;
+    left:2px;
+    transition:all 0.3s;
+    box-shadow:0 2px 6px rgba(0,0,0,0.3);
+}
+
+.toggle.on::after{left:20px;}
+
+/* Modal */
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.9);
+    backdrop-filter:blur(20px);
+    z-index:2000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.3s;
+}
+
+.modal.active{opacity:1;pointer-events:all;}
+
+.modal-box{
+    background:linear-gradient(135deg, #0A1020 0%, #060C18 100%);
+    border:1px solid var(--glass-border);
+    border-radius:24px;
+    padding:24px;
+    width:300px;
+    transform:scale(0.95) translateY(10px);
+    transition:all 0.3s;
+}
+
+.modal.active .modal-box{transform:scale(1) translateY(0);}
+
+/* Utility */
+.text-cyan{color:var(--cyan);}
+.text-magenta{color:var(--magenta);}
+.text-purple{color:var(--purple);}
+.text-dim{color:var(--text-dim);}
+.text-white{color:var(--text);}
+
+.flex{display:flex;}
+.items-center{align-items:center;}
+.justify-between{justify-content:space-between;}
+.gap-2{gap:8px;}
+.gap-3{gap:12px;}
+.mt-1{margin-top:4px;}
+.mt-2{margin-top:8px;}
+.mb-1{margin-bottom:4px;}
+.mb-2{margin-bottom:8px;}
+.w-full{width:100%;}
+.flex-1{flex:1;}
+.text-center{text-align:center;}
+.text-sm{font-size:12px;}
+.text-xs{font-size:10px;}
+.font-bold{font-weight:700;}
+.font-mono{font-family:'Syne Mono',monospace;}
+</style>
+</head>
+<body>
+
+<div class="frame">
+    <!-- SVG Gradient Definition -->
+    <svg width="0" height="0" style="position:absolute;">
+        <defs>
+            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#0066FF"/>
+                <stop offset="100%" style="stop-color:#00B4FF"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Dynamic Island -->
+    <div class="di">
+        <div class="di-dot"></div>
+        <span class="di-clock" id="clock">09:41</span>
+    </div>
+
+    <!-- Background -->
+    <div class="mesh">
+        <div class="mesh-blob cyan"></div>
+        <div class="mesh-blob purple"></div>
+        <div class="mesh-blob magenta"></div>
+    </div>
+
+    <!-- Active Indicator Line -->
+    <div class="active-line" id="activeLine"></div>
+
+    <!-- Left Navigation - STATIC (No floating animation) -->
+    <div class="nav-sidebar" id="navSidebar">
+        <div class="nav-orb active" onclick="navigate(0)" data-index="0">
+            <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+        <div class="nav-orb" onclick="navigate(1)" data-index="1">
+            <svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        </div>
+        <div class="nav-orb" onclick="navigate(2)" data-index="2">
+            <svg viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        </div>
+        <div class="nav-orb" onclick="navigate(3)" data-index="3">
+            <svg viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content">
+
+        <!-- SCREEN 0: HOME -->
+        <div class="screen active" id="screen0">
+            <div style="margin-bottom:8px;">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div style="font-family:'Syne',sans-serif; font-size:20px; font-weight:800; color:var(--text); letter-spacing:-0.02em;">Adımsayar</div>
+                        <div style="font-size:10px; color:var(--cyan); letter-spacing:0.08em; margin-top:2px;">Adım at, kazan, harca.</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:6px 12px;">
+                        <span style="font-family:'Syne Mono',monospace; font-size:12px; font-weight:700; color:#FF33FF; text-shadow:0 0 8px rgba(255,51,255,0.4);">2,458 NEX</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Step Counter - FIXED AT TOP -->
+            <div class="hero-section" style="margin-top:24px;">
+                <div class="step-ring">
+                    <svg viewBox="0 0 200 200">
+                        <circle class="bg" cx="100" cy="100" r="90"/>
+                        <circle class="progress" cx="100" cy="100" r="90"/>
+                    </svg>
+                </div>
+                <div class="main-step-count" id="stepCount">8,432</div>
+                <div class="label mt-2">Adım Sayısı</div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="flex justify-between text-xs text-dim mt-1">
+                    <span>0</span>
+                    <span id="stepsLeft">1,568 adım kaldı</span>
+                    <span>10K</span>
+                </div>
+            </div>
+
+            <!-- SPACER: Reduced to bring content closer -->
+            <div style="flex:1; min-height:16px; max-height:36px;"></div>
+
+            <!-- Quick Stats -->
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px;">
+                <div style="background:rgba(0,180,255,0.08); border:1px solid rgba(0,180,255,0.2); border-radius:14px; padding:12px 8px; text-align:center;">
+                    <div style="font-family:'Syne Mono',monospace; font-size:18px; font-weight:700; color:#00B4FF; text-shadow:0 0 10px rgba(0,180,255,0.3);">4.2</div>
+                    <div style="font-size:9px; color:#00B4FF; text-transform:uppercase; letter-spacing:0.08em; margin-top:2px;">KM</div>
+                </div>
+                <div style="background:rgba(204,0,255,0.08); border:1px solid rgba(204,0,255,0.2); border-radius:14px; padding:12px 8px; text-align:center;">
+                    <div style="font-family:'Syne Mono',monospace; font-size:18px; font-weight:700; color:#CC00FF; text-shadow:0 0 10px rgba(204,0,255,0.3);">342</div>
+                    <div style="font-size:9px; color:#CC00FF; text-transform:uppercase; letter-spacing:0.08em; margin-top:2px;">KCAL</div>
+                </div>
+                <div style="background:rgba(153,51,255,0.08); border:1px solid rgba(153,51,255,0.2); border-radius:14px; padding:12px 8px; text-align:center;">
+                    <div style="font-family:'Syne Mono',monospace; font-size:18px; font-weight:700; color:#9933FF; text-shadow:0 0 10px rgba(153,51,255,0.3);">64</div>
+                    <div style="font-size:9px; color:#9933FF; text-transform:uppercase; letter-spacing:0.08em; margin-top:2px;">DK</div>
+                </div>
+            </div>
+
+            <!-- Boost + Streak Side by Side -->
+            <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:10px; margin-top:10px;">
+                <!-- Boost - Bigger -->
+                <div class="card" onclick="showModal('boost')" style="padding:16px; display:flex; align-items:center; gap:12px; background:linear-gradient(135deg,rgba(153,51,255,0.15),rgba(204,0,255,0.1)); border-color:rgba(153,51,255,0.3);">
+                    <div style="width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,var(--purple),var(--magenta)); display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow:0 0 20px rgba(153,51,255,0.4); flex-shrink:0;">⚡</div>
+                    <div class="flex-1">
+                        <div style="font-size:14px; font-weight:700; color:var(--text);">2X Boost</div>
+                        <div style="font-size:11px; color:var(--purple);">58:23 kaldı</div>
+                    </div>
+                </div>
+
+                <!-- Streak - Smaller, compact -->
+                <div class="card" style="padding:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; background:rgba(204,0,255,0.05); border-color:rgba(204,0,255,0.2); cursor:pointer;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--magenta)" style="filter:drop-shadow(0 0 6px var(--magenta));">
+                        <path d="M12 2C10.5 4 9 6.5 9 9c0 2 1 3 2 4-2 0-4-1-5-3-1 3 0 6 3 8 2 1 5 1 7-1 2-2 3-5 2-8-1 1-2 1-3 0 1-1 2-3 2-5 0-1-1-2-1-2s-1 2-2 3c-1 1-2 1-2 0z"/>
+                    </svg>
+                    <div style="text-align:center;">
+                        <div style="font-family:'Syne',sans-serif; font-size:20px; font-weight:800; color:var(--magenta); line-height:1;">12</div>
+                        <div style="font-size:9px; color:var(--magenta); text-transform:uppercase; letter-spacing:0.06em;">Gün</div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <!-- Token Card -->
+            <div class="card" style="margin-top:10px; padding:14px; background:linear-gradient(135deg,rgba(0,180,255,0.1),rgba(153,51,255,0.08)); border-color:rgba(0,180,255,0.25);">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <div class="label">Token Bakiyesi</div>
+                        <div class="number-display text-lg text-white" style="font-size:22px;">84,320</div>
+                        <div class="text-xs text-cyan">+12.5% bu hafta</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="label">NEX</div>
+                        <div class="number-display text-lg" style="font-size:22px; color:var(--magenta);">2,458</div>
+                    </div>
+                </div>
+                <button onclick="showModal('convert')" style="width:100%; padding:10px; border-radius:10px; background:linear-gradient(135deg,var(--purple-dark),var(--cyan-dark)); color:white; border:none; font-size:12px; font-weight:700; cursor:pointer; font-family:'Epilogue',sans-serif; margin-top:8px;">Dönüştür ve Çek</button>
+            </div>
+
+            <!-- Weekly Streak -->
+            <div class="card" style="padding:16px; margin-top:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <span class="label">Haftalık İlerleme</span>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:12px; color:var(--magenta); font-weight:700;">12 Gün</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--magenta)" style="filter:drop-shadow(0 0 4px var(--magenta));">
+                            <path d="M12 2C10.5 4 9 6.5 9 9c0 2 1 3 2 4-2 0-4-1-5-3-1 3 0 6 3 8 2 1 5 1 7-1 2-2 3-5 2-8-1 1-2 1-3 0 1-1 2-3 2-5 0-1-1-2-1-2s-1 2-2 3c-1 1-2 1-2 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div style="display:flex; justify-content:space-between; gap:4px; margin-bottom:14px;">
+                    <div style="width:28px; height:28px; border-radius:50%; aspect-ratio:1; flex:none; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; background:rgba(0,180,255,0.15); border:1px solid var(--cyan); color:var(--cyan);">P</div>
+                    <div style="width:28px; height:28px; border-radius:50%; aspect-ratio:1; flex:none; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; background:rgba(0,180,255,0.15); border:1px solid var(--cyan); color:var(--cyan);">S</div>
+                    <div style="width:28px; height:28px; border-radius:50%; aspect-ratio:1; flex:none; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; background:rgba(0,180,255,0.15); border:1px solid var(--cyan); color:var(--cyan);">Ç</div>
+                    <div style="width:28px; height:28px; border-radius:50%; aspect-ratio:1; flex:none; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; background:rgba(0,180,255,0.15); border:1px solid var(--cyan); color:var(--cyan);">P</div>
+                    <div style="width:28px; height:28px; border-radius:50%; aspect-ratio:1; flex:none; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; background:rgba(0,180,255,0.15); border:1px solid var(--cyan); color:var(--cyan);">C</div>
+                    <div style="width:28px; height:28px; border-radius:50%; aspect-ratio:1; flex:none; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; background:rgba(0,180,255,0.15); border:1px solid var(--cyan); color:var(--cyan);">C</div>
+                    <div style="width:28px; height:28px; border-radius:50%; aspect-ratio:1; flex:none; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; background:linear-gradient(135deg,var(--magenta),var(--pink)); border:none; color:white; box-shadow:0 0 15px rgba(204,0,255,0.5);">P</div>
+                </div>
+                <button style="width:100%; padding:10px; border-radius:10px; background:linear-gradient(135deg,var(--magenta),var(--pink)); color:white; border:none; font-size:11px; font-weight:700; cursor:pointer; font-family:'Epilogue',sans-serif; box-shadow:0 4px 15px rgba(204,0,255,0.3);">🎁 Ödülü Topla (150 NEX)</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 1: STATS -->
+        <div class="screen" id="screen1">
+            <div class="mb-4" style="margin-top:30px;">
+                <div class="title-lg">İstatistikler</div>
+                <div class="label">Bu haftanın özeti</div>
+            </div>
+
+            <!-- Weekly Chart -->
+            <div class="card" style="margin-top:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:16px 16px 8px;">
+                    <span style="font-size:10px; color:#4A6480; letter-spacing:0.12em; text-transform:uppercase;">Haftalık Performans</span>
+                    <span style="font-size:11px; color:#00B4FF; font-weight:700;">▲ +23%</span>
+                </div>
+                <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:6px; height:120px; padding:0 16px 16px;">
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                        <div style="width:100%; height:60%; background:linear-gradient(to top,#6633FF,#9933FF); opacity:0.8; border-radius:3px 3px 0 0;"></div>
+                        <span style="font-size:9px; color:#4A6480;">Pt</span>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                        <div style="width:100%; height:75%; background:linear-gradient(to top,#6633FF,#9933FF); opacity:0.8; border-radius:3px 3px 0 0;"></div>
+                        <span style="font-size:9px; color:#4A6480;">Sa</span>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                        <div style="width:100%; height:45%; background:linear-gradient(to top,#6633FF,#9933FF); opacity:0.8; border-radius:3px 3px 0 0;"></div>
+                        <span style="font-size:9px; color:#4A6480;">Ça</span>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                        <div style="width:100%; height:90%; background:linear-gradient(to top,#6633FF,#9933FF); opacity:0.8; border-radius:3px 3px 0 0;"></div>
+                        <span style="font-size:9px; color:#4A6480;">Pe</span>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                        <div style="width:100%; height:70%; background:linear-gradient(to top,#6633FF,#9933FF); opacity:0.8; border-radius:3px 3px 0 0;"></div>
+                        <span style="font-size:9px; color:#4A6480;">Cu</span>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                        <div style="width:100%; height:85%; background:linear-gradient(to top,#6633FF,#9933FF); opacity:0.8; border-radius:3px 3px 0 0;"></div>
+                        <span style="font-size:9px; color:#4A6480;">Ct</span>
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end;">
+                        <div style="width:100%; height:84%; background:linear-gradient(to top,#0066FF,#00B4FF); border-radius:3px 3px 0 0; box-shadow:0 0 10px rgba(0,180,255,0.5);"></div>
+                        <span style="font-size:9px; color:#00B4FF;">Pz</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="stats-row" style="margin-top:12px;">
+                <div class="stat-pill">
+                    <div class="value text-cyan">58.4K</div>
+                    <div class="unit">Adım</div>
+                </div>
+                <div class="stat-pill">
+                    <div class="value" style="color:var(--magenta);">1,240</div>
+                    <div class="unit">NEX</div>
+                </div>
+                <div class="stat-pill">
+                    <div class="value text-purple">28.1</div>
+                    <div class="unit">KM</div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="label" style="margin-top:24px;">Başarımlar</div>
+
+            <div class="card achieve-row">
+                <div class="achieve-icon">🏃</div>
+                <div class="flex-1">
+                    <div class="text-sm font-bold text-white">Maratoncu</div>
+                    <div class="text-xs text-dim">10K adım x 30 gün</div>
+                    <div style="height:3px; background:rgba(255,255,255,0.06); border-radius:2px; margin-top:8px; overflow:hidden;">
+                        <div style="height:100%; width:72%; background:linear-gradient(90deg,var(--cyan),var(--magenta)); border-radius:2px;"></div>
+                    </div>
+                </div>
+                <button class="buy-btn primary">+500</button>
+            </div>
+
+            <div class="card achieve-row">
+                <div class="achieve-icon" style="background:rgba(204,0,255,0.1);">🔥</div>
+                <div class="flex-1">
+                    <div class="text-sm font-bold text-white">Ateş Kesilmiyor</div>
+                    <div class="text-xs text-dim">30 günlük seri</div>
+                    <div style="height:3px; background:rgba(255,255,255,0.06); border-radius:2px; margin-top:8px; overflow:hidden;">
+                        <div style="height:100%; width:40%; background:linear(90deg,var(--cyan),var(--magenta)); border-radius:2px;"></div>
+                    </div>
+                </div>
+                <button class="buy-btn secondary">Kilitli</button>
+            </div>
+
+            <div class="card achieve-row">
+                <div class="achieve-icon" style="background:rgba(0,180,255,0.1);">⚡</div>
+                <div class="flex-1">
+                    <div class="text-sm font-bold text-white">Hız Ustası</div>
+                    <div class="text-xs text-dim">5 gün üst üste 12K</div>
+                    <div style="height:3px; background:rgba(255,255,255,0.06); border-radius:2px; margin-top:8px; overflow:hidden;">
+                        <div style="height:100%; width:60%; background:linear-gradient(90deg,var(--cyan),var(--magenta)); border-radius:2px;"></div>
+                    </div>
+                </div>
+                <button class="buy-btn primary">+750</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: MARKET -->
+        <div class="screen" id="screen2">
+            <div class="flex justify-between items-end mb-4" style="margin-top:30px;">
+                <div>
+                    <div class="title-lg">Market</div>
+                    <div class="label">Gücünü artır</div>
+                </div>
+                <div class="card" style="padding:6px 12px;">
+                    <span class="number-display text-xs" style="color:var(--magenta);">2,458 NEX</span>
+                </div>
+            </div>
+
+            <!-- Premium -->
+            <div class="card premium-card" style="margin-top:20px;">
+                <div class="premium-icon">👑</div>
+                <div class="title-md mb-1">Premium Üyelik</div>
+                <div class="text-xs text-dim mb-3">Sınırsız 2x Boost + Özel Rozetler</div>
+                <div class="number-display text-magenta mb-3">299 NEX <span class="text-xs text-dim">/ay</span></div>
+                <button class="buy-btn primary w-full" style="padding:12px;">Hemen Yükselt</button>
+            </div>
+
+            <!-- Boosts -->
+            <div class="label" style="margin-top:20px;">Güçlendiriciler</div>
+
+            <div class="card market-item">
+                <div class="market-icon" style="background:linear-gradient(135deg,var(--cyan),var(--cyan-dark));box-shadow:0 0 15px rgba(0,180,255,0.3);">⚡</div>
+                <div class="flex-1">
+                    <div class="text-sm font-bold text-white">2X Boost</div>
+                    <div class="text-xs text-dim">1 saat 2x token</div>
+                    <div class="number-display text-cyan mt-1">99 NEX</div>
+                </div>
+                <button class="buy-btn primary">Satın Al</button>
+            </div>
+
+            <div class="card market-item">
+                <div class="market-icon" style="background:linear-gradient(135deg,var(--purple),var(--magenta));box-shadow:0 0 15px rgba(204,0,255,0.3);">🚀</div>
+                <div class="flex-1">
+                    <div class="text-sm font-bold text-white">3X Boost</div>
+                    <div class="text-xs text-dim">2 saat 3x token</div>
+                    <div class="number-display text-magenta mt-1">249 NEX</div>
+                </div>
+                <button class="buy-btn primary">Satın Al</button>
+            </div>
+
+            <div class="card market-item">
+                <div class="market-icon" style="background:linear-gradient(135deg,var(--purple-dark),var(--purple));box-shadow:0 0 15px rgba(102,51,255,0.3);">🤖</div>
+                <div class="flex-1">
+                    <div class="text-sm font-bold text-white">Oto-Adım</div>
+                    <div class="text-xs text-dim">24 saat arka planda</div>
+                    <div class="number-display text-purple mt-1">499 NEX</div>
+                </div>
+                <button class="buy-btn primary">Satın Al</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: PROFILE -->
+        <div class="screen" id="screen3">
+            <div class="profile-header">
+                <div class="avatar-ring">
+                    <div class="avatar-inner">👤</div>
+                </div>
+                <div class="flex-1">
+                    <div class="title-md">Alex Runner</div>
+                    <div class="text-xs text-dim">@alex_runner</div>
+                    <div class="flex gap-2 mt-2">
+                        <span class="badge badge-cyan">LVL 12</span>
+                        <span class="badge badge-purple">Adım Ustası</span>
+                    </div>
+
+                    <!-- EXP Bar for next level -->
+                    <div style="margin-top:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+                            <span style="font-size:8px; color:#4A6480; text-transform:uppercase; letter-spacing:0.08em;">Sonraki Seviye</span>
+                            <span style="font-size:10px; color:#00B4FF; font-weight:700;">7,500 / 10,000</span>
+                        </div>
+                        <div style="height:4px; background:rgba(255,255,255,0.06); border-radius:2px; overflow:hidden;">
+                            <div style="height:100%; width:75%; background:linear-gradient(90deg,#0066FF,#00B4FF); border-radius:2px; box-shadow:0 0 8px rgba(0,180,255,0.4);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-pill">
+                    <div class="value text-cyan">1.2M</div>
+                    <div class="unit">Adım</div>
+                </div>
+                <div class="stat-pill">
+                    <div class="value" style="color:var(--magenta);">45K</div>
+                    <div class="unit">NEX</div>
+                </div>
+                <div class="stat-pill">
+                    <div class="value text-purple">#42</div>
+                    <div class="unit">Sıra</div>
+                </div>
+            </div>
+
+            <!-- Leaderboard -->
+            <div class="label" style="margin-top:20px;">Haftalık Sıralama</div>
+            <div class="card" style="padding:16px; margin-top:8px;">
+                <div class="podium">
+                    <div class="podium-item">
+                        <div class="podium-avatar silver" style="background:rgba(192,192,192,0.1);">🥈</div>
+                        <span class="text-xs text-white">Maria</span>
+                        <span class="text-xs text-dim font-mono">98.5K</span>
+                    </div>
+                    <div class="podium-item">
+                        <div class="podium-avatar gold" style="background:rgba(255,215,0,0.15);">👑</div>
+                        <span class="text-xs text-white font-bold">John</span>
+                        <span class="text-xs font-mono" style="color:#FFD700;">125K</span>
+                    </div>
+                    <div class="podium-item">
+                        <div class="podium-avatar bronze" style="background:rgba(205,127,50,0.1);">🥉</div>
+                        <span class="text-xs text-white">Mike</span>
+                        <span class="text-xs text-dim font-mono">87.2K</span>
+                    </div>
+                </div>
+
+                <div class="lb-row">
+                    <span class="number-display text-dim" style="width:24px;">4</span>
+                    <div style="width:32px;height:32px;border-radius:50%;background:rgba(153,51,255,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;">S</div>
+                    <div class="flex-1">
+                        <div class="text-sm text-white">Sarah</div>
+                        <div class="text-xs text-dim">Lvl 15</div>
+                    </div>
+                    <span class="number-display text-xs" style="color:var(--text-dim);">76.4K</span>
+                </div>
+
+                <div class="lb-row you">
+                    <span class="number-display text-purple" style="width:24px;">42</span>
+                    <div style="width:32px;height:32px;border-radius:50%;background:rgba(102,51,255,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;">👤</div>
+                    <div class="flex-1">
+                        <div class="text-sm text-white">Sen</div>
+                        
+                    </div>
+                    <span class="number-display text-xs text-magenta">58.2K</span>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="label" style="margin-top:20px;">Ayarlar</div>
+            <div class="card" style="margin-top:8px;">
+                <div class="flex justify-between items-center" style="padding:14px 16px; border-bottom:1px solid var(--glass-border);">
+                    <div class="flex items-center gap-3">
+                        <div style="width:32px;height:32px;border-radius:8px;background:rgba(0,180,255,0.1);display:flex;align-items:center;justify-content:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2">
+                                <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                            </svg>
+                        </div>
+                        <span class="text-sm text-white">Bildirimler</span>
+                    </div>
+                    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+                <div class="flex justify-between items-center" style="padding:14px 16px; border-bottom:1px solid var(--glass-border);">
+                    <div class="flex items-center gap-3">
+                        <div style="width:32px;height:32px;border-radius:8px;background:rgba(0,180,255,0.1);display:flex;align-items:center;justify-content:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2">
+                                <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <span class="text-sm text-white">Arka Planda Çalış</span>
+                    </div>
+                    <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+                </div>
+                <div class="flex justify-between items-center" style="padding:14px 16px;">
+                    <div class="flex items-center gap-3">
+                        <div style="width:32px;height:32px;border-radius:8px;background:rgba(204,0,255,0.1);display:flex;align-items:center;justify-content:center;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" stroke-width="2">
+                                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </div>
+                        <span class="text-sm text-white">Sağlık Entegrasyonu</span>
+                    </div>
+                    <div class="toggle" onclick="this.classList.toggle('on')"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modals -->
+<div class="modal" id="modal-convert" onclick="closeModal(event,'convert')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <div class="text-center mb-4">
+            <div style="width:48px;height:48px;margin:0 auto 12px;border-radius:14px;background:linear-gradient(135deg,var(--purple-dark),var(--cyan));display:flex;align-items:center;justify-content:center;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+                </svg>
+            </div>
+            <div class="title-md">Dönüştür</div>
+        </div>
+        <div class="card" style="padding:14px; margin-bottom:12px;">
+            <div class="label mb-1">AdımCoin</div>
+            <div class="number-display text-lg text-white">84,320</div>
+        </div>
+        <div class="text-center text-xs text-dim mb-3">10 AdımCoin = 1 NEX</div>
+        <div class="card" style="padding:14px; margin-bottom:16px; background:rgba(204,0,255,0.05); border-color:rgba(204,0,255,0.2);">
+            <div class="label mb-1" style="color:var(--magenta);">Alınacak NEX</div>
+            <div class="number-display text-lg" style="color:var(--magenta);">8,422</div>
+        </div>
+        <button class="buy-btn primary w-full" style="padding:12px; margin-bottom:8px;" onclick="closeModalDirect('convert')">Dönüştür</button>
+        <button class="buy-btn secondary w-full" style="padding:12px;" onclick="closeModalDirect('convert')">İptal</button>
+    </div>
+</div>
+
+<div class="modal" id="modal-boost" onclick="closeModal(event,'boost')">
+    <div class="modal-box text-center" onclick="event.stopPropagation()">
+        <div style="width:64px;height:64px;margin:0 auto 16px;border-radius:20px;background:linear-gradient(135deg,var(--cyan),var(--cyan-dark));display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 0 30px rgba(0,180,255,0.4);">⚡</div>
+        <div class="title-md mb-2">2X Boost Aktif!</div>
+        <div class="text-xs text-dim mb-4">1 saat boyunca tüm adımların 2x token kazandıracak</div>
+        <div class="card" style="padding:14px; margin-bottom:16px;">
+            <div class="flex justify-between text-xs mb-2">
+                <span class="text-dim">Kalan Süre</span>
+                <span class="text-white font-bold">59:59</span>
+            </div>
+            <div class="progress-bar" style="margin:0;">
+                <div class="progress-fill" style="width:100%;"></div>
+            </div>
+        </div>
+        <button class="buy-btn primary w-full" style="padding:12px;" onclick="closeModalDirect('boost')">Harika!</button>
+    </div>
+</div>
+
+<script>
+let currentScreen = 0;
+
+function navigate(index) {
+    // Update nav orbs
+    document.querySelectorAll('.nav-orb').forEach((orb, i) => {
+        orb.classList.remove('active');
+        if(i === index) orb.classList.add('active');
+    });
+
+    // Move indicator line
+    const orb = document.querySelector(`.nav-orb[data-index="${index}"]`);
+    const line = document.getElementById('activeLine');
+    const sidebar = document.getElementById('navSidebar');
+
+    const orbRect = orb.getBoundingClientRect();
+    const sidebarRect = sidebar.getBoundingClientRect();
+
+    // Calculate relative position within the sidebar
+    const relativeTop = orbRect.top - sidebarRect.top + (orbRect.height / 2);
+    const sidebarTop = sidebarRect.top - document.querySelector('.frame').getBoundingClientRect().top;
+
+    // Center the line on the orb
+    const lineTop = sidebarTop + relativeTop;
+    line.style.top = lineTop + 'px';
+
+    // Switch screens
+    document.querySelectorAll('.screen').forEach((screen, i) => {
+        screen.classList.remove('active');
+        if(i === index) {
+            setTimeout(() => screen.classList.add('active'), 50);
+        }
+    });
+
+    currentScreen = index;
+}
+
+function showModal(type) {
+    document.getElementById('modal-' + type).classList.add('active');
+}
+
+function closeModal(event, type) {
+    if(event.target === event.currentTarget) {
+        document.getElementById('modal-' + type).classList.remove('active');
+    }
+}
+
+function closeModalDirect(type) {
+    document.getElementById('modal-' + type).classList.remove('active');
+}
+
+// Clock
+function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('clock').textContent = h + ':' + m;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Step simulation
+let steps = 8432;
+const target = 10000;
+
+setInterval(() => {
+    if(Math.random() > 0.6) {
+        steps += Math.floor(Math.random() * 3) + 1;
+        const pct = Math.min((steps / target) * 100, 100);
+        const left = Math.max(0, target - steps);
+
+        document.getElementById('stepCount').textContent = steps.toLocaleString('tr-TR');
+        document.getElementById('stepsLeft').textContent = left.toLocaleString('tr-TR') + ' adım kaldı';
+        document.getElementById('progressFill').style.width = pct + '%';
+
+        // Update ring progress
+        const ring = document.querySelector('.step-ring .progress');
+        if(ring) {
+            ring.style.strokeDashoffset = 565 - (565 * pct) / 100;
+        }
+    }
+}, 5000);
+
+// Initialize indicator position
+setTimeout(() => navigate(0), 100);
+</script>
+
+</body>
+</html>

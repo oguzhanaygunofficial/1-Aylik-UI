@@ -1,0 +1,124 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+
+YAYIN KEŞİF SİSTEMİ
+├── 3 Ana Tab (Keşfet, Arkadaşlar, Takip)
+├── VIP Üyeler Horizontal Scroll (10 profil, gradient ring)
+├── Kategori Filtreleme (8 kategori: Oyun, Müzik, Sohbet, Sanat, Spor, Teknoloji, Yemek, Eğitim)
+├── Popüler Yayınlar Spotlight List (sıralama, izleyici sayısı, süre)
+└── Yeni Başlayanlar 3D Carousel (5 kart, perspective transform)
+SOSYAL YAYIN ÖZELLİKLERİ
+├── Arkadaşlar Yayında Grid (2 sütun, 7+ kart + keşfet butonu)
+├── Yayın İzleyen Arkadaşlar Story Ring (çift katmanlı görsel + avatar overlay)
+├── Takip Ettiklerin Canlıda (avatar wrap, canlı indikatör)
+└── Yakında Yayın Açacak (zamanlayıcı, hatırlatma)
+YAYIN İZLEME & ETKİLEŞİM
+├── Full Screen Watch Overlay (arka plan, dim overlay, gradient)
+├── Canlı Sohbet (bubble mesajlar, avatar, kullanıcı adı renkli)
+├── Token Gönderme Sistemi (animasyonlu yükselen emojiler)
+├── Beğeni Sistemi (kalp ikonu, sayaç, toggle state)
+└── Paylaş & Raporlama (action buttons)
+YAYIN YÖNETİMİ
+├── Go Live Overlay (kamera önizleme, arka/ön kamera flip)
+├── Yayın Başlığı Input (icon + text field)
+├── Katılım Kısıtlama Toggle (checkbox, kilit ikonu)
+└── Yayını Başlat Butonu (gradient, büyük CTA)
+GEÇMİŞ & STALK ÖZELLİKLERİ
+├── Yayın Geçmişi Listesi (tarih, süre, kaçırıldı badge)
+├── Geçmiş Avatar Gösterimi (opacity düşük, border)
+├── Missed Yayın Vurgulama (kırmızı border, badge)
+└── Tüm Geçmiş Overlay (scrollable liste)
+NAVİGASYON & ERİŞİM
+├── Bottom Navigation (5 ikon: Ana Sayfa, Keşfet, Yayın Aç, Ara, Profil)
+├── Tab Indicator (animated underline, cubic-bezier geçiş)
+├── Swipe Gesture Desteği (touchstart/touchend)
+└── Overlay Yönetimi (z-index hierarchy: 700-850)
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+FRAME & CONTAINER
+├── iPhone Frame (402x874px, 55px border-radius, 12px padding)
+├── Dynamic Island (126x37px, saat + kamera simülasyonu)
+├── Side Buttons (volume up/down, action, power - CSS pseudo)
+├── Screen Container (border-radius: 47px, overflow hidden)
+└── App Shell (flex column, padding-top: 60px)
+TİPOGRAFİ SİSTEMİ
+├── Space Grotesk (body, 400-700 weight, button text)
+├── Syne (display, başlıklar, 700-800 weight)
+├── Font Scale: 9px (badge) - 26px (header title)
+└── Gradient Text (background-clip: text, fill transparent)
+GLASSMORPHISM & SURFACE
+├── --surface: rgba(255,255,255,0.045)
+├── --surface2: rgba(255,255,255,0.07)
+├── --border: rgba(255,255,255,0.08)
+├── Backdrop-filter: blur (8px-20px range)
+└── Gradient Overlays (linear-gradient to bottom, transparent to black)
+KART & LISTE BİLEŞENLERİ
+├── Spotlight Card (54x68px thumbnail, live bar, rank badge)
+├── Senin İçin Card (200px height, full bleed image, gradient overlay)
+├── Friends Grid Card (220px height, 2-col grid, live dot)
+├── VIP Item (66px ring, gradient border, avatar center)
+└── History Item (flex row, icon box, avatar wrap)
+3D CAROUSEL SİSTEMİ
+├── Perspective Container (1000px perspective)
+├── Transform Style: preserve-3d
+├── Card States: active (scale 1), side (scale 0.85), far (scale 0.7)
+├── Glow Back Effect (radial-gradient, sadece active kartta)
+└── Navigation: prev/next buttons + dot indicators
+INTERAKTİF ELEMENTLER
+├── Tab Buttons (active state, indicator animation)
+├── Icon Buttons (38px, border-radius 12px, hover states)
+├── Gradient Buttons (primary CTA, shadow effects)
+├── Toggle Switch (checkbox simulation, on/off states)
+└── Chip/Filter Buttons (active: cyan border + bg)
+OVERLAY Mimarisi
+├── all-overlay (z-index: 700, full screen, slide up)
+├── friends-all-overlay (z-index: 700, friend specific)
+├── watch-overlay (z-index: 800, video player simulation)
+└── go-live-overlay (z-index: 850, camera preview)
+ANİMASYON & GEÇİŞLER
+├── Tab Switch (translateX, 300ms, cubic-bezier)
+├── Card Hover (transform: translateY, scale)
+├── Pulse Animation (live dot, 1.4s ease-in-out infinite)
+├── Token Float (translateY -170px, 1.8s ease-out)
+└── Camera Flip (rotateY 180deg, 350ms)
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+
+PRIMARY GRADIENT (Brand)
+Cyan              : #00C0FF  (Ana vurgu, canlı indikatör, başlık gradyanı)
+Blue              : #0066FF  (Ara geçiş tonu)
+Purple            : #6633FF  (Marka moru, gradyan ortası)
+Magenta           : #CC00FF  (Derin vurgu, gradyan bitişi)
+Pink              : #FF33FF  (Neon vurgu, glow efektleri)
+
+GRADIENT TANIMLARI
+grad-main         : linear-gradient(135deg, #00C0FF 0%, #6633FF 55%, #CC00FF 100%)
+grad-subtle       : linear-gradient(135deg, rgba(0,192,255,.15) 0%, rgba(102,51,255,.15) 100%)
+vip-ring          : linear-gradient(135deg, #00d4ff 0%, #7b2cbf 50%, #ff006e 100%)
+
+ARKA PLAN
+bg                : #08080E  (Ana arka plan, derin siyah-mavi)
+surface           : rgba(255,255,255,0.045)  (Kart yüzeyleri)
+surface2          : rgba(255,255,255,0.07)   (Vurgulu yüzeyler)
+border            : rgba(255,255,255,0.08)   (İnce borderlar)
+
+METİN RENKLERİ
+text-primary      : #FFFFFF  (Beyaz, ana metin)
+text-secondary    : rgba(255,255,255,0.5)   (Gri, ikincil metin)
+text-muted        : rgba(255,255,255,0.3)   (Soluk, hint text)
+
+KATEGORİ RENKLERİ (Category Cards)
+Oyun              : linear-gradient(180deg, #0a2f3a 0%, #051820 100%) + #00c8ff icon
+Müzik             : linear-gradient(180deg, #3a0a3a 0%, #200520 100%) + #e600ff icon
+Sohbet            : linear-gradient(180deg, #3a1528 0%, #200a18 100%) + #ff3399 icon
+Sanat             : linear-gradient(180deg, #0a1a3a 0%, #050d20 100%) + #3380ff icon
+Spor              : linear-gradient(180deg, #0a3a1a 0%, #051a0d 100%) + #33ff80 icon
+Teknoloji         : linear-gradient(180deg, #15152a 0%, #0a0a18 100%) + #8080ff icon
+Yemek             : linear-gradient(180deg, #3a280a 0%, #201805 100%) + #ffaa33 icon
+Eğitim            : linear-gradient(180deg, #280a3a 0%, #180520 100%) + #bb33ff icon
+
+SEMANTİK & DURUM RENKLERİ
+Live Red          : #ff003c  (Canlı yayın indikatörü, pulse animasyonlu)
+Live Pink         : rgba(255,0,80,.85)  (Live pill background)
+Missed Badge      : #ff0040  (Kaçırıldı badge, kırmızı vurgu)
+Success/Token     : #00C0FF  (Token gönderme, başarı durumları)
+================================================================================ SONUÇ: Nexlify Canlı Yayın, glassmorphism ve neon gradient prensipleriyle tasarlanmış, 3D carousel, VIP halka sistemi ve sosyal yayın keşfi odaklı, 5 katmanlı overlay mimarisine sahip, mobil-first bir live streaming uygulamasıdır.

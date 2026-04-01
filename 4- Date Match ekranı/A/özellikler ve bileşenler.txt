@@ -1,0 +1,148 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+
+Keşif & Eşleşme Sistemi
+├── Tinder-style kart kaydırma (swipe) mekanizması
+├── Çift tıklama ile beğenme (double-tap heart)
+├── Boost modu ile görünürlük artırma
+├── Akıllı fotoğraf seçimi (en çok beğenilen)
+├── Geri alma (undo) fonksiyonu
+├── Fotoğraf/video gezinme (dikey dot navigasyon)
+└── Uyum skoru gösterimi (compatibility badge)
+Etkileşim Mekanizmaları
+├── Standart beğenme (like)
+├── Geçme (nope/pass)
+├── Süper beğenme (super like)
+├── Hediye gönderme (gift system)
+├── Süper mesaj (eşleşmeden önce mesaj)
+├── Sesli mesaj gönderme
+└── AI destekli sohbet açılışları
+Eşleşme & Sohbet
+├── Eşleşme animasyonu ve modal
+├── Anlık mesajlaşma
+├── Sesli mesaj entegrasyonu
+├── Kaybolan mesaj modu (disappearing)
+├── Hediye kilidi ile 3 mesaj özgürlüğü
+├── Oyun entegrasyonu (Bu mu Bu mu?)
+└── Randevu öneri butonu
+Profil & Keşif
+├── Detaylı profil çekmecesi (drawer)
+├── Fotoğraf grid görünümü
+├── Hikaye bölümü
+├── Spotify anthem entegrasyonu
+├── Sesli not profil entegrasyonu
+├── Ortak arkadaş gösterimi
+├── Blind date modu (fotoğraf gizleme)
+└── İlgi alanları etiketleri
+Token & Ekonomi
+├── Token bakiyesi sistemi
+├── Boost satın alma
+├── Süper beğeni satın alma
+├── Hediye paketleri (Bronz/Gümüş/Altın/Elmas)
+└── Token satın alma butonu
+Topluluk (Hub)
+├── İlgi alanı bazlı topluluklar
+├── Kategori kartları (8 farklı tema)
+├── Üye sayısı gösterimi
+└── Topluluğa katılma fonksiyonu
+Sosyal Özellikler
+├── Beğenenleri görme (blur kilitli)
+├── Öncelikli beğenenler (priority likes)
+├── Yeni eşleşmeler listesi
+├── Sabitlenmiş mesajlar
+├── Çevrimiçi durum göstergesi
+└── Yazıyor... göstergesi
+Ayarlar & Tercihler
+├── Keşif ayarları (mesafe, yaş aralığı)
+├── Doğrulanmış profil filtresi
+├── Global mod
+├── Görünmez mod
+├── Bildirim ayarları
+└── Gizlilik ayarları
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+Navigasyon Bileşenleri
+├── Dock-style bottom navigation (5 tab)
+├── Merkez FAB (Floating Action Button) - Keşfet
+├── Badge sistemi (bildirim sayıları)
+├── Dynamic Island (iOS-style status bar)
+└── Geri butonu (chat screen)
+Kart & Profil Bileşenleri
+├── Profil kartı (stacked card layout)
+├── Fotoğraf stack (vertical carousel)
+├── Fotoğraf dot göstergeleri (dikey)
+├── Uyum rozeti (circular progress)
+├── Online durum göstergesi (pulse animasyon)
+├── Etiket/chip bileşeni
+└── Çekmece (drawer) header
+Buton & Aksiyonlar
+├── Aksiyon butonları (4'lü bar)
+├── Gradient butonlar
+├── Glassmorphism butonlar
+├── Toggle switch bileşeni
+├── Range slider (mesafe/yaş)
+└── Undo butonu (floating)
+Modal & Overlay
+├── Eşleşme modalı (full screen)
+├── Süper mesaj modalı (bottom sheet)
+├── Hediye modalı (bottom sheet)
+├── Ayarlar modalı (full screen)
+└── Pull-to-refresh göstergesi
+Input & Form
+├── Chat input alanı
+├── Mesaj composer (match modal)
+├── Textarea (süper mesaj)
+└── Ses kayıt butonu (hold-to-record)
+Görsel & Medya
+├── Fotoğraf grid (2 sütun)
+├── Video entegrasyonu (autoplay)
+├── Albüm kapağı (Spotify anthem)
+├── Oynatma göstergesi (equalizer animasyon)
+└── Ses dalgası görselleştirme
+Bilgi & Durum
+├── Skeleton/loading state
+├── Boş durum illüstrasyonları
+├── Boş liste mesajları
+├── Sistem mesajları (gift notification)
+└── Uyarı mesajları (limit warning)
+Animasyon & Efektler
+├── Card swipe animasyonları
+├── Stamp overlay animasyonları
+├── Match modal animasyonları
+├── Pulse/glow efektler
+├── Gradient shimmer efektleri
+└── Parçacık sistemi (match celebration)
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+
+Ana Renkler (Primary)
+--bg-primary       : #0A0A1F              (Uygulama arka planı - koyu lacivert)
+--accent-violet    : #8B5CF6              (Ana vurgu rengi - mor)
+--accent-magenta   : #EC4899              (İkincil vurgu - pembe/magenta)
+--accent-cyan      : #22D3EE              (Üçüncül vurgu - turkuaz/cyan)
+--accent-gold      : #F59E0B              (Token/ödül rengi - altın)
+
+Cam Efekti (Glassmorphism)
+--glass-bg         : rgba(255,255,255,0.03) (Cam arka plan)
+--glass-border     : rgba(255,255,255,0.08) (Cam kenarlık)
+Glass blur         : blur(30px) saturate(180%) (Blur efekti değeri)
+
+Durum Renkleri
+Online yeşil       : #10B981              (Çevrimiçi durum göstergesi)
+Nope kırmızı       : #FF0040              (Geçme/ret eylemi)
+Uyarı turuncu      : #F59E0B / #D97706    (Limit uyarıları)
+Okundu mavi        : #8B5CF6              (Mesaj okundu göstergesi)
+
+Nötr Tonlar
+Beyaz              : #FFFFFF              (Ana metin rengi)
+Gri-300            : #E5E7EB              (İkincil metin)
+Gri-400            : #9CA3AF              (Pasif metin/placeholder)
+Gri-500            : #6B7280              (Etiketler/altyazılar)
+Koyu yüzey         : #1A1A2E              (Kart yüzeyleri)
+
+Hediye Paketi Renkleri
+Bronz              : #CD7F32 / #8B4513    (Bronz paket gradyan)
+Gümüş              : #C0C0C0 / #808080    (Gümüş paket gradyan)
+Altın              : #F59E0B / #D97706    (Altın paket gradyan)
+Elmas              : #B9F2FF / #00CED1    (Elmas paket gradyan)
+================================================================================
+SONUÇ: Nexlify DateMatch, modern dating app standartlarına uygun glassmorphism UI, token ekonomisi ve çok katmanlı etkileşim sistemleriyle donatılmış kapsamlı bir mobil web uygulamasıdır.

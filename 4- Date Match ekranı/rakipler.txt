@@ -1,0 +1,37 @@
+--------------------------------------------------------------------------------------
+
+
+1. Hinge Tarzı "Harekete Geçirici" (Interaction) Yaklaşımı
+
+Hinge, "silinmek için tasarlandı" mottosuyla, eşleşme anında kullanıcıyı boş bırakmıyor.
+Onlarda ne var?: "Convo Starters" (AI destekli). 2026 itibarıyla Hinge, AI kullanarak kullanıcının profiline göre 3 farklı mesaj önerisi sunuyor.
+2026 Güncellemesi: "Video Prompt" entegrasyonu; kullanıcılar artık profillerindeki bir soruya 5 saniyelik video yanıtlar ekleyebiliyor ve eşleşme anında bu video otomatik oynuyor.
+
+Senin İçin Olmazsa Olmaz: "Buzkıran" (Icebreaker) Butonu. Hinge bunu yapıyor çünkü kullanıcıların %70'i "selam"dan sonra tıkanıyor. Eğer bu butonu koymazsan, eşleşmelerin çoğu "ölü eşleşme" olarak kalır ve kullanıcı uygulamadan soğur.
+
+
+--------------------------------------------------------------------------------------
+
+
+2. Bumble Tarzı "Kontrol ve Hız" Yaklaşımı
+
+Bumble, kadınların ilk adımı atması kuralını esneterek "Opening Moves" özelliğini getirdi.
+Onlarda ne var?: Profilin en üstünde sabitlenen bir soru. Eşleşme ekranında bu soru direkt kullanıcının karşısına çıkıyor. Ayrıca "Suggest a Date" (Randevu Öner) butonunu test ediyorlar.
+2026 Güncellemesi: "Deception Detector 2.0"; AI tabanlı yüz doğrulama ve gerçek zamanlı lokasyon bazlı "Safety Check" özelliği ile güvenli buluşma rotaları önerisi.
+
+Senin İçin Olmazsa Olmaz: "Görüntülü/Sesli Randevu Planla" Butonu. 2026'da insanlar haftalarca yazışmak istemiyor. Eşleşme ekranında "Hadi 3 dakikalık bir sesli tanışma yapalım" diyen bir buton, kullanıcıyı tutma (retention) oranını %40 artırır.
+
+
+--------------------------------------------------------------------------------------
+
+
+3. Tinder Tarzı "Oyunlaştırma ve Para Kazanma" Yaklaşımı
+
+Tinder, dopamin ve mikro-ödemelerin kralıdır.
+Onlarda ne var?: "Super Message" ve "Boost". Eşleşme ekranında veya hemen sonrasında "mesajını en üste taşı" teklifleri sunuyorlar. Ayrıca "Hediye Gönder" gibi özelliklerle mikro-satış yapıyorlar.
+2026 Güncellemesi: "Select" üyeliğinin genişletilmesi; sadece onaylı ve yüksek skorlu kullanıcıların görebildiği ultra-premium bir eşleşme havuzu.
+
+Senin İçin Olmazsa Olmaz: "Virtual Gifts" (Sanal Hediyeler). Şirket tarafında para kazanmak istiyorsan, eşleşme anı en yüksek duygu anıdır. O an 1-2 dolarlık bir "dijital çiçek" veya "premium emoji" gönderme butonu, en kolay dönüşüm sağlayan yerdir.
+
+
+--------------------------------------------------------------------------------------

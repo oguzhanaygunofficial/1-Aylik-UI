@@ -1,0 +1,195 @@
+A. ÖZELLİK LİSTESİ (İşlevsel Analiz)
+KULLANICI ETKİLEŞİM SİSTEMİ (Swipe & Discovery)
+├── Yatay Swipe Hareketleri (Sola/Sağa)
+├── Dokunmatik/Mouse Drag Algılama
+├── Swipe Geri Bildirim Animasyonları
+├── Fotoğraf Galerisi Navigasyonu (Sol/Sağ Tıklama)
+└── Geri Alma (Undo) Mekanizması
+PROFİL KEŞİF SİSTEMİ
+├── Tam Ekran Fotoğraf Görüntüleme
+├── Çoklu Fotoğraf Desteği (5+ fotoğraf)
+├── Dikey Scroll ile Detay Paneli
+├── Biyografi ve Kişisel Bilgiler
+├── İlgi Alanı Etiketleri (Tags)
+└── Tanışma Soruları (Q&A Format)
+EŞLEŞME YÖNETİMİ
+├── Beğenme (Like) Sistemi
+├── Geçme (Pass) Sistemi
+├── Süper Beğeni (Super Like) - Token Tabanlı
+├── Eşleşme Anında Full-Screen Overlay
+├── AI Destekli Mesaj Önerileri
+└── Eşleşme Sonrası Hızlı Sohbet Başlatma
+MESAJLAŞMA SİSTEMİ (Chat)
+├── Gerçek Zamanlı Mesaj Balonları
+├── Mesaj Durum Göstergeleri (Gönderildi/Zaman)
+├── Hediye Mesaj Entegrasyonu
+├── Mesaj Limiti Kontrolü (3 Mesaj Kuralı)
+├── Bekleme Modu (Yanıt Bekleniyor)
+└── Otomatik Yanıt Sistemi (Simülasyon)
+EKONOMİ & TOKEN SİSTEMİ
+├── Token Bakiye Görüntüleme
+├── Süper Beğeni (30 Token)
+├── Premium Mesaj / Hediye (10-60 Token)
+├── Süper Mesaj (50 Token)
+├── Beğeni Kilidi Açma (80 Token)
+└── Geri Alma (Undo) (19 Token)
+MAĞAZA & MONETIZASYON
+├── Premium Üyelik (Datelify Plus)
+├── Özellik Paketleri (6 farklı paket)
+├── Token Satın Alma (3 paket)
+├── Boost Sistemi
+├── Gizli Mod
+└── Kim Beğendi Gösterimi
+FİLTRELEME SİSTEMİ
+├── Yaş Aralığı (Ücretsiz)
+├── Mesafe Filtresi (Ücretsiz)
+├── Boy Filtresi (Premium)
+├── Kilo Filtresi (Premium)
+└── İlişki Tipi Filtresi (Premium)
+TOPLULUK (HUB) ÖZELLİKLERİ
+├── İlgi Alanı Bazlı Topluluklar
+├── Üye Sayısı Görüntüleme
+├── Çevrimiçi Kullanıcı Sayısı
+└── Topluluğa Katılma Butonları
+KULLANICI PROFİL YÖNETİMİ
+├── Profil Düzenleme
+├── İstatistik Görüntüleme (Görüntülenme/Eşleşme)
+├── Token Bakiye Takibi
+├── Ayarlar Menüsü
+└── Çıkış Yapma
+EĞİTİM & ONBOARDING
+├── Tutorial Overlay (İlk Giriş)
+├── Swipe Hareket Eğitimi
+├── Aksiyon Butonları Tanıtımı
+└── Detay Paneli Keşif Rehberi
+================================================================================
+B. TEKNİK LİSTESİ (UI Bileşen Analizi)
+LAYOUT & CONTAINER BİLEŞENLERİ
+├── screen-* (5 ana ekran container)
+├── explore-wrap (Keşif ekranı wrapper)
+├── card-scroll-page (Dikey scroll container)
+├── swipe-layer (Yatay swipe katmanı)
+├── photo-section (Tam ekran fotoğraf alanı)
+├── detail-block (Profil detay bloğu)
+├── matches-wrap (Eşleşme listesi container)
+├── hub-scroll-c (Topluluk scroll container)
+└── profile-scroll-c (Profil scroll container)
+NAVİGASYON BİLEŞENLERİ
+├── pill-nav (Floating bottom navigation)
+├── pill-item (Navigasyon butonları - 3 adet)
+├── pill-dot (Bildirim noktası)
+├── explore-topbar (Üst navigasyon barı)
+├── status (iOS status bar simülasyonu)
+├── dynamic-island (Dynamic Island UI)
+└── scroll-hint-pill (Scroll indicator)
+KART & GÖRSEL BİLEŞENLER
+├── split-card (Ana profil kartı)
+├── filmstrip (Yatay eşleşme şeridi)
+├── film-card (Küçük profil kartı)
+├── film-avatar (Yuvarlak avatar container)
+├── match-photo-frame (Eşleşme fotoğraf çerçevesi)
+├── msg-ava (Mesaj avatarı)
+├── chat-ava-r (Chat header avatarı)
+└── mini-ava (Mesaj balonu mini avatar)
+BUTON & AKSIYON BİLEŞENLERİ
+├── action-btn (Ana aksiyon butonları - 3 tip)
+│   ├── action-btn.pass (Geç butonu)
+│   ├── action-btn.superlike (Süper beğeni)
+│   └── action-btn.like (Beğeni)
+├── float-btn (Yüzen aksiyon butonları)
+├── icon-btn-labeled (İkon butonları)
+├── icon-btn-profile (Profil avatar butonu)
+├── undo-btn (Geri alma butonu)
+├── send-btn (Mesaj gönderme)
+├── mcta-primary (Primary CTA)
+└── mcta-ghost (Ghost CTA)
+MODAL & OVERLAY BİLEŞENLERİ
+├── token-modal (Token işlemleri modalı)
+├── filter-modal (Filtre modalı)
+├── shop-modal (Mağaza modalı)
+├── likes-modal (Beğeni listesi modalı)
+├── undo-modal (Geri alma modalı)
+├── match-ov (Eşleşme overlay)
+├── tutorial-ov (Tutorial overlay)
+├── filter-sheet / shop-sheet (Bottom sheet)
+└── sheet-handle (Sheet handle bar)
+FORM & INPUT BİLEŞENLERİ
+├── chat-inp (Mesaj input)
+├── flt-slider (Filtre slider)
+├── match-inp-c (Eşleşme mesaj input)
+├── sheet-inp (Modal input)
+├── gift-grid (Hediye seçim grid)
+├── gift-item (Hediye kartı)
+└── flt-apply-btn (Filtre uygula)
+GERİ BİLDİRİM & BİLDİRİM BİLEŞENLERİ
+├── action-toast (Aksiyon bildirim toast)
+├── swipe-hint-left / swipe-hint-right (Swipe ipuçları)
+├── msg-badge (Okunmamış mesaj sayısı)
+├── typing-dots (Yazıyor animasyonu)
+├── pill-dot (Navigasyon bildirim noktası)
+├── flt-free-badge / flt-lock-badge (Filtre badgeleri)
+└── msg-limit-bar (Mesaj limit uyarısı)
+TİPOGRAFİ & METİN BİLEŞENLERİ
+├── app-wordmark (Uygulama logosu)
+├── split-name (Profil isim başlığı)
+├── page-title (Sayfa başlıkları)
+├── detail-bio (Biyografi metni)
+├── detail-tag (İlgi alanı etiketi)
+├── msg-preview (Mesaj önizleme)
+├── bbl (Mesaj balonu)
+└── ai-sug (AI öneri butonu)
+İSTATİSTİK & BİLGİ BİLEŞENLERİ
+├── profile-stats-row (Profil istatistikleri)
+├── pstat (İstatistik item)
+├── token-c (Token kartı)
+├── token-val-c (Token değer)
+├── match-compat-c (Uyum skoru)
+└── shop-token-item (Token paketi)
+EFEKT & GÖRSEL EFEKT BİLEŞENLERİ
+├── photo-top-grad / photo-bot-grad (Fotoğraf gradient)
+├── grain (Doku overlay)
+├── glass / glass-b (Glassmorphism değişkenleri)
+├── hub-bg-c (Topluluk arka plan)
+└── match-frame-gradient (Eşleşme gradient)
+================================================================================
+C. RENK PALETİ LİSTESİ (Design System Colors)
+
+TEMEL ARKA PLAN RENKLERİ
+--bg              : #08070F  (Ana arka plan - Gece siyahı)
+--bg2             : #0F0C1A  (İkincil arka plan - Koyu mor)
+
+MARKA RENKLERİ (Brand Colors)
+--primary         : #7C6FFF  (Ana marka rengi - Mor)
+--primary-s       : #9D93FF  (Açık mor - Soft vurgu)
+--accent          : #F06292  (Vurgu rengi - Pembe)
+--accent-s        : #F48FB1  (Açık pembe - Soft vurgu)
+
+DESTEKLEYİCİ RENKLER
+--violet          : #9B59FF  (Menekşe - İkincil vurgu)
+--teal            : #3DD9C5  (Turkuaz - Başarı/Online)
+--blue            : #7C6FFF  (Mavi-mor alias)
+--blue-soft       : #9D93FF  (Açık mavi-mor alias)
+
+YARDIMCI RENKLER (Utility)
+--text            : rgba(255,255,255,0.92)  (Ana metin)
+--muted           : rgba(255,255,255,0.38)  (İkincil metin)
+--subtle          : rgba(255,255,255,0.06)  (Hafif vurgu)
+
+GLASSMORPHISM RENKLERİ
+--glass           : rgba(255,255,255,0.045)  (Cam efekti)
+--glass-b         : rgba(255,255,255,0.08)   (Cam border)
+
+ESKİ/ALTERNATİF ALIASES
+--purple          : #F06292  (Pembe alias)
+--purple-d        : #C2185B  (Koyu pembe)
+--magenta         : #F48FB1  (Açık pembe alias)
+--pink            : #FCE4EC  (Açık pembe arka plan)
+--rose            : #E91E63  (Gül kırmızısı)
+
+EKONOMİ RENKLERİ (Token/Shop)
+Token Altın        : #f59e0b / #fbbf24  (Token rengi)
+Token Koyu         : #d97706  (Koyu altın)
+Başarı Yeşili      : #10b981  (Online/Onay)
+Hata Kırmızısı     : #ff6680 / #ff4560  (Geç/Çıkış)
+Süper Beğeni       : #fbbf24  (Altın sarısı)
+================================================================================ SONUÇ: Datelify, modern glassmorphism tasarım diliyle, token bazlı ekonomi sistemi entegre edilmiş, çoklu etkileşim modlarına sahip (swipe, mesaj, hediye) kapsamlı bir sosyal keşif uygulamasıdır. 5 ana ekran, 8 modal tipi, 17 animasyon ve 20+ renk değişkeniyle zengin bir UI/UX altyapısı sunar.

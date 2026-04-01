@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexlify StepCounter - Full Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Orbitron', 'monospace'],
+                    },
+                    colors: {
+                        nex: {
+                            dark: '#0A0A1F',
+                            darker: '#050510',
+                            purple: '#C026D3',
+                            magenta: '#FF00AA',
+                            cyan: '#00F0FF',
+                            gold: '#FFD700',
+                            green: '#39FF14',
+                            orange: '#FF6B35'
+                        }
+                    },
+                    animation: {
+                        'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'bounce-slight': 'bounceSlight 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'scale-in': 'scaleIn 0.3s ease-out',
+                        'glow-pulse': 'glowPulse 1.5s ease-in-out infinite',
+                        'boost-gold': 'boostGold 1s ease-in-out infinite',
+                        'boost-purple': 'boostPurple 1s ease-in-out infinite',
+                        'boost-cyan': 'boostCyan 1s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(192, 38, 211, 0.5), 0 0 40px rgba(192, 38, 211, 0.3)' },
+                            '50%': { boxShadow: '0 0 30px rgba(192, 38, 211, 0.8), 0 0 60px rgba(192, 38, 211, 0.5), 0 0 90px rgba(192, 38, 211, 0.3)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        },
+                        bounceSlight: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.9)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        glowPulse: {
+                            '0%, 100%': { filter: 'brightness(1)' },
+                            '50%': { filter: 'brightness(1.3)' }
+                        },
+                        boostGold: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(255, 215, 0, 0.5), inset 0 0 20px rgba(255, 215, 0, 0.2)' },
+                            '50%': { boxShadow: '0 0 40px rgba(255, 215, 0, 0.8), inset 0 0 30px rgba(255, 215, 0, 0.4)' }
+                        },
+                        boostPurple: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(192, 38, 211, 0.5), inset 0 0 20px rgba(192, 38, 211, 0.2)' },
+                            '50%': { boxShadow: '0 0 40px rgba(192, 38, 211, 0.8), inset 0 0 30px rgba(192, 38, 211, 0.4)' }
+                        },
+                        boostCyan: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(0, 240, 255, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.2)' },
+                            '50%': { boxShadow: '0 0 40px rgba(0, 240, 255, 0.8), inset 0 0 30px rgba(0, 240, 255, 0.4)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        body {
+            background: #000;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        
+        .ios-frame {
+            width: 390px;
+            height: 844px;
+            border-radius: 50px;
+            overflow: hidden;
+            position: relative;
+            background: #0A0A1F;
+            box-shadow: 
+                0 0 0 12px #1a1a1a,
+                0 0 0 14px #333,
+                0 25px 50px -12px rgba(0, 0, 0, 0.8),
+                0 0 100px rgba(192, 38, 211, 0.2);
+        }
+        
+        .dynamic-island {
+            position: absolute;
+            top: 11px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(192, 38, 211, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(192, 38, 211, 0.3);
+        }
+        
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-cyan {
+            background: rgba(0, 240, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+        }
+        
+        .neon-border {
+            box-shadow: 0 0 10px rgba(192, 38, 211, 0.5), inset 0 0 10px rgba(192, 38, 211, 0.2);
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-out;
+            background: #0A0A1F;
+            padding-top: 48px;
+        }
+        
+        .screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 95x;
+            background: linear-gradient(to top, rgba(10,10,31,0.98) 0%, rgba(10,10,31,0.9) 50%, transparent 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 100;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: 12px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: color 0.3s ease, filter 0.3s ease;
+            padding: 8px 0;
+            width: 72px;
+            border-radius: 16px;
+            position: relative;
+            color: #6b7280;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            background: linear-gradient(135deg, rgba(192,38,211,0.2) 0%, rgba(0,240,255,0.2) 100%);
+        }
+        
+        .nav-item:hover::before {
+            opacity: 1;
+        }
+        
+        .nav-item.active {
+            color: #C026D3;
+        }
+        
+        .nav-item.active::before {
+            opacity: 1;
+        }
+        
+        .nav-item.active svg {
+            filter: drop-shadow(0 0 8px rgba(192, 38, 211, 0.9));
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #C026D3 0%, #FF00AA 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a3e 0%, #0f0f2d 100%);
+            border: 1px solid rgba(192, 38, 211, 0.3);
+            border-radius: 28px;
+            padding: 28px;
+            width: 340px;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+        
+        .streak-day {
+            transition: all 0.3s ease;
+        }
+        
+        .streak-day.active {
+            background: linear-gradient(135deg, #C026D3 0%, #FF00AA 100%);
+            box-shadow: 0 0 20px rgba(192, 38, 211, 0.5);
+        }
+        
+        .streak-day.claimed {
+            background: rgba(192, 38, 211, 0.3);
+            border-color: rgba(192, 38, 211, 0.5);
+        }
+        
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: particleFloat 1s ease-out forwards;
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        .level-badge {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .rank-item {
+            transition: all 0.3s ease;
+        }
+        
+        .rank-item:hover {
+            background: rgba(255,255,255,0.05);
+            transform: translateX(5px);
+        }
+        
+        .boost-card {
+            background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(255,107,53,0.1) 100%);
+            border: 1px solid rgba(255,215,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .boost-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        .glow-text {
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+        
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        input:focus {
+            outline: none;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #C026D3 0%, #FF00AA 100%);
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+        }
+
+        .boost-ring {
+    position: absolute;
+    inset: -10px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: currentColor;
+    border-right-color: currentColor;
+    animation: spin 1s linear infinite;
+}
+
+.boost-ring-gold {
+    color: #FFD700;
+    filter: drop-shadow(0 0 10px #FFD700);
+}
+
+.boost-ring-purple {
+    color: #C026D3;
+    filter: drop-shadow(0 0 10px #C026D3);
+}
+
+.boost-ring-cyan {
+    color: #00F0FF;
+    filter: drop-shadow(0 0 10px #00F0FF);
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.boost-particles-ring {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+        
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .carousel-track {
+            display: flex;
+            transition: transform 0.3s ease;
+        }
+        
+        .carousel-item {
+            min-width: 140px;
+            margin-right: 12px;
+        }
+        
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        
+        .carousel-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .carousel-btn.prev {
+            left: 0;
+        }
+        
+        .carousel-btn.next {
+            right: 0;
+        }
+        
+        .achievement-locked {
+            opacity: 0.4;
+            filter: grayscale(1);
+        }
+        
+        .achievement-locked .achievement-btn {
+            pointer-events: none;
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.3);
+        }
+        
+        .step-counter-container {
+            position: relative;
+        }
+        
+        .active-boost-indicator {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        
+        .progress-glow-gold {
+            filter: drop-shadow(0 0 10px rgba(255,215,0,0.8));
+        }
+        
+        .progress-glow-purple {
+            filter: drop-shadow(0 0 10px rgba(192,38,211,0.8));
+        }
+        
+        .progress-glow-cyan {
+            filter: drop-shadow(0 0 10px rgba(0,240,255,0.8));
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ios-frame">
+        <!-- Dynamic Island -->
+        <div class="dynamic-island">
+            <span class="text-white text-sm font-semibold" id="island-clock">09:41</span>
+        </div>
+
+        <!-- Background Effects -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] bg-purple-600/20 rounded-full blur-[100px] animate-pulse"></div>
+            <div class="absolute bottom-[20%] right-[-10%] w-[250px] h-[250px] bg-cyan-500/10 rounded-full blur-[80px]"></div>
+            <div class="absolute top-[40%] left-[50%] transform -translate-x-1/2 w-[200px] h-[200px] bg-pink-500/10 rounded-full blur-[60px]"></div>
+        </div>
+
+        <!-- SCREEN 1: HOME (Main Dashboard) -->
+        <div class="screen active hide-scrollbar" id="screen-home">
+            <div class="relative min-h-full p-6 pb-24">
+                
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h1 class="text-white font-display text-2xl font-bold tracking-wider">NEXLIFY</h1>
+                        <p class="text-nex-cyan text-sm tracking-wide">Adım at, kazan.</p>
+                    </div>
+                    <button onclick="showInfoModal()" class="glass w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Level & Streak Banner -->
+                <div class="flex gap-3 mb-6">
+                    <div class="flex-1 glass-cyan rounded-2xl p-3 flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full level-badge flex items-center justify-center text-black font-bold text-lg">12</div>
+                        <div>
+                            <div class="text-white text-sm font-semibold">Seviye 12</div>
+                            <div class="text-xs text-gray-400">2,450 / 3,000 XP</div>
+                            <div class="w-24 h-1.5 bg-gray-700 rounded-full mt-1">
+                                <div class="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full" style="width: 82%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-cyan rounded-2xl p-3 flex items-center gap-3 cursor-pointer" onclick="showStreakModal()">
+                        <div class="text-3xl">🔥</div>
+                        <div>
+                            <div class="text-white text-sm font-semibold">12 Gün</div>
+                            <div class="text-xs text-orange-400">Seri Devam Ediyor</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Token Balance Card -->
+                <div class="glass-strong rounded-3xl p-5 mb-6 relative overflow-hidden group cursor-pointer transform transition-transform active:scale-95" onclick="showTokenDetails()">
+                    <div class="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-yellow-400/10 rounded-full blur-3xl"></div>
+                    <div class="relative">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-purple-300 text-sm font-medium">Bakiyeniz</span>
+                            <span class="text-xs text-nex-green flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                                +12.5%
+                            </span>
+                        </div>
+                        <!-- AdımCoin row -->
+                        <div class="flex items-baseline gap-2 mb-1">
+                            <span class="text-2xl font-bold text-white tracking-tight" id="adimcoin-balance">84,320</span>
+                            <span class="text-cyan-400 font-semibold text-sm">AdımCoin</span>
+                        </div>
+                        <!-- Arrow -->
+                        <div class="flex items-center gap-2 mb-1 pl-1">
+                            <svg class="w-4 h-4 text-nex-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            <span class="text-gray-500 text-xs">dönüştürülünce</span>
+                        </div>
+                        <!-- NEX row -->
+                        <div class="flex items-baseline gap-2 mb-3">
+                            <span class="text-3xl font-bold text-white tracking-tight" id="token-balance">2,458.50</span>
+                            <span class="text-nex-gold font-semibold text-lg">NEX</span>
+                        </div>
+                        <button class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2.5 rounded-xl text-sm font-semibold hover:opacity-90 transition shadow-lg shadow-purple-500/30" onclick="event.stopPropagation(); showConvertModal()">
+                            Dönüştür ve Çek
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Step Counter -->
+<div class="flex flex-col items-center mb-8 step-counter-container">
+    <div class="relative w-64 h-64 mb-2 cursor-pointer select-none" id="step-circle-container" onclick="addSteps()">
+        <!-- Boost Ring (görünür when active) -->
+        <div id="boost-ring" class="boost-ring hidden"></div>
+        
+        <!-- Outer Glow Rings -->
+        <div class="absolute inset-0 rounded-full border-2 border-purple-500/20 animate-pulse" id="outer-ring"></div>
+        <div class="absolute inset-4 rounded-full border border-cyan-500/30 animate-spin-slow" id="inner-ring"></div>
+        
+        <!-- Boost Particles Ring -->
+        <div id="boost-particles-ring" class="boost-particles-ring"></div>
+                        
+                        <!-- SVG Progress -->
+                        <svg class="w-full h-full progress-ring" viewBox="0 0 120 120" id="progress-svg">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#C026D3"/>
+                                    <stop offset="100%" style="stop-color:#00F0FF"/>
+                                </linearGradient>
+                                <linearGradient id="gradient-gold" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#FFD700"/>
+                                    <stop offset="100%" style="stop-color:#FFA500"/>
+                                </linearGradient>
+                                <linearGradient id="gradient-cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#00F0FF"/>
+                                    <stop offset="100%" style="stop-color:#0099FF"/>
+                                </linearGradient>
+                            </defs>
+                            <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
+                            <circle id="progress-circle" class="progress-ring-circle" cx="60" cy="60" r="54" fill="none" stroke="url(#gradient)" stroke-width="8" 
+                                    stroke-linecap="round" stroke-dasharray="339.292" stroke-dashoffset="54"/>
+                        </svg>
+                        
+                        <!-- Center Content -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span id="step-count" class="text-5xl font-bold text-white" style="text-shadow: 0 0 30px rgba(192,38,211,0.5)">8,432</span>
+                            <span class="text-gray-400 text-sm mt-1">/ 10,000 adım</span>
+                            
+                            <!-- Elegant Percentage Display -->
+                            <div class="mt-4 flex items-center gap-2">
+                                <div class="h-px w-8 bg-gradient-to-r from-transparent to-purple-500"></div>
+                                <span class="text-purple-300 text-lg font-light tracking-widest" id="percentage-text">84.3%</span>
+                                <div class="h-px w-8 bg-gradient-to-l from-transparent to-cyan-500"></div>
+                            </div>
+                        </div>
+
+                        <!-- Floating Particles Container -->
+                        <div id="particles-container" class="absolute inset-0 pointer-events-none"></div>
+                    </div>
+                    
+                    <!-- Active Boost Indicator -->
+                    <div class="active-boost-indicator" id="active-boost-name" style="display: none;">
+                        <span class="text-nex-gold text-sm font-semibold px-4 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/10" id="boost-name-text"></span>
+                    </div>
+                </div>
+
+                <!-- Daily Stats Header -->
+                <div class="flex items-center justify-between mb-3 px-1">
+                    <h3 class="text-white font-semibold text-sm">Günlük Veriler</h3>
+                    <span class="text-gray-400 text-xs">Bugün</span>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <div class="glass rounded-2xl p-4 text-center stat-card">
+                        <div class="text-nex-cyan text-2xl font-bold mb-1">4.2</div>
+                        <div class="text-gray-400 text-xs">kilometre</div>
+                    </div>
+                    <div class="glass rounded-2xl p-4 text-center stat-card border border-pink-500/30">
+                        <div class="text-nex-magenta text-2xl font-bold mb-1">342</div>
+                        <div class="text-gray-400 text-xs">kalori</div>
+                    </div>
+                    <div class="glass rounded-2xl p-4 text-center stat-card">
+                        <div class="text-nex-purple text-2xl font-bold mb-1">64</div>
+                        <div class="text-gray-400 text-xs">dakika</div>
+                    </div>
+                </div>
+
+                <!-- Premium Boost CTA -->
+                <div class="boost-card rounded-3xl p-5 mb-6 relative cursor-pointer transform transition hover:scale-[1.02]" onclick="showBoostModal()">
+                    <div class="flex items-center justify-between relative z-10">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-3xl shadow-lg shadow-orange-500/30">⚡</div>
+                            <div>
+                                <div class="text-white font-bold text-lg">2X Boost Aktif Et</div>
+                                <div class="text-gray-300 text-sm">1 saat boyunca 2x token kazan</div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-nex-gold text-sm font-semibold">99 NEX</span>
+                                    <span class="text-gray-500 text-xs line-through">199 NEX</span>
+                                    <span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">%50 İNDİRİM</span>
+                                </div>
+                            </div>
+                        </div>
+                        <svg class="w-6 h-6 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Daily Streak -->
+                <div class="glass rounded-3xl p-5">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <span class="text-white text-sm font-semibold">Günlük Seri</span>
+                            <p class="text-gray-400 text-xs mt-0.5">Her gün adım at, ödülü kap</p>
+                        </div>
+                        <div class="flex items-center gap-1 text-orange-400">
+                            <span class="text-xl">🔥</span>
+                            <span class="font-bold">12 Gün</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <div class="streak-day w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-xs text-white font-bold claimed">P</div>
+                        <div class="streak-day w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-xs text-white font-bold claimed">S</div>
+                        <div class="streak-day w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-xs text-white font-bold claimed">Ç</div>
+                        <div class="streak-day w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-xs text-white font-bold claimed">P</div>
+                        <div class="streak-day w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-xs text-white font-bold claimed">C</div>
+                        <div class="streak-day w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center text-xs text-white font-bold claimed">C</div>
+                        <div class="streak-day w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-xs text-white font-bold active animate-pulse">P</div>
+                    </div>
+                    <button id="daily-reward-btn" onclick="claimDailyReward()" class="w-full mt-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-3 rounded-xl font-bold text-sm hover:opacity-90 transition shadow-lg shadow-orange-500/30">
+    🎁 Günlük Ödülü Al (150 NEX)
+</button>
+                </div>
+
+                <div class="h-8"></div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: DASHBOARD (Stats & Analytics) -->
+        <div class="screen hide-scrollbar" id="screen-dashboard">
+            <div class="relative min-h-full p-6 pb-24">
+                
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-white font-display text-xl font-bold">İstatistikler</h2>
+                    <button class="glass p-2 rounded-full">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Weekly Chart Card -->
+<div class="glass rounded-3xl p-5 mb-6" style="overflow:visible">
+    <div class="flex justify-between items-center mb-4">
+        <div>
+            <div class="text-white font-semibold">Haftalık Performans</div>
+            <div class="text-gray-400 text-xs mt-0.5">Son 7 gün</div>
+        </div>
+        <div class="text-nex-green text-sm font-semibold">+23%</div>
+    </div>
+    
+    <!-- Bar Chart -->
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;height:128px;gap:6px;overflow:visible;padding-top:24px;position:relative">
+        <!-- Pt 60% -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+            <div class="group" style="width:100%;height:60%;background:linear-gradient(to top,#7c3aed,#a78bfa);border-radius:6px 6px 0 0;position:relative;cursor:pointer">
+                <div style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none" class="bar-tip">6,240</div>
+            </div>
+            <span style="color:#9ca3af;font-size:10px">Pt</span>
+        </div>
+        <!-- Sa 80% -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+            <div class="group" style="width:100%;height:80%;background:linear-gradient(to top,#7c3aed,#a78bfa);border-radius:6px 6px 0 0;position:relative;cursor:pointer">
+                <div style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none" class="bar-tip">8,320</div>
+            </div>
+            <span style="color:#9ca3af;font-size:10px">Sa</span>
+        </div>
+        <!-- Ça 45% -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+            <div class="group" style="width:100%;height:45%;background:linear-gradient(to top,#7c3aed,#a78bfa);border-radius:6px 6px 0 0;position:relative;cursor:pointer">
+                <div style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none" class="bar-tip">4,680</div>
+            </div>
+            <span style="color:#9ca3af;font-size:10px">Ça</span>
+        </div>
+        <!-- Pe 90% -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+            <div class="group" style="width:100%;height:90%;background:linear-gradient(to top,#7c3aed,#a78bfa);border-radius:6px 6px 0 0;position:relative;cursor:pointer">
+                <div style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none" class="bar-tip">9,360</div>
+            </div>
+            <span style="color:#9ca3af;font-size:10px">Pe</span>
+        </div>
+        <!-- Cu 70% -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+            <div class="group" style="width:100%;height:70%;background:linear-gradient(to top,#7c3aed,#a78bfa);border-radius:6px 6px 0 0;position:relative;cursor:pointer">
+                <div style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none" class="bar-tip">7,280</div>
+            </div>
+            <span style="color:#9ca3af;font-size:10px">Cu</span>
+        </div>
+        <!-- Ct 100% CYAN (bugün) -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+            <div class="group" style="width:100%;height:100%;background:linear-gradient(to top,#0891b2,#22d3ee);border-radius:6px 6px 0 0;position:relative;cursor:pointer;box-shadow:0 0 12px rgba(34,211,238,0.4)">
+                <div style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none" class="bar-tip">10,400</div>
+            </div>
+            <span style="color:#22d3ee;font-size:10px;font-weight:bold">Ct</span>
+        </div>
+        <!-- Pz 85% -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end">
+            <div class="group" style="width:100%;height:85%;background:linear-gradient(to top,#7c3aed,#a78bfa);border-radius:6px 6px 0 0;position:relative;cursor:pointer">
+                <div style="position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:white;font-size:10px;padding:3px 7px;border-radius:5px;white-space:nowrap;opacity:0;transition:opacity 0.2s;pointer-events:none" class="bar-tip">8,432</div>
+            </div>
+            <span style="color:#9ca3af;font-size:10px">Pz</span>
+        </div>
+    </div>
+</div>
+<style>
+.group:hover .bar-tip { opacity: 1 !important; }
+</style>
+
+                <!-- Total Stats -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="glass rounded-2xl p-4">
+                        <div class="text-gray-400 text-xs mb-1">Toplam Adım</div>
+                        <div class="text-2xl font-bold text-white">1.2M</div>
+                        <div class="text-nex-green text-xs mt-1">+15% bu ay</div>
+                    </div>
+                    <div class="glass rounded-2xl p-4">
+                        <div class="text-gray-400 text-xs mb-1">Yakılan Kalori</div>
+                        <div class="text-2xl font-bold text-white">48.5K</div>
+                        <div class="text-nex-green text-xs mt-1">+8% bu ay</div>
+                    </div>
+                    <div class="glass rounded-2xl p-4">
+                        <div class="text-gray-400 text-xs mb-1">Toplam Mesafe</div>
+                        <div class="text-2xl font-bold text-white">892 km</div>
+                        <div class="text-gray-400 text-xs mt-1">İstanbul'a kadar</div>
+                    </div>
+                    <div class="glass rounded-2xl p-4">
+                        <div class="text-gray-400 text-xs mb-1">Kazanılan Token</div>
+                        <div class="text-2xl font-bold text-nex-gold">45.2K</div>
+                        <div class="text-nex-green text-xs mt-1">+22% bu ay</div>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="glass rounded-3xl p-5 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="text-white font-semibold">Başarımlar</div>
+                        <span class="text-nex-purple text-sm" id="achievement-count">12/24</span>
+                    </div>
+                    <div id="achievements-list" class="space-y-3">
+                        <!-- Rendered by JS -->
+                    </div>
+                    <!-- Pagination dots -->
+                    <div id="achievement-dots" class="flex justify-center gap-2 mt-4">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <div class="h-8"></div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: MARKET (Boosters & Upgrades) -->
+        <div class="screen hide-scrollbar" id="screen-market">
+            <div class="relative min-h-full p-6 pb-24">
+                
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-white font-display text-xl font-bold">Market</h2>
+                    <div class="glass px-3 py-1.5 rounded-full flex items-center gap-2">
+                        <span class="text-nex-gold text-sm font-bold">2,458 NEX</span>
+                    </div>
+                </div>
+
+                <!-- Premium Banner -->
+                <div class="bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-3xl p-5 mb-6 border border-purple-500/30 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl"></div>
+                    <div class="relative z-10 flex items-center gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center text-3xl shadow-lg shadow-orange-500/30">👑</div>
+                        <div class="flex-1">
+                            <div class="text-white font-bold text-lg">Premium Üyelik</div>
+                            <div class="text-gray-300 text-sm">Sınırsız 2x Boost + Özel Rozetler</div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="text-nex-gold font-bold">299 NEX</span>
+                                <span class="text-gray-400 text-xs">/ay</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-3 rounded-xl font-bold text-sm hover:opacity-90 transition">Hemen Yükselt</button>
+                </div>
+
+                <!-- Boosters Section -->
+                <div class="mb-6">
+                    <div class="text-white font-semibold mb-3">Güçlendiriciler</div>
+                    <div class="space-y-3">
+                        
+                        <!-- 2x Boost -->
+                        <div class="glass rounded-2xl p-4 flex items-center gap-4 border border-yellow-500/30 relative overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-r from-yellow-500/10 to-orange-500/10"></div>
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-2xl relative z-10 shadow-lg shadow-orange-500/20">⚡</div>
+                            <div class="flex-1 relative z-10">
+                                <div class="flex items-center gap-2">
+                                    <div class="text-white font-bold">2X Boost</div>
+                                    <span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full animate-pulse">POPÜLER</span>
+                                </div>
+                                <div class="text-gray-400 text-xs mt-0.5">1 saat boyunca 2x token</div>
+                                <div class="text-nex-gold text-sm font-bold mt-1">99 NEX</div>
+                            </div>
+                            <button onclick="buyBoost('2x', 99, 'gold')" class="relative z-10 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition">Satın Al</button>
+                        </div>
+
+                        <!-- 3x Boost -->
+                        <div class="glass rounded-2xl p-4 flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-2xl shadow-lg shadow-purple-500/20">🚀</div>
+                            <div class="flex-1">
+                                <div class="text-white font-bold">3X Boost</div>
+                                <div class="text-gray-400 text-xs mt-0.5">2 saat boyunca 3x token</div>
+                                <div class="text-nex-gold text-sm font-bold mt-1">249 NEX</div>
+                            </div>
+                            <button onclick="buyBoost('3x', 249, 'purple')" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition">Satın Al</button>
+                        </div>
+
+                        <!-- Auto Step -->
+                        <div class="glass rounded-2xl p-4 flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-2xl shadow-lg shadow-cyan-500/20">🤖</div>
+                            <div class="flex-1">
+                                <div class="text-white font-bold">Oto-Adım</div>
+                                <div class="text-gray-400 text-xs mt-0.5">24 saat boyunca arka planda sayar</div>
+                                <div class="text-nex-gold text-sm font-bold mt-1">499 NEX</div>
+                            </div>
+                            <button onclick="buyBoost('auto', 499, 'cyan')" class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:opacity-90 transition">Satın Al</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Shoes Carousel -->
+                <div class="mb-6">
+                    <div class="text-white font-semibold mb-3">Özel Ayakkabılar</div>
+                    <div class="carousel-container relative">
+                        <div class="carousel-btn prev" onclick="moveCarousel(-1)">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                        </div>
+                        <div class="carousel-track" id="shoes-carousel">
+                            <!-- Rendered by JS -->
+                        </div>
+                        <div class="carousel-btn next" onclick="moveCarousel(1)">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Special Offers -->
+                <div class="glass rounded-3xl p-5 border border-red-500/30 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-red-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold">SINIRLI</div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center text-3xl animate-pulse">🎁</div>
+                        <div>
+                            <div class="text-white font-bold text-lg">Mega Paket</div>
+                            <div class="text-gray-300 text-sm">5x 2X Boost + 1x NFT</div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-nex-gold font-bold text-xl">399 NEX</span>
+                                <span class="text-gray-400 text-sm line-through">699 NEX</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2 mb-2">
+                        <div class="bg-gradient-to-r from-red-500 to-pink-500 h-2 rounded-full" style="width: 75%"></div>
+                    </div>
+                    <div class="text-red-400 text-xs mb-3">Sadece 3 paket kaldı!</div>
+                    <button onclick="buyMegaPack()" class="w-full bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 rounded-xl font-bold text-sm hover:opacity-90 transition shadow-lg shadow-red-500/30">Hemen Al</button>
+                </div>
+
+                <div class="h-8"></div>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: PROFILE & LEADERBOARD -->
+        <div class="screen hide-scrollbar" id="screen-profile">
+            <div class="relative min-h-full p-6 pb-24">
+                
+                <!-- Profile Header -->
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 p-1">
+                        <div class="w-full h-full rounded-full bg-gray-800 flex items-center justify-center text-3xl">👤</div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-white font-bold text-xl">Alex Runner</div>
+                        <div class="text-gray-400 text-sm">@alex_runner</div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="level-badge px-2 py-0.5 rounded-full text-black text-xs font-bold">Lvl 12</span>
+                            <span class="text-nex-purple text-xs">Adım Ustası</span>
+                        </div>
+                    </div>
+                    <button class="glass p-2 rounded-full">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="flex gap-4 mb-6">
+                    <div class="flex-1 glass rounded-2xl p-3 text-center">
+                        <div class="text-2xl font-bold text-white">1.2M</div>
+                        <div class="text-gray-400 text-xs">Adım</div>
+                    </div>
+                    <div class="flex-1 glass rounded-2xl p-3 text-center">
+                        <div class="text-2xl font-bold text-nex-gold">45K</div>
+                        <div class="text-gray-400 text-xs">NEX</div>
+                    </div>
+                    <div class="flex-1 glass rounded-2xl p-3 text-center">
+                        <div class="text-2xl font-bold text-nex-purple">#42</div>
+                        <div class="text-gray-400 text-xs">Sıralama</div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="glass rounded-3xl p-5 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="text-white font-semibold">Haftalık Sıralama</div>
+                        <span class="text-nex-cyan text-sm cursor-pointer">Tümü →</span>
+                    </div>
+                    
+                    <!-- Top 3 -->
+                    <div class="flex justify-center gap-4 mb-6">
+                        <div class="flex flex-col items-center mt-4">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-gray-300 to-gray-500 p-0.5 mb-2">
+                                <div class="w-full h-full rounded-full bg-gray-800 flex items-center justify-center text-xl">🥈</div>
+                            </div>
+                            <div class="text-white text-xs font-semibold">Maria</div>
+                            <div class="text-nex-gold text-xs">98.5K</div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 p-0.5 mb-2 shadow-lg shadow-yellow-500/30">
+                                <div class="w-full h-full rounded-full bg-gray-800 flex items-center justify-center text-2xl">👑</div>
+                            </div>
+                            <div class="text-white text-sm font-bold">John</div>
+                            <div class="text-nex-gold text-sm font-bold">125K</div>
+                        </div>
+                        <div class="flex flex-col items-center mt-4">
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-orange-400 to-red-500 p-0.5 mb-2">
+                                <div class="w-full h-full rounded-full bg-gray-800 flex items-center justify-center text-xl">🥉</div>
+                            </div>
+                            <div class="text-white text-xs font-semibold">Mike</div>
+                            <div class="text-nex-gold text-xs">87.2K</div>
+                        </div>
+                    </div>
+
+                    <!-- List -->
+                    <div class="space-y-2">
+                        <div class="rank-item flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-purple-500/30">
+                            <div class="text-nex-purple font-bold w-6">4</div>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-sm">S</div>
+                            <div class="flex-1">
+                                <div class="text-white text-sm font-semibold">Sarah</div>
+                                <div class="text-gray-400 text-xs">Lvl 15</div>
+                            </div>
+                            <div class="text-nex-gold font-bold text-sm">76.4K</div>
+                        </div>
+                        <div class="rank-item flex items-center gap-3 p-3 bg-white/5 rounded-xl">
+                            <div class="text-gray-400 font-bold w-6">5</div>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-600 to-blue-600 flex items-center justify-center text-sm">D</div>
+                            <div class="flex-1">
+                                <div class="text-white text-sm font-semibold">David</div>
+                                <div class="text-gray-400 text-xs">Lvl 14</div>
+                            </div>
+                            <div class="text-nex-gold font-bold text-sm">72.1K</div>
+                        </div>
+                        <div class="rank-item flex items-center gap-3 p-3 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-xl border border-purple-500/50">
+                            <div class="text-nex-purple font-bold w-6">42</div>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center text-sm">👤</div>
+                            <div class="flex-1">
+                                <div class="text-white text-sm font-semibold">Sen</div>
+                                <div class="text-nex-purple text-xs">Lvl 12 • %12 daha fazla</div>
+                            </div>
+                            <div class="text-nex-gold font-bold text-sm">58.2K</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div class="glass rounded-3xl p-5">
+                    <div class="text-white font-semibold mb-4">Ayarlar</div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-purple-600/30 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                                    </svg>
+                                </div>
+                                <span class="text-white text-sm">Bildirimler</span>
+                            </div>
+                            <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-cyan-600/30 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-white text-sm">Arka Planda Çalış</span>
+                            </div>
+                            <div class="toggle-switch active" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-pink-600/30 flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                                    </svg>
+                                </div>
+                                <span class="text-white text-sm">Sağlık Entegrasyonu</span>
+                            </div>
+                            <div class="toggle-switch" onclick="this.classList.toggle('active')"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="h-8"></div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="navigateTo('home')" data-screen="home">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span class="text-[10px]">Ana Sayfa</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('dashboard')" data-screen="dashboard">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <span class="text-[10px]">İstatistik</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('market')" data-screen="market">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                </svg>
+                <span class="text-[10px]">Market</span>
+            </div>
+            <div class="nav-item" onclick="navigateTo('profile')" data-screen="profile">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span class="text-[10px]">Profil</span>
+            </div>
+        </div>
+
+        <!-- MODALS -->
+
+        <!-- Info Modal -->
+<div class="modal" id="info-modal">
+    <div class="modal-content">
+        <div class="text-center mb-4">
+            <div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center text-2xl mb-3">ℹ️</div>
+            <h3 class="text-white text-lg font-bold mb-1">Nasıl Çalışır?</h3>
+        </div>
+        
+        <div class="space-y-3 mb-4">
+            <div class="glass rounded-xl p-3">
+                <div class="flex items-center gap-2 mb-1">
+                    <div class="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center text-xs">1</div>
+                    <span class="text-white text-sm font-semibold">Adım At</span>
+                </div>
+                <p class="text-gray-400 text-xs">Her adım 0.1 NEX. 10,000 adım = ek bonus.</p>
+            </div>
+            
+            <div class="glass rounded-xl p-3">
+                <div class="flex items-center gap-2 mb-1">
+                    <div class="w-6 h-6 rounded-full bg-pink-600 flex items-center justify-center text-xs">2</div>
+                    <span class="text-white text-sm font-semibold">Token Kazan</span>
+                </div>
+                <p class="text-gray-400 text-xs">Adımlar otomatik NEX'e dönüşür.</p>
+            </div>
+            
+            <div class="glass rounded-xl p-3">
+                <div class="flex items-center gap-2 mb-1">
+                    <div class="w-6 h-6 rounded-full bg-cyan-600 flex items-center justify-center text-xs">3</div>
+                    <span class="text-white text-sm font-semibold">Canlı Yayında Hediye</span>
+                </div>
+                <p class="text-gray-400 text-xs">Tokenleri canlı yayında gönder.</p>
+            </div>
+        </div>
+        
+        <div class="glass rounded-xl p-3 mb-3 border border-yellow-500/30">
+            <div class="text-center">
+                <div class="text-gray-400 text-xs mb-1">Dönüşüm</div>
+                <div class="text-xl font-bold text-nex-gold">1 Adım = 0.1 NEX</div>
+            </div>
+        </div>
+        
+        <button onclick="closeModal('info-modal')" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2.5 rounded-xl font-bold text-sm">Anladım</button>
+    </div>
+</div>
+
+        <!-- Convert & Withdraw Modal -->
+        <div class="modal" id="convert-modal">
+            <div class="modal-content">
+                <h3 class="text-white text-lg font-bold mb-4 text-center">Dönüştür ve Çek</h3>
+                
+                <div class="glass rounded-xl p-4 mb-3 border border-cyan-500/30">
+                    <div class="text-gray-400 text-xs mb-1">AdımCoin Bakiyeniz</div>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold text-white" id="modal-adimcoin">84,320</span>
+                        <span class="text-cyan-400 text-sm font-semibold">AdımCoin</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-center my-2">
+                    <div class="flex items-center gap-2 text-gray-500 text-xs">
+                        <div class="h-px w-16 bg-gray-700"></div>
+                        <svg class="w-5 h-5 text-nex-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                        </svg>
+                        <span>10 AdımCoin = 1 NEX</span>
+                        <div class="h-px w-16 bg-gray-700"></div>
+                    </div>
+                </div>
+                
+                <div class="glass rounded-xl p-4 mb-4 border border-yellow-500/30">
+                    <div class="text-gray-400 text-xs mb-1">Alınacak NEX Token</div>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-3xl font-bold text-nex-gold" id="modal-nex-amount">8,422.00</span>
+                        <span class="text-nex-gold text-sm font-semibold">NEX</span>
+                    </div>
+                    <div class="text-gray-500 text-xs mt-1">İşlem ücreti: 10 NEX</div>
+                </div>
+                
+                <div class="space-y-2 mb-3">
+                    <button onclick="processConvert()" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-bold text-sm hover:opacity-90 transition">Dönüştür ve Çek</button>
+                    <button onclick="closeModal('convert-modal')" class="w-full glass text-white py-3 rounded-xl font-bold text-sm">İptal</button>
+                </div>
+                
+                <p class="text-center text-gray-500 text-xs">Çekimler 24 saat içinde hesabınıza aktarılır.</p>
+            </div>
+        </div>
+
+        <!-- Boost Modal -->
+        <div class="modal" id="boost-modal">
+            <div class="modal-content">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-4xl mb-4 shadow-lg shadow-orange-500/30 animate-bounce">⚡</div>
+                    <h3 class="text-white text-xl font-bold mb-2">2X Boost Aktif!</h3>
+                    <p class="text-gray-400 text-sm">1 saat boyunca tüm adımlarınız 2x token kazandıracak!</p>
+                </div>
+                <div class="glass rounded-xl p-4 mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-400 text-sm">Kalan Süre</span>
+                        <span class="text-white font-bold" id="boost-timer">59:59</span>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full animate-pulse" style="width: 100%"></div>
+                    </div>
+                </div>
+                <button onclick="closeModal('boost-modal')" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-bold text-sm">Harika!</button>
+            </div>
+        </div>
+
+        <!-- Daily Reward Modal -->
+        <div class="modal" id="reward-modal">
+            <div class="modal-content">
+                <div class="text-center">
+                    <div class="text-6xl mb-4 animate-bounce">🎁</div>
+                    <h3 class="text-white text-xl font-bold mb-2">Günlük Ödül!</h3>
+                    <p class="text-gray-400 text-sm mb-4">12 günlük serin devam ediyor</p>
+                    <div class="text-4xl font-bold text-nex-gold mb-2">+150 NEX</div>
+                    <p class="text-nex-green text-sm mb-6">Yarın: 200 NEX</p>
+                    <button onclick="closeModal('reward-modal'); updateBalance(150)" class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-black py-3 rounded-xl font-bold text-sm">Topla</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div class="modal" id="success-modal">
+            <div class="modal-content text-center">
+                <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-4xl mb-4 animate-scale-in">✓</div>
+                <h3 class="text-white text-xl font-bold mb-2" id="success-title">İşlem Başarılı!</h3>
+                <p class="text-gray-400 text-sm mb-6" id="success-message">İşleminiz başarıyla tamamlandı.</p>
+                <button onclick="closeModal('success-modal')" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-bold text-sm">Tamam</button>
+            </div>
+        </div>
+
+        <!-- Streak Modal -->
+<div class="modal" id="streak-modal">
+    <div class="modal-content">
+        <h3 class="text-white text-lg font-bold mb-3 text-center">12 Gün! 🔥</h3>
+        
+        <div class="flex justify-between mb-3">
+            <div class="text-center">
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">P</div>
+                <div class="text-[10px] text-gray-400 mt-1">+50</div>
+            </div>
+            <div class="text-center">
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">S</div>
+                <div class="text-[10px] text-gray-400 mt-1">+50</div>
+            </div>
+            <div class="text-center">
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">Ç</div>
+                <div class="text-[10px] text-gray-400 mt-1">+50</div>
+            </div>
+            <div class="text-center">
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">P</div>
+                <div class="text-[10px] text-gray-400 mt-1">+50</div>
+            </div>
+            <div class="text-center">
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">C</div>
+                <div class="text-[10px] text-gray-400 mt-1">+50</div>
+            </div>
+            <div class="text-center">
+                <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold">C</div>
+                <div class="text-[10px] text-gray-400 mt-1">+50</div>
+            </div>
+            <div class="text-center">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold animate-pulse">P</div>
+                <div class="text-[10px] text-nex-gold font-bold mt-1">+150</div>
+            </div>
+        </div>
+        
+        <div class="glass rounded-xl p-3 mb-3">
+            <div class="text-center">
+                <div class="text-gray-400 text-xs mb-1">Bugünkü Ödül</div>
+                <div class="text-2xl font-bold text-nex-gold">150 NEX</div>
+                <div class="text-nex-green text-[10px] mt-1">Yarın: 200 NEX</div>
+            </div>
+        </div>
+        
+        <button onclick="closeModal('streak-modal')" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2.5 rounded-xl font-bold text-sm">Kapat</button>
+    </div>
+</div>
+
+    </div>
+
+    <script>
+        // State Management
+        let state = {
+            steps: 8432,
+            targetSteps: 10000,
+            tokens: 2458.50,
+            adimCoin: 84320,
+            level: 12,
+            xp: 2450,
+            targetXp: 3000,
+            streak: 12,
+            boostActive: false,
+            boostTimeRemaining: 0,
+            activeBoostType: null,
+            activeBoostName: '',
+            carouselIndex: 0,
+            dailyRewardClaimed: false,
+            currentAchievementPage: 0,
+            achievements: [
+                {id: 1, name: 'Maratoncu', desc: '10K adım x 30 gün', reward: 500, claimed: false, icon: '🏃', color: 'from-yellow-400 to-orange-500'},
+                {id: 2, name: 'Ateş Kesilmiyor', desc: '30 günlük seri', reward: 1000, claimed: false, icon: '🔥', color: 'from-purple-400 to-pink-500'},
+                {id: 3, name: 'Adım Kralı', desc: "Sıralamada ilk 10'a gir", reward: 2000, claimed: false, icon: '👑', color: 'from-gray-400 to-gray-600', locked: true},
+                {id: 4, name: 'Hız Ustası', desc: '5 gün üst üste 12K adım', reward: 750, claimed: false, icon: '⚡', color: 'from-cyan-400 to-blue-500'},
+                {id: 5, name: 'Token Avcısı', desc: '10,000 NEX kazan', reward: 300, claimed: false, icon: '💰', color: 'from-yellow-500 to-green-500'},
+                {id: 6, name: 'Efsane', desc: '1 milyon toplam adım', reward: 5000, claimed: false, icon: '🏆', color: 'from-purple-500 to-yellow-400', locked: true}
+            ],
+            shoes: [
+                {id: 1, name: 'Cyber Runner', bonus: 5, price: 1299, icon: '👟', color: 'from-purple-600 to-pink-600', owned: true},
+                {id: 2, name: 'Gold Walker', bonus: 10, price: 2499, icon: '👢', color: 'from-yellow-400 to-orange-500', owned: false},
+                {id: 3, name: 'Maratoncu Pro', bonus: 20, price: 0, icon: '🏃', color: 'from-yellow-400 to-red-500', owned: false, achievementUnlock: 1},
+                {id: 4, name: 'Ice Trekker', bonus: 15, price: 4999, icon: '🥾', color: 'from-cyan-600 to-blue-600', owned: false},
+                {id: 5, name: 'Eco Walker', bonus: 8, price: 1899, icon: '👞', color: 'from-green-600 to-emerald-600', owned: false},
+                {id: 6, name: 'Speedster', bonus: 12, price: 3299, icon: '👠', color: 'from-red-600 to-pink-600', owned: false}
+            ]
+        };
+
+        // Navigation
+        function navigateTo(screenName) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+                screen.scrollTop = 0;
+            });
+            
+            const target = document.getElementById(`screen-${screenName}`);
+            target.classList.add('active');
+            target.scrollTop = 0;
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if(item.dataset.screen === screenName) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Show Info Modal
+        function showInfoModal() {
+            showModal('info-modal');
+        }
+
+        // Show Convert Modal
+        function showConvertModal() {
+            updateAdimCoinDisplay();
+            showModal('convert-modal');
+        }
+
+        // Process Convert
+        function processConvert() {
+            if (state.adimCoin <= 0) {
+                showSuccess('Yetersiz Bakiye', 'Dönüştürecek AdımCoin yok.');
+                closeModal('convert-modal');
+                return;
+            }
+            const nexGained = Math.max(0, (state.adimCoin / 10) - 10);
+            state.tokens += nexGained;
+            state.adimCoin = 0;
+            updateTokenDisplay();
+            updateAdimCoinDisplay();
+            closeModal('convert-modal');
+            showSuccess('Dönüştürme Başarılı!', `${nexGained.toLocaleString('tr-TR', {minimumFractionDigits: 2})} NEX hesabınıza eklendi.`);
+        }
+
+        // Add Steps Function with +1 increment
+function addSteps() {
+    state.steps += 1;
+    
+    document.getElementById('step-count').textContent = state.steps.toLocaleString('tr-TR');
+    
+    const percentage = Math.min((state.steps / state.targetSteps) * 100, 100);
+    const circumference = 339.292;
+    const offset = circumference - (percentage / 100) * circumference;
+    document.getElementById('progress-circle').style.strokeDashoffset = offset;
+    document.getElementById('percentage-text').textContent = percentage.toFixed(1) + '%';
+    
+    // AdımCoin kazancı: 1 adım = 10 AdımCoin (boost varsa daha fazla)
+    const coinEarned = state.boostActive ? (state.activeBoostType === '3x' ? 30 : 20) : 10;
+    state.adimCoin += coinEarned;
+    updateAdimCoinDisplay();
+    
+    createBoostParticles(event);
+    
+    if(state.steps >= state.targetSteps && state.steps - 1 < state.targetSteps) {
+        showSuccess('Hedef Tamamlandı!', '10,000 adım hedefini başardın! +5,000 AdımCoin bonus kazandın.');
+        state.adimCoin += 5000;
+        updateAdimCoinDisplay();
+    }
+}
+
+        // Create Boost-Specific Particle Effects
+        function createBoostParticles(e) {
+            const container = document.getElementById('particles-container');
+            const colors = {
+                '2x': ['#FFD700', '#FFA500'],
+                '3x': ['#C026D3', '#FF00AA'],
+                'auto': ['#00F0FF', '#0099FF'],
+                'default': ['#C026D3', '#00F0FF']
+            };
+            
+            const boostColors = state.boostActive ? colors[state.activeBoostType] || colors['default'] : colors['default'];
+            
+            for(let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                particle.style.width = (Math.random() * 6 + 4) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = boostColors[Math.floor(Math.random() * boostColors.length)];
+                particle.style.borderRadius = '50%';
+                particle.style.boxShadow = `0 0 10px ${particle.style.background}`;
+                particle.style.setProperty('--tx', `${(Math.random() - 0.5) * 150}px`);
+                particle.style.setProperty('--ty', `${(Math.random() - 0.5) * 150}px`);
+                container.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        // Update Token Display
+        function updateTokenDisplay() {
+            document.getElementById('token-balance').textContent = state.tokens.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        function updateAdimCoinDisplay() {
+            const el = document.getElementById('adimcoin-balance');
+            if (el) el.textContent = state.adimCoin.toLocaleString('tr-TR');
+            // also update convert modal if open
+            const modalEl = document.getElementById('modal-adimcoin');
+            if (modalEl) modalEl.textContent = state.adimCoin.toLocaleString('tr-TR');
+            const nexEl = document.getElementById('modal-nex-amount');
+            if (nexEl) {
+                const nexAmount = (state.adimCoin / 10) - 10;
+                nexEl.textContent = nexAmount > 0 ? nexAmount.toLocaleString('tr-TR', {minimumFractionDigits: 2}) : '0.00';
+            }
+        }
+
+        function updateBalance(amount) {
+            state.tokens += amount;
+            updateTokenDisplay();
+        }
+
+        // Modal Functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showBoostModal() {
+            if(state.tokens >= 99) {
+                state.tokens -= 99;
+                updateTokenDisplay();
+                activateBoost('2x', '2X Boost', 'gold');
+                showModal('boost-modal');
+            } else {
+                showSuccess('Yetersiz Bakiye', 'Boost satın almak için daha fazla token kazanmalısın.');
+            }
+        }
+
+        function activateBoost(type, name, colorTheme) {
+    state.boostActive = true;
+    state.activeBoostType = type;
+    state.activeBoostName = name;
+    state.boostTimeRemaining = 3600;
+    
+    // Update UI
+    document.getElementById('active-boost-name').style.display = 'block';
+    document.getElementById('boost-name-text').textContent = name;
+    
+    // Show boost ring
+    const boostRing = document.getElementById('boost-ring');
+    boostRing.classList.remove('hidden', 'boost-ring-gold', 'boost-ring-purple', 'boost-ring-cyan');
+    boostRing.classList.add(`boost-ring-${colorTheme}`);
+    
+    // Apply color theme
+    const circle = document.getElementById('progress-circle');
+    const outerRing = document.getElementById('outer-ring');
+    const innerRing = document.getElementById('inner-ring');
+    
+    if(colorTheme === 'gold') {
+        circle.setAttribute('stroke', 'url(#gradient-gold)');
+        outerRing.style.borderColor = 'rgba(255, 215, 0, 0.5)';
+        innerRing.style.borderColor = 'rgba(255, 165, 0, 0.5)';
+    } else if(colorTheme === 'purple') {
+        circle.setAttribute('stroke', 'url(#gradient)');
+        outerRing.style.borderColor = 'rgba(192, 38, 211, 0.5)';
+        innerRing.style.borderColor = 'rgba(255, 0, 170, 0.5)';
+    } else if(colorTheme === 'cyan') {
+        circle.setAttribute('stroke', 'url(#gradient-cyan)');
+        outerRing.style.borderColor = 'rgba(0, 240, 255, 0.5)';
+        innerRing.style.borderColor = 'rgba(0, 153, 255, 0.5)';
+    }
+    
+    startBoostTimer();
+}
+
+        function startBoostTimer() {
+            const timerInterval = setInterval(() => {
+                state.boostTimeRemaining--;
+                if(state.boostTimeRemaining <= 0) {
+                    state.boostActive = false;
+                    state.activeBoostType = null;
+                    state.activeBoostName = '';
+                    document.getElementById('active-boost-name').style.display = 'none';
+                    
+                    // Reset visual effects
+                    const container = document.getElementById('step-circle-container');
+                    const circle = document.getElementById('progress-circle');
+                    const outerRing = document.getElementById('outer-ring');
+                    const innerRing = document.getElementById('inner-ring');
+                    
+                    container.className = 'relative w-64 h-64 mb-2';
+                    circle.setAttribute('stroke', 'url(#gradient)');
+                    outerRing.style.borderColor = 'rgba(192, 38, 211, 0.2)';
+                    innerRing.style.borderColor = 'rgba(0, 240, 255, 0.3)';
+                    
+                    clearInterval(timerInterval);
+                }
+                
+                const minutes = Math.floor(state.boostTimeRemaining / 60);
+                const seconds = state.boostTimeRemaining % 60;
+                const timerEl = document.getElementById('boost-timer');
+                if(timerEl) {
+                    timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function claimDailyReward() {
+    if(state.dailyRewardClaimed) {
+        showSuccess('Zaten Alındı!', 'Günlük ödülünüzü zaten topladınız. Yarın tekrar gelin!');
+        return;
+    }
+    
+    state.dailyRewardClaimed = true;
+    state.tokens += 150;
+    updateTokenDisplay();
+    
+    // Butonu devre dışı bırak
+    const btn = document.getElementById('daily-reward-btn');
+    btn.disabled = true;
+    btn.classList.remove('from-yellow-400', 'to-orange-500', 'text-black');
+    btn.classList.add('from-gray-600', 'to-gray-700', 'text-gray-400', 'cursor-not-allowed');
+    btn.innerHTML = '✓ Ödül Alındı';
+    
+    showModal('reward-modal');
+}
+
+        function showStreakModal() {
+            showModal('streak-modal');
+        }
+
+        function showSuccess(title, message) {
+            document.getElementById('success-title').textContent = title;
+            document.getElementById('success-message').textContent = message;
+            showModal('success-modal');
+        }
+
+        function showTokenDetails() {
+            // Could expand to show token history
+        }
+
+        // Buy Boost from Market
+        function buyBoost(type, price, colorTheme) {
+            if(state.tokens >= price) {
+                state.tokens -= price;
+                updateTokenDisplay();
+                
+                let name = type === '2x' ? '2X Boost' : type === '3x' ? '3X Boost' : 'Oto-Adım';
+                activateBoost(type, name, colorTheme);
+                
+                showSuccess('Satın Alım Başarılı!', `${name} aktif edildi ve çalışıyor.`);
+            } else {
+                showSuccess('Yetersiz Bakiye', 'Daha fazla token kazanman gerekiyor.');
+            }
+        }
+
+        function buyMegaPack() {
+            if(state.tokens >= 399) {
+                state.tokens -= 399;
+                updateTokenDisplay();
+                showSuccess('Mega Paket Alındı!', '5x 2X Boost envanterine eklendi.');
+            } else {
+                showSuccess('Yetersiz Bakiye', 'Bu paketi almak için daha fazla token kazanmalısın.');
+            }
+        }
+
+        // Achievement Functions
+        function renderAchievements() {
+            const page = state.currentAchievementPage;
+            const perPage = 3;
+            const start = page * perPage;
+            const pageAchievements = state.achievements.slice(start, start + perPage);
+            const totalPages = Math.ceil(state.achievements.length / perPage);
+
+            const list = document.getElementById('achievements-list');
+            if (!list) return;
+            list.innerHTML = pageAchievements.map(a => {
+                if (a.locked) {
+                    return `<div class="flex items-center gap-3 p-3 bg-white/5 rounded-xl opacity-40">
+                        <div class="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center text-2xl grayscale">${a.icon}</div>
+                        <div class="flex-1">
+                            <div class="text-white text-sm font-semibold">${a.name}</div>
+                            <div class="text-gray-400 text-xs">${a.desc}</div>
+                        </div>
+                        <span class="text-gray-500 text-xs font-bold px-3 py-1.5 bg-gray-700 rounded-lg">🔒 Kilitli</span>
+                    </div>`;
+                } else if (a.claimed) {
+                    return `<div class="flex items-center gap-3 p-3 bg-white/5 rounded-xl opacity-60">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br ${a.color} flex items-center justify-center text-2xl">${a.icon}</div>
+                        <div class="flex-1">
+                            <div class="text-white text-sm font-semibold">${a.name}</div>
+                            <div class="text-gray-400 text-xs">${a.desc}</div>
+                        </div>
+                        <span class="text-gray-400 text-xs font-bold px-3 py-1.5 bg-gray-700 rounded-lg cursor-not-allowed">✓ Alındı</span>
+                    </div>`;
+                } else {
+                    return `<div class="flex items-center gap-3 p-3 bg-white/5 rounded-xl">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br ${a.color} flex items-center justify-center text-2xl">${a.icon}</div>
+                        <div class="flex-1">
+                            <div class="text-white text-sm font-semibold">${a.name}</div>
+                            <div class="text-gray-400 text-xs">${a.desc}</div>
+                        </div>
+                        <button onclick="claimAchievement(${a.id})" class="bg-gradient-to-r ${a.color} text-black px-3 py-1.5 rounded-lg text-xs font-bold hover:opacity-90 transition whitespace-nowrap">+${a.reward} NEX Al</button>
+                    </div>`;
+                }
+            }).join('');
+
+            // Dots
+            const dots = document.getElementById('achievement-dots');
+            if (dots) {
+                dots.innerHTML = Array.from({length: totalPages}, (_, i) =>
+                    `<button onclick="goToAchievementPage(${i})" class="w-2 h-2 rounded-full transition-all ${i === page ? 'bg-nex-purple w-4' : 'bg-gray-600'}" style="${i === page ? 'background:#C026D3' : ''}"></button>`
+                ).join('');
+            }
+        }
+
+        function claimAchievement(id) {
+            const a = state.achievements.find(x => x.id === id);
+            if (!a || a.claimed || a.locked) return;
+            a.claimed = true;
+            state.tokens += a.reward;
+            updateTokenDisplay();
+            showSuccess('Ödül Kazanıldı!', `${a.reward} NEX hesabına eklendi.`);
+            renderAchievements();
+
+            // Check shoe unlock
+            state.shoes.forEach(shoe => {
+                if (shoe.achievementUnlock === id && !shoe.owned) {
+                    shoe.owned = true;
+                    renderShoes();
+                    setTimeout(() => showSuccess('Yeni Ayakkabı Açıldı!', `${shoe.name} envanterine eklendi! +${shoe.bonus}% verimlilik aktif.`), 1500);
+                }
+            });
+        }
+
+        function goToAchievementPage(page) {
+            state.currentAchievementPage = page;
+            renderAchievements();
+        }
+
+        // Shoes Render
+        function renderShoes() {
+            const track = document.getElementById('shoes-carousel');
+            if (!track) return;
+            track.innerHTML = state.shoes.map(shoe => {
+                let priceHtml, btnHtml;
+                if (shoe.owned) {
+                    priceHtml = `<div class="text-nex-green text-xs font-bold mt-1">✓ Sahip Olundu</div>`;
+                    btnHtml = `<button disabled class="w-full mt-2 bg-green-800/50 text-green-400 py-1.5 rounded-lg text-xs font-bold cursor-not-allowed">Aktif</button>`;
+                } else if (shoe.achievementUnlock) {
+                    const ach = state.achievements.find(a => a.id === shoe.achievementUnlock);
+                    priceHtml = `<div class="text-nex-purple text-xs mt-1">🏆 Başarım ile Aç</div>`;
+                    btnHtml = `<button disabled class="w-full mt-2 bg-gray-700/50 text-gray-400 py-1.5 rounded-lg text-xs font-bold cursor-not-allowed opacity-60">🔒 Kilitli</button>`;
+                } else {
+                    priceHtml = `<div class="text-nex-gold text-sm font-bold mt-1">${shoe.price.toLocaleString()} NEX</div>`;
+                    btnHtml = `<button onclick="buyShoe(${shoe.id})" class="w-full mt-2 bg-gradient-to-r ${shoe.color} text-white py-1.5 rounded-lg text-xs font-bold hover:opacity-90 transition">Satın Al</button>`;
+                }
+                return `<div class="carousel-item">
+                    <div class="glass rounded-2xl p-3 h-full ${shoe.owned ? 'border border-green-500/30' : ''}">
+                        <div class="w-full h-20 bg-gradient-to-br ${shoe.color}/30 rounded-xl mb-2 flex items-center justify-center text-4xl">${shoe.icon}</div>
+                        <div class="text-white text-sm font-semibold">${shoe.name}</div>
+                        <div class="text-nex-cyan text-xs">+${shoe.bonus}% verimlilik</div>
+                        ${priceHtml}
+                        ${btnHtml}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function buyShoe(id) {
+            const shoe = state.shoes.find(s => s.id === id);
+            if (!shoe || shoe.owned) return;
+            if (state.tokens >= shoe.price) {
+                state.tokens -= shoe.price;
+                shoe.owned = true;
+                updateTokenDisplay();
+                renderShoes();
+                showSuccess('Ayakkabı Satın Alındı!', `${shoe.name} envanterine eklendi! +${shoe.bonus}% verimlilik aktif.`);
+            } else {
+                showSuccess('Yetersiz Bakiye', 'Daha fazla token kazanman gerekiyor.');
+            }
+        }
+
+        // Carousel Functions
+        function moveCarousel(direction) {
+            const track = document.getElementById('shoes-carousel');
+            const items = track.querySelectorAll('.carousel-item');
+            const itemWidth = 152; // 140px + 12px margin
+            
+            state.carouselIndex += direction;
+            
+            if(state.carouselIndex < 0) state.carouselIndex = 0;
+            if(state.carouselIndex > items.length - 2) state.carouselIndex = items.length - 2;
+            
+            track.style.transform = `translateX(-${state.carouselIndex * itemWidth}px)`;
+        }
+
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const timeString = `${hours}:${minutes}`;
+            document.getElementById('island-clock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if(e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const percentage = (state.steps / state.targetSteps) * 100;
+            const circumference = 339.292;
+            const offset = circumference - (percentage / 100) * circumference;
+            document.getElementById('progress-circle').style.strokeDashoffset = offset;
+            document.getElementById('percentage-text').textContent = percentage.toFixed(1) + '%';
+            updateAdimCoinDisplay();
+            renderAchievements();
+            renderShoes();
+        });
+
+        // Simulate passive step counting
+        setInterval(() => {
+            if(Math.random() > 0.7) {
+                state.steps += Math.floor(Math.random() * 3);
+                document.getElementById('step-count').textContent = state.steps.toLocaleString();
+                
+                const percentage = Math.min((state.steps / state.targetSteps) * 100, 100);
+                const circumference = 339.292;
+                const offset = circumference - (percentage / 100) * circumference;
+                document.getElementById('progress-circle').style.strokeDashoffset = offset;
+                document.getElementById('percentage-text').textContent = percentage.toFixed(1) + '%';
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
